@@ -124,7 +124,7 @@ State& Game::GetCurrentState(){
 
 Game& Game::GetInstance(){
     if(!instance)
-        instance.reset(new Game("João Víctor Siqueira de Araujo - 190031026", 1024, 600));
+        instance.reset(new Game("Remember - 190031026", 1024, 600));
     return *instance;
 }
 
