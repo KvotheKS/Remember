@@ -26,6 +26,9 @@ void Collider::Update(float dt){
 
 void Collider::Render(){
     if(debugMode){
+
+        associated.depth = associated.depth + 100; //fodase tudo que tem collider fica em cima removame depois -m
+        
         Vec2 center = box.GetCenter();
         SDL_Point points[5];
         float angle = associated.angleDeg * (PI / 180.0);
@@ -45,6 +48,7 @@ void Collider::Render(){
 
         SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderDrawLines(Game::GetInstance().GetRenderer(), points, 5);
+            
     }
 }
 

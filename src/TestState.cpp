@@ -35,13 +35,13 @@ void TestState::LoadAssets(){
     goTileMap->box.y = 0;
     objectArray.emplace_back(goTileMap);
 
-    GameObject* goPBody = new GameObject();
-    goPBody->depth = 0;
-    PenguinBody* pbody = new PenguinBody(*goPBody);
-    goPBody->AddComponent(pbody);
-    goPBody->box.SetCenter(704, 640);
-    objectArray.emplace_back(goPBody);
-    Camera::Follow(goPBody);
+    // GameObject* goPBody = new GameObject();
+    // goPBody->depth = 0;
+    // PenguinBody* pbody = new PenguinBody(*goPBody);
+    // goPBody->AddComponent(pbody);
+    // goPBody->box.SetCenter(704, 640);
+    // objectArray.emplace_back(goPBody);
+    // Camera::Follow(goPBody);
 
     // for(int i = 0; i < 3; i++){
     //     GameObject* goAlien = new GameObject();
@@ -64,7 +64,19 @@ void TestState::LoadAssets(){
     fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     objectArray.emplace_back(fpsChecker);
     
+    GameObject* goBox1 = new GameObject();
+        RigidBody* box = new RigidBody(*goBox1,1);
+        goBox1->AddComponent(box);
+        goBox1->box.SetCenter(800, 800);
+    objectArray.emplace_back(goBox1);
+
     backgroundMusic.Play();
+
+    GameObject* goBox2 = new GameObject();
+        RigidBody* box2 = new RigidBody(*goBox2,0);
+        goBox2->AddComponent(box2);
+        goBox2->box.SetCenter(1000, 800);
+    objectArray.emplace_back(goBox2);
 }
 
 void TestState::Start(){
@@ -73,12 +85,12 @@ void TestState::Start(){
 }
 
 void TestState::Update(float dt){
-    if(PenguinBody::player == nullptr){
-        GameData::playerVictory = false;
-        popRequested = true;
-        backgroundMusic.Stop(500);
-        Game::GetInstance().Push(new EndState());
-    }
+    // if(PenguinBody::player == nullptr){
+    //     GameData::playerVictory = false;
+    //     popRequested = true;
+    //     backgroundMusic.Stop(500);
+    //     Game::GetInstance().Push(new EndState());
+    // }
 
     // removendo condicao de vitoria -m
 
@@ -95,8 +107,11 @@ void TestState::Update(float dt){
         quitRequested = true;
     if(inManager.KeyPress(ESCAPE_KEY))
         popRequested = true;
-    if(inManager.KeyPress(F3_KEY))
+    if(inManager.KeyPress(F3_KEY)){
         Collider::debugMode = !Collider::debugMode;
+        std::cout << "hit: " << Collider::debugMode << std::endl;
+    }
+        
 
     Camera::Update(dt);
 

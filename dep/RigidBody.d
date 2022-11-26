@@ -1,5 +1,5 @@
-dep/TestState.d bin/TestState.o: src/TestState.cpp include/TestState.h \
- include/State.h include/GameObject.h include/Component.h \
+dep/RigidBody.d bin/RigidBody.o: src/RigidBody.cpp include/RigidBody.h \
+ include/Component.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h \
@@ -88,7 +88,7 @@ dep/TestState.d bin/TestState.o: src/TestState.cpp include/TestState.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/charconv.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/functional_hash.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_string.tcc \
- include/Rect.h include/Vec2.h \
+ include/GameObject.h include/Rect.h include/Vec2.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/include/math.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/vector \
@@ -117,7 +117,7 @@ dep/TestState.d bin/TestState.o: src/TestState.cpp include/TestState.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_base.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_lockfree_defines.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/backward/auto_ptr.h \
- include/Sprite.h include/SDL_include.h include/SDL2/SDL.h \
+ include/InputManager.h include/SDL_include.h include/SDL2/SDL.h \
  include/SDL2/SDL_main.h include/SDL2/SDL_stdinc.h \
  include/SDL2/SDL_config.h include/SDL2/SDL_platform.h \
  include/SDL2/begin_code.h include/SDL2/close_code.h \
@@ -210,18 +210,17 @@ dep/TestState.d bin/TestState.o: src/TestState.cpp include/TestState.h \
  include/SDL2/SDL_power.h include/SDL2/SDL_render.h \
  include/SDL2/SDL_shape.h include/SDL2/SDL_system.h \
  include/SDL2/SDL_timer.h include/SDL2/SDL_version.h \
- include/SDL2/SDL_locale.h include/SDL2/SDL_misc.h include/Resources.h \
- include/SDL2/SDL_image.h include/SDL2/SDL.h include/SDL2/SDL_mixer.h \
- include/SDL2/SDL_ttf.h \
+ include/SDL2/SDL_locale.h include/SDL2/SDL_misc.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/unordered_map \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hashtable.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hashtable_policy.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/limits \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h \
- include/Camera.h include/InputManager.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstring \
- C:/TDM-GCC-32/include/string.h include/Timer.h \
+ C:/TDM-GCC-32/include/string.h include/Camera.h include/Sprite.h \
+ include/Resources.h include/SDL2/SDL_image.h include/SDL2/SDL.h \
+ include/SDL2/SDL_mixer.h include/SDL2/SDL_ttf.h include/Timer.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/iostream \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ostream \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ios \
@@ -245,35 +244,13 @@ dep/TestState.d bin/TestState.o: src/TestState.cpp include/TestState.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ostream.tcc \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/istream \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/istream.tcc \
- include/Music.h include/TileSet.h include/TileMap.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/fstream \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/codecvt.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/basic_file.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++io.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/fstream.tcc \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/sstream \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/sstream.tcc \
- include/CameraFollower.h include/Alien.h include/Minion.h \
- include/Bullet.h include/Collider.h include/PenguinBody.h \
- include/PenguinCannon.h include/Sound.h \
+ include/Sound.h include/Collider.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/algorithm \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h \
- include/RigidBody.h include/Collision.h include/GameData.h \
- include/EndState.h include/Text.h include/FpsPrinter.h include/Game.h \
- include/TitleState.h include/StageState.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime \
- C:/TDM-GCC-32/include/time.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/stack \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/deque \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_deque.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/deque.tcc \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h
-include/TestState.h:
-include/State.h:
-include/GameObject.h:
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h
+include/RigidBody.h:
 include/Component.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h:
@@ -373,6 +350,7 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cerrno:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/charconv.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/functional_hash.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_string.tcc:
+include/GameObject.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:
@@ -403,7 +381,7 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/shared_ptr_atomic.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_base.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_lockfree_defines.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/backward/auto_ptr.h:
-include/Sprite.h:
+include/InputManager.h:
 include/SDL_include.h:
 include/SDL2/SDL.h:
 include/SDL2/SDL_main.h:
@@ -523,21 +501,21 @@ include/SDL2/SDL_timer.h:
 include/SDL2/SDL_version.h:
 include/SDL2/SDL_locale.h:
 include/SDL2/SDL_misc.h:
-include/Resources.h:
-include/SDL2/SDL_image.h:
-include/SDL2/SDL.h:
-include/SDL2/SDL_mixer.h:
-include/SDL2/SDL_ttf.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/unordered_map:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hashtable.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hashtable_policy.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/limits:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h:
-include/Camera.h:
-include/InputManager.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstring:
 C:/TDM-GCC-32/include/string.h:
+include/Camera.h:
+include/Sprite.h:
+include/Resources.h:
+include/SDL2/SDL_image.h:
+include/SDL2/SDL.h:
+include/SDL2/SDL_mixer.h:
+include/SDL2/SDL_ttf.h:
 include/Timer.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/iostream:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ostream:
@@ -562,42 +540,10 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_ios.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ostream.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/istream:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/istream.tcc:
-include/Music.h:
-include/TileSet.h:
-include/TileMap.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/fstream:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/codecvt.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/basic_file.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++io.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/fstream.tcc:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/sstream:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/sstream.tcc:
-include/CameraFollower.h:
-include/Alien.h:
-include/Minion.h:
-include/Bullet.h:
-include/Collider.h:
-include/PenguinBody.h:
-include/PenguinCannon.h:
 include/Sound.h:
+include/Collider.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/algorithm:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h:
-include/RigidBody.h:
-include/Collision.h:
-include/GameData.h:
-include/EndState.h:
-include/Text.h:
-include/FpsPrinter.h:
-include/Game.h:
-include/TitleState.h:
-include/StageState.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime:
-C:/TDM-GCC-32/include/time.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/stack:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/deque:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_deque.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/deque.tcc:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h:

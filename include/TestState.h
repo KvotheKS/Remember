@@ -9,6 +9,7 @@
 #include "CameraFollower.h"
 #include "Alien.h"
 #include "PenguinBody.h"
+#include "RigidBody.h"
 #include "Collider.h"
 #include "Collision.h"
 #include "GameData.h"
