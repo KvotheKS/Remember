@@ -76,6 +76,7 @@ void TestState::LoadAssets(){
         RigidBody* box2 = new RigidBody(*goBox2,0);
         goBox2->AddComponent(box2);
         goBox2->box.SetCenter(300, 300);
+        goBox2->angleDeg = 35;
     objectArray.emplace_back(goBox2);
 }
 

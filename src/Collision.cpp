@@ -55,12 +55,12 @@ bool Collision::IsColliding(Rect& a, Rect& b, float angleOfA, float angleOfB){
                 if(maxA < minB || minA > maxB){
                     collide = false;
                     // return false;
-                }
-                    
+                }  
             }
           
             // p(sep)
-            // p(sep_vector.x)
+            // cout << "sep_vector.x" << ": " << sep_vector.x ;
             // p(sep_vector.y)
+
             return collide;
         }
