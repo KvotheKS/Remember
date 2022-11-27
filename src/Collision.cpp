@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 
-
+// define pra test -m
 using namespace std;
 #define p(x) cout << #x << ": " << x << endl;
 
@@ -41,23 +41,17 @@ bool Collision::IsColliding(Rect& a, Rect& b, float angleOfA, float angleOfB){
                 float maxB = *std::max_element(P, P + 4);
 
 
-
-                // float sep = std::numeric_limits<float>::max();
-
-               
+                //pegar valor de separacao menor pra projecao do loop atual -m
                 sep = min(sep, maxA-minB);
-                
-
                 sep = min(sep, maxB-minA);
 
+                //pegar vetor de separacao.
                 if(sep_vector.Magnitude() > (axis*sep).Magnitude()){
                     sep_vector = (axis*sep);
                 }
                 
 
-                // sep = min(sep,sep);
-
-
+                // diferente da função base precisamos olhar todos os vertices pra pegar o vetor de distancia minima -m
                 if(maxA < minB || minA > maxB){
                     collide = false;
                     // return false;
