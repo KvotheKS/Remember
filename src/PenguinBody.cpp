@@ -25,6 +25,7 @@ void PenguinBody::Start(){
     State& state = Game::GetInstance().GetCurrentState();
 
     GameObject* goPCannon = new GameObject();
+    goPCannon->depth = associated.depth+0.0001f;
     std::weak_ptr<GameObject> penguinBody = state.GetObjectPtr(&associated);
     PenguinCannon* penguinCannon = new PenguinCannon(*goPCannon, penguinBody);
     goPCannon->AddComponent(penguinCannon);
