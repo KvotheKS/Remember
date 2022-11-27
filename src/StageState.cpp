@@ -43,6 +43,7 @@ void StageState::LoadAssets(){
 
     for(int i = 0; i < 3; i++){
         GameObject* goAlien = new GameObject();
+        goAlien->depth = 0;
         Alien* alien = new Alien(*goAlien, rand() % 2 ? 5 : 7, rand() % 4);
         goAlien->AddComponent(alien);
 

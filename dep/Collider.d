@@ -268,7 +268,8 @@ dep/Collider.d bin/Collider.o: src/Collider.cpp include/Collider.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/deque \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_deque.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/deque.tcc \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h \
+ include/Scheduler.h
 include/Collider.h:
 include/Component.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string:
@@ -596,3 +597,4 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/deque:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_deque.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/deque.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h:
+include/Scheduler.h:

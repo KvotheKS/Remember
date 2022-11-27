@@ -24,6 +24,7 @@ class Sprite : public Component {
         float frameTime;
         Timer selfDestructCount;
         float secondsToSelfDestruct;
+        float depth;
     public:
         Sprite(GameObject& associated);
         Sprite(GameObject& associated, std::string file, int frameCount = 1,
@@ -33,7 +34,8 @@ class Sprite : public Component {
         void SetClip(int x, int y, int w, int h);
         void Update(float dt);
         void Render();
-        void Render(float x, float y, float depth = 0.0f);
+        void Render(float x, float y);
+        void Print(float x=-1, float y=-1);
         bool Is(std::string type);
         int GetWidth();
         int GetHeight();

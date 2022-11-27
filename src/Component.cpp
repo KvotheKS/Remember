@@ -11,3 +11,5 @@ void Component::Start(){
 
 void Component::NotifyCollision(GameObject& other){
 }
+
+void Component::Print(float x, float y){}

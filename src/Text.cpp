@@ -66,18 +66,20 @@ void Text::Update(float dt){
 }
 
 void Text::Render(){
-    if(texture != nullptr && showText){
-        SDL_Rect ClipRect = {0, 0, (int) associated.box.w, (int) associated.box.h};
+    if(texture != nullptr && showText)
+        Scheduler::Push(this, associated.depth);
+}
+
+void Text::Print(float x, float y)
+{
+    SDL_Rect ClipRect = {0, 0, (int) associated.box.w, (int) associated.box.h};
         SDL_Rect DestRect;
         DestRect.x = associated.box.x - Camera::pos.x;
         DestRect.y = associated.box.y - Camera::pos.y;
         DestRect.w = ClipRect.w;
         DestRect.h = ClipRect.h;
-        
-        // SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &ClipRect, &DestRect,
-            // associated.angleDeg, nullptr, SDL_FLIP_NONE);
-        Scheduler::Push(texture, ClipRect, DestRect, associated.angleDeg);
-    }
+        SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &ClipRect, &DestRect,
+            associated.angleDeg, nullptr, SDL_FLIP_NONE);
 }
 
 bool Text::Is(std::string type){

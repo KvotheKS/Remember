@@ -1,4 +1,5 @@
 #include "TileMap.h"
+#include "Scheduler.h"
 
 TileMap::TileMap(GameObject& associated, std::string file, TileSet* tileSet) : Component(associated){
     Load(file);
@@ -46,10 +47,14 @@ void TileMap::Update(float dt){
 }
 
 void TileMap::Render(){
-    for(int i = 0; i < mapDepth; i++){
-        float layerSpeed = 1.0 + 0.25 * i;
-        RenderLayer(i, Camera::pos.x * layerSpeed, Camera::pos.y * layerSpeed);
-    }
+    for(int i = 0; i < mapDepth; i++)
+        Scheduler::Push(this, associated.depth + i, i);
+}
+
+void TileMap::Print(float x, float y)
+{
+    float layerSpeed = 1.0 + 0.25 * x;
+    RenderLayer(x, Camera::pos.x * layerSpeed, Camera::pos.y * layerSpeed);
 }
 
 bool TileMap::Is(std::string type){
@@ -61,8 +66,7 @@ void TileMap::RenderLayer(int layer, int cameraX, int cameraY){
         for(int j = 0; j < mapWidth; j++){
             int tileX = j * tileSet->GetTileWidth() - cameraX;
             int tileY = i * tileSet->GetTileHeight() - cameraY;
-
-            tileSet->RenderTile(At(j, i, layer), tileX, tileY, layer);
+            tileSet->RenderTile(At(j, i, layer), tileX, tileY);
         }
     }
 }

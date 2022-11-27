@@ -251,7 +251,8 @@ dep/TileMap.d bin/TileMap.o: src/TileMap.cpp include/TileMap.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++io.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/fstream.tcc \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/sstream \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/sstream.tcc
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/sstream.tcc \
+ include/Scheduler.h
 include/TileMap.h:
 include/Component.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string:
@@ -550,3 +551,4 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++io.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/fstream.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/sstream:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/sstream.tcc:
+include/Scheduler.h:

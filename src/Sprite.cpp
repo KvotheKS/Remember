@@ -64,15 +64,22 @@ void Sprite::Render(){
     Render(associated.box.x - Camera::pos.x, associated.box.y - Camera::pos.y);
 }
 
-void Sprite::Render(float x, float y,  float depth){
+void Sprite::Render(float x, float y){
+    
+    // SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture.get(), &this->clipRect, &dstRect,
+    //         associated.angleDeg, nullptr, SDL_FLIP_NONE);
+    Scheduler::Push(this, associated.depth + depth, x, y);
+}
+
+void Sprite::Print(float x, float y)
+{
     SDL_Rect dstRect;
     dstRect.x = x;
     dstRect.y = y;
     dstRect.w = clipRect.w * scale.x;
     dstRect.h = clipRect.h * scale.y;
-    // SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture.get(), &this->clipRect, &dstRect,
-    //         associated.angleDeg, nullptr, SDL_FLIP_NONE);
-    Scheduler::Push(texture.get(), clipRect, dstRect, associated.angleDeg, associated.depth + depth);
+    SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture.get(), &this->clipRect, &dstRect,
+            associated.angleDeg, nullptr, SDL_FLIP_NONE);
 }
 
 bool Sprite::Is(std::string type){

@@ -23,6 +23,7 @@ class TileMap : public Component {
         int& At(int x, int y, int z = 0);
         void Update(float dt);
         void Render();
+        void Print(float x = -1, float y = -1);
         bool Is(std::string type);
         void RenderLayer(int layer, int cameraX = 0, int cameraY = 0);
         int GetWidth();

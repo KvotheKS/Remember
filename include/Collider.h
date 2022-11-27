@@ -16,6 +16,7 @@ class Collider : public Component {
         Collider(GameObject& associated, Vec2 scale = {1, 1}, Vec2 offset = {0, 0});
         void Update(float dt);
         void Render();
+        void Print(float x=-1, float y=-1);
         bool Is(std::string type);
         void SetScale(Vec2 scale);
         void SetOffset(Vec2 offset);

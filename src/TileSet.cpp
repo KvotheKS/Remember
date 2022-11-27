@@ -10,13 +10,13 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string file) : tileSet(*new
     }
 }
 
-void TileSet::RenderTile(unsigned index, float x, float y, float depth){
+void TileSet::RenderTile(unsigned index, float x, float y){
     if(index < (unsigned) rows*columns){
         int clipX = (index % columns) * tileWidth;
         int clipY = (index / columns) * tileHeight;
         tileSet.SetClip(clipX, clipY, tileWidth, tileHeight);
 
-        tileSet.Render(x, y, depth);
+        tileSet.Print(x, y);
     }
 }
 

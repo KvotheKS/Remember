@@ -1,5 +1,6 @@
 #include "Collider.h"
 #include "Game.h"
+#include "Scheduler.h"
 
 #if defined(DEBUG)
     bool Collider::debugMode = true;
@@ -24,7 +25,12 @@ void Collider::Update(float dt){
     box.SetCenter(center.x + offsetR.x, center.y + offsetR.y);
 }
 
-void Collider::Render(){
+void Collider::Render()
+{
+    Scheduler::Push(this, associated.depth);
+}
+
+void Collider::Print(float x, float y){
     if(debugMode){
         Vec2 center = box.GetCenter();
         SDL_Point points[5];

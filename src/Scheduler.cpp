@@ -3,22 +3,22 @@
 #include <vector>
 #include <algorithm>
 
-std::vector<info> Scheduler::textureVec;
+std::vector<__info> Scheduler::textureVec;
 
-bool SchedulerComp(info a, info b)
+bool SchedulerComp(__info a, __info b)
 { return a.depth < b.depth; }
 
 void Scheduler::Render()
 {
     std::stable_sort(Scheduler::textureVec.begin(), Scheduler::textureVec.end(), SchedulerComp);
     for(auto& it : Scheduler::textureVec)
-        SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), it.texture, &it.clip, &it.dst,
-            it.angle, nullptr, SDL_FLIP_NONE);
+        it.cpt->Print(it.x, it.y);
+    
     Scheduler::Clear();
 }
 
-void Scheduler::Push(SDL_Texture* texture, SDL_Rect& clip, SDL_Rect& dst, float angle, float depth)
-{ Scheduler::textureVec.push_back({texture, clip, dst, angle, depth}); }
+void Scheduler::Push(Component* cpt, float depth, float x, float y)
+{ Scheduler::textureVec.push_back({cpt, depth, x, y}); }
 
 void Scheduler::Clear()
 { Scheduler::textureVec.clear(); }
