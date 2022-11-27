@@ -29,8 +29,10 @@ bool RigidBody::Is(std::string type){
     return type == "RigidBody";
 }
 void RigidBody::NotifyCollision(GameObject& other){
+   
     if(RigidBody * body = (RigidBody*)other.GetComponent("RigidBody")){
         if(body->modo == 1){
+            printf("ouch\n");
             
         }
         else{

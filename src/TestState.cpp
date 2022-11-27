@@ -67,7 +67,7 @@ void TestState::LoadAssets(){
     GameObject* goBox1 = new GameObject();
         RigidBody* box = new RigidBody(*goBox1,1);
         goBox1->AddComponent(box);
-        goBox1->box.SetCenter(800, 800);
+        goBox1->box.SetCenter(100, 100);
     objectArray.emplace_back(goBox1);
 
     backgroundMusic.Play();
@@ -75,7 +75,7 @@ void TestState::LoadAssets(){
     GameObject* goBox2 = new GameObject();
         RigidBody* box2 = new RigidBody(*goBox2,0);
         goBox2->AddComponent(box2);
-        goBox2->box.SetCenter(1000, 800);
+        goBox2->box.SetCenter(300, 300);
     objectArray.emplace_back(goBox2);
 }
 

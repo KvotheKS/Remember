@@ -263,7 +263,7 @@ dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h \
  include/Collision.h include/GameData.h include/EndState.h include/Text.h \
- include/TestState.h include/Game.h \
+ include/TestState.h include/RigidBody.h include/Game.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime \
  C:/TDM-GCC-32/include/time.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/stack \
@@ -591,6 +591,7 @@ include/GameData.h:
 include/EndState.h:
 include/Text.h:
 include/TestState.h:
+include/RigidBody.h:
 include/Game.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime:
 C:/TDM-GCC-32/include/time.h:
