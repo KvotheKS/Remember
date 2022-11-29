@@ -110,9 +110,10 @@ void StageState::Update(float dt){
                 continue;
             float angleOfB = objectArray[j]->angleDeg * (PI / 180.0);
 
-            if(Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)){
-                objectArray[i]->NotifyCollision(*objectArray[j]);
-                objectArray[j]->NotifyCollision(*objectArray[i]);
+            if((Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).first){
+                Vec2 sep = (Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).second;
+                objectArray[i]->NotifyCollision(*objectArray[j],sep);
+                objectArray[j]->NotifyCollision(*objectArray[i],sep);
             }
         }
     }

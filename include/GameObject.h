@@ -24,5 +24,5 @@ class GameObject {
         void AddComponent(Component* cpt);
         void RemoveComponent(Component* cpt);
         Component* GetComponent(std::string type);
-        void NotifyCollision(GameObject& other);
+        void NotifyCollision(GameObject& other,Vec2 sep);
 };

@@ -76,7 +76,7 @@ void TestState::LoadAssets(){
         RigidBody* box2 = new RigidBody(*goBox2,0);
         goBox2->AddComponent(box2);
         goBox2->box.SetCenter(300, 300);
-        goBox2->angleDeg = 35;
+        goBox2->angleDeg = 0;
     objectArray.emplace_back(goBox2);
 }
 
@@ -86,6 +86,8 @@ void TestState::Start(){
 }
 
 void TestState::Update(float dt){
+    // removendo condicao de vitoria/derrota -m
+    
     // if(PenguinBody::player == nullptr){
     //     GameData::playerVictory = false;
     //     popRequested = true;
@@ -93,7 +95,7 @@ void TestState::Update(float dt){
     //     Game::GetInstance().Push(new EndState());
     // }
 
-    // removendo condicao de vitoria -m
+    
 
     // else if(Alien::alienCount == 0){
     //     GameData::playerVictory = true;
@@ -130,9 +132,10 @@ void TestState::Update(float dt){
                 continue;
             float angleOfB = objectArray[j]->angleDeg * (PI / 180.0);
 
-            if(Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)){
-                objectArray[i]->NotifyCollision(*objectArray[j]);
-                objectArray[j]->NotifyCollision(*objectArray[i]);
+            if((Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).first){
+                Vec2 sep = (Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).second;
+                objectArray[i]->NotifyCollision(*objectArray[j],sep);
+                objectArray[j]->NotifyCollision(*objectArray[i],sep);
             }
         }
     }

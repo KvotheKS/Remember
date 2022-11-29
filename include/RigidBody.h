@@ -25,7 +25,7 @@ public:
     void Update(float dt);
     void Render();
     bool Is(std::string type);
-    void NotifyCollision(GameObject& other);
+    void NotifyCollision(GameObject& other,Vec2 sep);
 
     int modo;
    

@@ -1,5 +1,5 @@
 #include "GameObject.h"
-
+#include "Collider.h"
 GameObject::GameObject(){
     isDead = false;
     started = false;
@@ -14,12 +14,16 @@ GameObject::~GameObject(){
 void GameObject::Start(){
     for(unsigned i = 0; i < components.size(); i++)
         components[i]->Start();
+    
     started = true;
 }
 
 void GameObject::Update(float dt){
     for(unsigned i = 0; i < components.size(); i++)
         components[i]->Update(dt);
+    if(Collider* collider = (Collider*)GetComponent("Collider")){
+        collider->Update(dt);
+    }
 }
 
 void GameObject::Render(){
@@ -57,7 +61,7 @@ Component* GameObject::GetComponent(std::string type){
     return nullptr;
 }
 
-void GameObject::NotifyCollision(GameObject& other){
+void GameObject::NotifyCollision(GameObject& other,Vec2 sep){
     for(unsigned i = 0; i < components.size(); i++)
-        components[i]->NotifyCollision(other);
+        components[i]->NotifyCollision(other,sep);
 }

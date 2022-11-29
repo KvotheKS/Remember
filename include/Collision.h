@@ -8,6 +8,6 @@
 
 class Collision {
 public:
-    static bool IsColliding(Rect& a, Rect& b, float angleOfA, float angleOfB);
+    static pair<bool,Vec2> IsColliding(Rect& a, Rect& b, float angleOfA, float angleOfB);
 
 };
