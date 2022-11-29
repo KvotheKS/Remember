@@ -4,6 +4,7 @@
 GameObject* Camera::focus = nullptr;
 Vec2 Camera::pos = Vec2();
 Vec2 Camera::speed = Vec2();
+Vec2 Camera::lpos = Vec2();
 
 void Camera::Follow(GameObject* newFocus){
     focus = newFocus;
@@ -14,6 +15,7 @@ void Camera::Unfollow(){
 }
 
 void Camera::Update(float dt){
+    lpos = pos;
     if(focus != nullptr){
         int width, height;
         Vec2 focusCenter = focus->box.GetCenter();

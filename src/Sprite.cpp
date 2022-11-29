@@ -78,8 +78,10 @@ void Sprite::Print(float x, float y)
     dstRect.y = y;
     dstRect.w = clipRect.w * scale.x;
     dstRect.h = clipRect.h * scale.y;
+    SDL_SetTextureColorMod(texture.get(), r, g, b);
     SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture.get(), &this->clipRect, &dstRect,
             associated.angleDeg, nullptr, SDL_FLIP_NONE);
+    SDL_SetTextureColorMod(texture.get(), 255,255,255);
 }
 
 bool Sprite::Is(std::string type){
@@ -127,4 +129,11 @@ void Sprite::SetFrameCount(int frameCount){
 void Sprite::SetFrameTime(float frameTime){
     this->frameTime = frameTime;
     timeElapsed = 0;
+}
+
+void Sprite::SetTint(Uint8 r, Uint8 g, Uint8 b)
+{
+    this->r = r;
+    this->g = g;
+    this->b = b;
 }
