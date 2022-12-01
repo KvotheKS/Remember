@@ -16,14 +16,18 @@ void State::StartArray(){
     started = true;
 }
 
+
 void State::UpdateArray(float dt){
     for(unsigned i = 0; i < objectArray.size(); i++)
         objectArray[i]->Update(dt);
+  
 }
 
 void State::RenderArray(){
     for(unsigned i = 0; i < objectArray.size(); i++)
         objectArray[i]->Render();
+    for(unsigned i = 0; i < cameraFollowerObjectArray.size(); i++) //!! 
+        cameraFollowerObjectArray[i]->Render();
 }
 
 std::weak_ptr<GameObject> State::AddObject(GameObject* object){
