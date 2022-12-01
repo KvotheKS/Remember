@@ -1,5 +1,7 @@
 #pragma once
 #include "Component.h"
+#include "TerrainBody.h"
+#include "RigidBody.h"
 #include "Rect.h"
 #include <vector>
 #include <memory>

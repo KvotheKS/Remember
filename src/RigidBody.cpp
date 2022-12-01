@@ -1,9 +1,11 @@
 #include "RigidBody.h"
 #include <iostream>
-
+#include "Game.h"
 // define pra test -m
 using namespace std;
-#define p(x) cout << #x << ": " << x << endl;
+#define p(x) cout << #x << ": " << x <<" ";
+
+
 
 RigidBody::RigidBody(GameObject& associated, int modo):Component(associated), modo(modo){
     Sprite* pbody = new Sprite(associated, "assets/img/testblock.jpg");
@@ -11,6 +13,23 @@ RigidBody::RigidBody(GameObject& associated, int modo):Component(associated), mo
 
     Collider* collider = new Collider(associated);
     associated.AddComponent(collider);
+
+    speed =  Vec2(0,0);
+    grounded = false;
+    inputdone = false;
+
+    MAX_GLOBAL_SPEED = 3000;
+
+    JUMP_FORCE = 800;
+    MAX_FALL_SPEED = 800;
+    FALL_ACCELERATION = 100;
+
+    MAX_MOVE_SPEED = 600;
+    MOVE_ACCELERATION = 400;
+    LATERAL_FRICTION = 80;
+    LATERAL_SPEED_THRESHOLD = 100;
+
+    
 }
 RigidBody::~RigidBody(){
 
@@ -20,11 +39,16 @@ void RigidBody::Start(){
 
 }
 void RigidBody::Update(float dt){
-    InputManager& inManager = InputManager::GetInstance();
-    if(inManager.MousePress(LEFT_MOUSE_BUTTON) && modo == 1){
-        associated.box.x = inManager.GetMouseX() + Camera::pos.x;
-        associated.box.y = inManager.GetMouseY() + Camera::pos.y;
-    }
+
+    
+    
+    Controls(dt);
+    Physics(dt);
+
+    grounded = false;
+    inputdone = false;
+    
+   
 }
 void RigidBody::Render(){
 
@@ -33,30 +57,118 @@ bool RigidBody::Is(std::string type){
     return type == "RigidBody";
 }
 void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
-    
-    if(RigidBody * body = (RigidBody*)other.GetComponent("RigidBody")){
-        if(body->modo == 1){
-            // printf("ouch\n");
-            if(other.box.GetCenter().x < associated.box.GetCenter().x){
-                associated.box.x += sep.x;
-            }else{
-                associated.box.x -= sep.x;
-            }
-            
-            if(other.box.GetCenter().y > associated.box.GetCenter().y){
-                associated.box.y += sep.y;
-            }else{
-                associated.box.y -= sep.y;
-            }
 
-            if(Collider* collider = (Collider*)associated.GetComponent("Collider")){
-            collider->Update(0);
-    }
+    if(TerrainBody * body = (TerrainBody*)other.GetComponent("TerrainBody")){
+        // Lidar com Contato na Direita -m
+        if(associated.box.GetCenter().x > other.box.GetCenter().x){
+            associated.box.x += sep.x;
+        }
+
+        // Lidar com Contato na Esquerda -m
+        else{
+            associated.box.x -= sep.x;
+        }
+
+        // Lidar com Contato no Topo -m
+        if(associated.box.GetCenter().y < other.box.GetCenter().y){
+            speed = Vec2(speed.x,0);
+            grounded = true; 
+            associated.box.y += sep.y;
+            Camera::Update(0);
+            
+
+        }
+        else{
+            associated.box.y -= sep.y;
+        }
+        // Lidar com Contato a baixo -m
+        if(Collider* collider = (Collider*)associated.GetComponent("Collider")){
+        collider->Update(0);
+        }
             
         }
         else{
            
         }
+}
+
+void RigidBody::Controls(float dt){
+    
+    InputManager& inManager = InputManager::GetInstance();
+    if(inManager.IsKeyDown(W_KEY)){  
+        grounded = false;
+        speed = Vec2(speed.x,-JUMP_FORCE*dt);
+   
+    }
+    if(inManager.IsKeyDown(S_KEY)){
+        
+    }
+    if(inManager.IsKeyDown(A_KEY)){
+        speed.x -= MOVE_ACCELERATION*dt;
+        inputdone = true;
+    }
+    if(inManager.IsKeyDown(D_KEY)){
+       
+        speed.x += MOVE_ACCELERATION*dt;
+        inputdone = true;
+        
     }
     
+    if(inManager.MousePress(LEFT_MOUSE_BUTTON) && modo == 1){
+        associated.box.x = inManager.GetMouseX() + Camera::pos.x;
+        associated.box.y = inManager.GetMouseY() + Camera::pos.y;
+        speed = Vec2(0,0);
+    }
+}
+
+void RigidBody::Physics(float dt){
+      
+    // Queda
+    // double angle = 0;
+    // float rad = (angle) * M_PI/180;
+    // speed += Vec2(0,FALL_ACCELERATION*dt).Rotate(rad) * dt;
+
+   
+    speed.y += FALL_ACCELERATION*dt; 
+
+    
+    if(!inputdone){
+            // desacelerar
+        if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
+            speed.x = 0;
+        else if(speed.x > 0){
+            speed.x = speed.x - LATERAL_FRICTION*dt; 
+        }else{
+            speed.x = speed.x + LATERAL_FRICTION*dt; 
+        }
+    }
+
+    
+              
+
+    // // limitar velocidade geral
+    // if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
+    //     speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
+    // }
+
+    // limitar velocidade lateral
+    if(abs(speed.x) > MAX_MOVE_SPEED*dt){         
+        speed = Vec2((speed.x/abs(speed.x))*MAX_MOVE_SPEED*dt, speed.y );          
+    }
+
+    //limitar velocidade de queda
+    if(speed.y > MAX_FALL_SPEED*dt){         
+        speed.y =  MAX_FALL_SPEED*dt;          
+    }
+
+     
+
+    // mova-se de acordo com a velocidade 
+    if(grounded) speed.y = 0;
+    Vec2 center = Vec2(associated.box.GetCenter() + speed);
+    associated.box.SetCenter(center.x,center.y);
+
+}
+int MoveonTopof(GameObject& target){
+
 }

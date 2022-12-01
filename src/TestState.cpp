@@ -17,7 +17,7 @@ TestState::~TestState(){
 void TestState::LoadAssets(){
     GameObject* goBackground = new GameObject();
     goBackground->depth = -1;
-    Sprite* bg = new Sprite(*goBackground, "assets/img/ocean.jpg");
+    Sprite* bg = new Sprite(*goBackground, "assets/img/space.jpg");
     goBackground->AddComponent(bg);
 
     CameraFollower* cf = new CameraFollower(*goBackground);
@@ -25,36 +25,17 @@ void TestState::LoadAssets(){
 
     goBackground->box.x = 0;
     goBackground->box.y = 0;
-    objectArray.emplace_back(goBackground);
+    cameraFollowerObjectArray.emplace_back(goBackground);
 
-    GameObject* goTileMap = new GameObject();
-    goTileMap->depth = 0;
-    TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tileMap.txt", tileSet);
-    goTileMap->AddComponent(tileMap);
-    goTileMap->box.x = 0;
-    goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
+    // GameObject* goTileMap = new GameObject();
+    // goTileMap->depth = 0;
+    // TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tileMap.txt", tileSet);
+    // goTileMap->AddComponent(tileMap);
+    // goTileMap->box.x = 0;
+    // goTileMap->box.y = 0;
+    // objectArray.emplace_back(goTileMap);
 
-    // GameObject* goPBody = new GameObject();
-    // goPBody->depth = 0;
-    // PenguinBody* pbody = new PenguinBody(*goPBody);
-    // goPBody->AddComponent(pbody);
-    // goPBody->box.SetCenter(704, 640);
-    // objectArray.emplace_back(goPBody);
-    // Camera::Follow(goPBody);
-
-    // for(int i = 0; i < 3; i++){
-    //     GameObject* goAlien = new GameObject();
-    //     Alien* alien = new Alien(*goAlien, rand() % 2 ? 5 : 7, rand() % 4);
-    //     goAlien->AddComponent(alien);
-
-    //     Vec2 alienPos = Vec2(rand() % 1409, rand() % 1281);
-    //     while(alienPos.Distance(PenguinBody::player->GetPlayerCenter()) <= 500)
-    //         alienPos = Vec2(rand() % 1409, rand() % 1281);
-    //     goAlien->box.SetCenter(alienPos.x, alienPos.y);
-
-    //     objectArray.emplace_back(goAlien);
-    // }
+    
     
     GameObject* fpsChecker = new GameObject();
     fpsChecker->depth = 9999;
@@ -72,12 +53,16 @@ void TestState::LoadAssets(){
 
     backgroundMusic.Play();
 
-    GameObject* goBox2 = new GameObject();
-        RigidBody* box2 = new RigidBody(*goBox2,0);
+    Camera::Follow(goBox1);
+    for(int i = 0; i<15; i++){
+        GameObject* goBox2 = new GameObject();
+        TerrainBody* box2 = new TerrainBody(*goBox2);
         goBox2->AddComponent(box2);
-        goBox2->box.SetCenter(300, 300);
+        goBox2->box.SetCenter(i*100, 500);
         goBox2->angleDeg = 0;
-    objectArray.emplace_back(goBox2);
+        objectArray.emplace_back(goBox2);
+    }
+    
 }
 
 void TestState::Start(){
@@ -116,9 +101,13 @@ void TestState::Update(float dt){
     }
         
 
-    Camera::Update(dt);
+    
 
     UpdateArray(dt);
+    Camera::Update(dt);
+    
+    
+    
 
     for(unsigned i = 0; i < objectArray.size(); i++){
         Collider* colliderA = (Collider*) objectArray[i]->GetComponent("Collider");

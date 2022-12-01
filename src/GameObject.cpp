@@ -21,6 +21,9 @@ void GameObject::Start(){
 void GameObject::Update(float dt){
     for(unsigned i = 0; i < components.size(); i++)
         components[i]->Update(dt);
+
+    // para garantir que o collider seja atualizado depois de sprite, ele esta sendo atualizado 2 vezes todo frame
+    // pra concertar isso teria que ter um scheduler no Update() tambem.                                            -m
     if(Collider* collider = (Collider*)GetComponent("Collider")){
         collider->Update(dt);
     }
