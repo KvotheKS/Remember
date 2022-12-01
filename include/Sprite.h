@@ -26,6 +26,9 @@ class Sprite : public Component {
         float secondsToSelfDestruct;
         float depth;
     public:
+        Uint8 r=255, g=255, b=255;
+
+    public:
         Sprite(GameObject& associated);
         Sprite(GameObject& associated, std::string file, int frameCount = 1,
                float frameTime = 1, float secondsToSelfDestruct = 0);
@@ -45,4 +48,5 @@ class Sprite : public Component {
         void SetFrame(int frame);
         void SetFrameCount(int frameCount);
         void SetFrameTime(float frameTime);
+        void SetTint(Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
 };

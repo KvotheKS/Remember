@@ -1,6 +1,8 @@
 #include "StageState.h"
 #include "FpsPrinter.h"
 #include "Game.h"
+#include "Slider.h"
+#include <functional>
 
 StageState::StageState() : State(){
     backgroundMusic.Open("assets/audio/stageState.ogg");
@@ -63,6 +65,22 @@ void StageState::LoadAssets(){
     fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     objectArray.emplace_back(fpsChecker);
     
+    GameObject* sld = new GameObject(); sld->box = Rect(100, 0, 100, 30); sld->depth = 9999;
+    
+    sld->AddComponent(
+        new Slider(
+            *sld, goPBody,
+            [](GameObject* cpt, float pct)
+            { 
+                auto spr = ((Sprite*)cpt->GetComponent("Sprite"));
+                spr->SetTint(pct*255, (1-pct)*255, (1-pct)*255);
+            },
+            0.5
+        )
+    );
+
+    objectArray.emplace_back(sld);
+
     backgroundMusic.Play();
 }
 
