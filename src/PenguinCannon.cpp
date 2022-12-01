@@ -1,7 +1,7 @@
 #include "PenguinCannon.h"
 #include "Game.h"
 
-PenguinCannon::PenguinCannon(GameObject& associated, std::weak_ptr<GameObject> penguinBody) : Component(associated){
+PenguinCannon::PenguinCannon(GameObject& associated, std::weak_ptr<GameObject> penguinBody) : GameObject(associated){
     Sprite* pcannon = new Sprite(associated, "assets/img/cubngun.png");
     associated.AddComponent(pcannon);
 

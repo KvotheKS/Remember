@@ -1,6 +1,6 @@
 #include "CameraFollower.h"
 
-CameraFollower::CameraFollower(GameObject& go) : Component(go){
+CameraFollower::CameraFollower(GameObject& go) : GameObject(go){
 }
 
 void CameraFollower::Update(float dt){

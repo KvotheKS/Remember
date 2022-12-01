@@ -11,7 +11,7 @@
 #include <memory>
 #include <iostream>
 
-class Sprite : public Component {
+class Sprite : public GameObject {
     private:
         std::shared_ptr<SDL_Texture> texture;
         int width;

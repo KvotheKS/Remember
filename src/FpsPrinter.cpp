@@ -2,7 +2,7 @@
 #include "Text.h"
 
 FpsPrinter::FpsPrinter(GameObject& associated)
-    : Component(associated), count(0), dt(0.0f)
+    : GameObject(associated), count(0), dt(0.0f)
 {}
 
 void FpsPrinter::Update(float dt)

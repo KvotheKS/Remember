@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include <string>
 
-class CameraFollower : public Component {
+class CameraFollower : public GameObject {
     public:
         CameraFollower(GameObject& go);
         void Update(float dt);

@@ -8,7 +8,7 @@
 #include <memory>
 #include <iostream>
 
-class Sound : public Component {
+class Sound : public GameObject {
     private:
         std::shared_ptr<Mix_Chunk> chunk;
         int channel;

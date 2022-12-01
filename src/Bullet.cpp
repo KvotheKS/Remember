@@ -1,7 +1,7 @@
 #include "Bullet.h"
 
 Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, std::string sprite,
-               int frameCount, float frameTime, bool targetsPlayer) : Component(associated){
+               int frameCount, float frameTime, bool targetsPlayer) : GameObject(associated){
     Sprite* bullet = new Sprite(associated, sprite, frameCount, frameTime);
     associated.AddComponent(bullet);
 

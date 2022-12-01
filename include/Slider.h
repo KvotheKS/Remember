@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "GameObject.h"
 #include <limits>
+#include "Text.h"
 
 /*
     How to use: 
@@ -15,14 +16,14 @@
     overload its print function;
 */
 
-class Slider : public Component
+class Slider : public GameObject
 {
 public:
     float pct;
     GameObject* rcv;
-private:
+protected:
     std::function<void(GameObject*,float)> fnc;
-
+    bool changed;
 public:
     Slider(GameObject& associated, GameObject* rcv, 
         std::function<void(GameObject*,float)> fnc, 

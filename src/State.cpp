@@ -18,12 +18,18 @@ void State::StartArray(){
 
 void State::UpdateArray(float dt){
     for(unsigned i = 0; i < objectArray.size(); i++)
+    {
         objectArray[i]->Update(dt);
+        objectArray[i]->UpdateNodes(dt);
+    }
 }
 
 void State::RenderArray(){
     for(unsigned i = 0; i < objectArray.size(); i++)
+    {
         objectArray[i]->Render();
+        objectArray[i]->RenderNodes();
+    }
 }
 
 std::weak_ptr<GameObject> State::AddObject(GameObject* object){

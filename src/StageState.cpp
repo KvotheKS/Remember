@@ -65,7 +65,7 @@ void StageState::LoadAssets(){
     fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     objectArray.emplace_back(fpsChecker);
     
-    GameObject* sld = new GameObject(); sld->box = Rect(100, 0, 100, 30); sld->depth = 9999;
+    GameObject* sld = new GameObject(); sld->box = Rect(100, 10, 100, 30); sld->depth = 9999;
     
     sld->AddComponent(
         new Slider(
@@ -74,8 +74,7 @@ void StageState::LoadAssets(){
             { 
                 auto spr = ((Sprite*)cpt->GetComponent("Sprite"));
                 spr->SetTint(pct*255, (1-pct)*255, (1-pct)*255);
-            },
-            0.5
+            }
         )
     );
 

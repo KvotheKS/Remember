@@ -15,7 +15,7 @@
 #include <algorithm>
 
 
-class RigidBody : public Component{
+class RigidBody : public GameObject{
 private:
 public:
     RigidBody(GameObject& associated,int modo);

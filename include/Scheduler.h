@@ -8,7 +8,7 @@
 
 struct __info
 {
-    Component* cpt;
+    GameObject* cpt;
     float depth;
     float x, y;
 };
@@ -33,6 +33,6 @@ class Scheduler
     static std::vector<__info> textureVec;
 public:
     static void Render();
-    static void Push(Component* cpt, float depth = 0.0f, float x = -1, float y = -1);
+    static void Push(GameObject* cpt, float depth = 0.0f, float x = -1, float y = -1);
     static void Clear();
 };

@@ -1,7 +1,7 @@
 #include "TileMap.h"
 #include "Scheduler.h"
 
-TileMap::TileMap(GameObject& associated, std::string file, TileSet* tileSet) : Component(associated){
+TileMap::TileMap(GameObject& associated, std::string file, TileSet* tileSet) : GameObject(associated){
     Load(file);
     this->tileSet = tileSet;
 }

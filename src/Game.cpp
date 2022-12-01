@@ -9,6 +9,9 @@ Game::Game(std::string title, int width, int height){
         exit(EXIT_FAILURE);
     }
 
+    std::cin.tie(0);
+    std::cout.tie(0);
+
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0){
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);

@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "Scheduler.h"
 
-Sprite::Sprite(GameObject& associated) : Component(associated){
+Sprite::Sprite(GameObject& associated) : GameObject(associated){
     texture = nullptr;
     scale = Vec2(1, 1);
 }

@@ -6,7 +6,7 @@
 #include "Vec2.h"
 #include <string>
 
-class Bullet : public Component {
+class Bullet : public GameObject {
     private:
         Vec2 speed;
         float distanceLeft;

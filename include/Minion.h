@@ -9,7 +9,7 @@
 #include <string>
 #include <cstdlib>
 
-class Minion : public Component {
+class Minion : public GameObject {
     private:
         std::weak_ptr<GameObject> alienCenter;
         float arc;

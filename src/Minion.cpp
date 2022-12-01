@@ -2,7 +2,7 @@
 #include "Game.h"
 
 Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, float arcOffsetDeg)
-: Component(associated){
+: GameObject(associated){
     Sprite* minion = new Sprite(associated, "assets/img/minion.png");
     float scale = (((float) rand() / (float) RAND_MAX) * 0.5) + 1.0;
     minion->SetScaleX(scale, scale);

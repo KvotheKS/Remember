@@ -3,7 +3,7 @@
 #include "Component.h"
 #include "GameObject.h"
 
-class FpsPrinter : public Component
+class FpsPrinter : public GameObject
 {
     int count;
     float dt;

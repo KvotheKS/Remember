@@ -17,7 +17,7 @@
 #define MIN_SPEED -250
 #define THRESHOLD 5
 
-class PenguinBody : public Component {
+class PenguinBody : public GameObject {
     private:
         std::weak_ptr<GameObject> pcannon;
         Vec2 speed;

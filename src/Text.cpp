@@ -3,7 +3,7 @@
 #include "Scheduler.h"
 
 Text::Text(GameObject& associated, std::string fontFile, int fontSize, TextStyle style, std::string text,
-           SDL_Color color, float cooldown) : Component(associated){
+           SDL_Color color, float cooldown) : GameObject(associated){
     this->fontFile = fontFile;
     this->fontSize = fontSize;
     this->style = style;

@@ -6,7 +6,7 @@
 #include "Rect.h"
 #include <string>
 
-class Collider : public Component {
+class Collider : public GameObject {
     private:
         Vec2 scale;
         Vec2 offset;

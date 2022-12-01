@@ -7,22 +7,29 @@
 
 class GameObject {
     private:
-        std::vector<std::unique_ptr<Component>> components;
+        std::vector<std::unique_ptr<GameObject>> components;
+    protected:
+        GameObject& associated;
         bool isDead;
     public:
-        Rect box;
+        Rect box, relative;
         bool started;
         double angleDeg;
         float depth;
-        GameObject();
+        GameObject(GameObject& associated = *((GameObject*)nullptr));
         ~GameObject();
-        void Start();
-        void Update(float dt);
-        void Render();
+        virtual void Start();
+        void UpdateNodes(float dt);
+        void RenderNodes();
+        virtual void Update(float dt);
+        virtual void Render();
+        virtual void Print(float x = -1, float y = -1);
+        virtual bool Is(std::string type);
+        virtual std::string Is();
+        virtual void NotifyCollision(GameObject& other);
         bool IsDead();
         void RequestDelete();
-        void AddComponent(Component* cpt);
-        void RemoveComponent(Component* cpt);
-        Component* GetComponent(std::string type);
-        void NotifyCollision(GameObject& other);
+        void AddComponent(GameObject* cpt);
+        void RemoveComponent(GameObject* cpt);
+        GameObject* GetComponent(std::string type);
 };

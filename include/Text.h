@@ -11,7 +11,7 @@
 #include <memory>
 #include <iostream>
 
-class Text : public Component {
+class Text : public GameObject {
     public:
         enum TextStyle {SOLID, SHADED, BLENDED};
     private:

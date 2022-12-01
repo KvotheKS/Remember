@@ -15,7 +15,7 @@
 #include <memory>
 #include <string>
 
-class Alien : public Component {
+class Alien : public GameObject {
     private:
         Vec2 speed;
         int hp;

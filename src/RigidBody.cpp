@@ -1,7 +1,7 @@
 #include "RigidBody.h"
 
 
-RigidBody::RigidBody(GameObject& associated, int modo):Component(associated), modo(modo){
+RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), modo(modo){
     Sprite* pbody = new Sprite(associated, "assets/img/testblock.jpg");
     associated.AddComponent(pbody);
 

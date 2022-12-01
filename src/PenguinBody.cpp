@@ -3,7 +3,7 @@
 
 PenguinBody* PenguinBody::player = nullptr;
 
-PenguinBody::PenguinBody(GameObject& associated) : Component(associated){
+PenguinBody::PenguinBody(GameObject& associated) : GameObject(associated){
     Sprite* pbody = new Sprite(associated, "assets/img/penguin.png");
     associated.AddComponent(pbody);
 

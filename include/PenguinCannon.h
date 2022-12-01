@@ -11,7 +11,7 @@
 #include <string>
 #include <memory>
 
-class PenguinCannon : public Component {
+class PenguinCannon : public GameObject {
     private:
         std::weak_ptr<GameObject> pbody;
         float angle;

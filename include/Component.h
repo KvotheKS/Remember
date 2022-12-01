@@ -3,9 +3,12 @@
 
 class GameObject;
 
-class Component {
+class Component{
     protected:
         GameObject& associated;
+        // Rect absolute, relative;
+        // std::vector<std::unique_ptr<Component>> components;
+        bool isDead;
     public:
         Component(GameObject& associated);
         virtual ~Component();

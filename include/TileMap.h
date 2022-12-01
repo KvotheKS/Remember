@@ -9,7 +9,7 @@
 #include <iostream>
 #include <sstream>
 
-class TileMap : public Component {
+class TileMap : public GameObject {
     private:
         std::vector<int> tileMatrix;
         TileSet* tileSet;

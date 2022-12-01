@@ -17,7 +17,7 @@ void Scheduler::Render()
     Scheduler::Clear();
 }
 
-void Scheduler::Push(Component* cpt, float depth, float x, float y)
+void Scheduler::Push(GameObject* cpt, float depth, float x, float y)
 { Scheduler::textureVec.push_back({cpt, depth, x, y}); }
 
 void Scheduler::Clear()

@@ -8,7 +8,7 @@
     bool Collider::debugMode = false;
 #endif
 
-Collider::Collider(GameObject& associated, Vec2 scale, Vec2 offset) : Component(associated){
+Collider::Collider(GameObject& associated, Vec2 scale, Vec2 offset) : GameObject(associated){
     this->scale = scale;
     this->offset = offset;
 }
@@ -31,8 +31,9 @@ void Collider::Render()
 }
 
 void Collider::Print(float x, float y){
-    if(debugMode){
-
+    this->Update(0);
+        
+    if(debugMode){    
         associated.depth = associated.depth + 100; //fodase tudo que tem collider fica em cima removame depois -m
         
         Vec2 center = box.GetCenter();

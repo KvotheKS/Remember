@@ -3,7 +3,7 @@
 
 int Alien::alienCount = 0;
 
-Alien::Alien(GameObject& associated, int nMinions, float timeOffset) : Component(associated){
+Alien::Alien(GameObject& associated, int nMinions, float timeOffset) : GameObject(associated){
     Sprite* alien = new Sprite(associated, "assets/img/alien.png");
     associated.AddComponent(alien);
 
