@@ -1,6 +1,6 @@
 #pragma once
-#include "Component.h"
 #include "GameObject.h"
+#include "Component.h"
 #include "TileSet.h"
 #include "Camera.h"
 #include <vector>

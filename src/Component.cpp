@@ -1,15 +1,15 @@
 #include "Component.h"
 
-Component::Component(GameObject& associated) : associated(associated){
-}
+// Component::Component(GameObject& associated) : associated(associated){
+// }
 
-Component::~Component(){
-}
+// Component::~Component(){
+// }
 
-void Component::Start(){
-}
+// void Component::Start(){
+// }
 
-void Component::NotifyCollision(GameObject& other,Vec2 sep){
-}
+// void Component::NotifyCollision(GameObject& other,Vec2 sep){
+// }
 
-void Component::Print(float x, float y){}
+// void Component::Print(float x, float y){}

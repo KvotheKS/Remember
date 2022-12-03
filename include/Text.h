@@ -3,8 +3,8 @@
 #define INCLUDE_SDL_TTF
 #include "SDL_include.h"
 #include "Resources.h"
-#include "Component.h"
 #include "GameObject.h"
+#include "Component.h"
 #include "Camera.h"
 #include "Timer.h"
 #include <string>

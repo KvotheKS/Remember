@@ -1,4 +1,5 @@
 #include "RigidBody.h"
+#include "TerrainBody.h"
 #include <iostream>
 #include "Game.h"
 // define pra test -m

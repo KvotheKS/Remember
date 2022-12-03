@@ -1,7 +1,7 @@
 #pragma once
 #define INCLUDE_SDL
 #include "SDL_include.h"
-#include "Component.h"
+#include "GameObject.h"
 #include <memory>
 #include <string>
 #include <vector>

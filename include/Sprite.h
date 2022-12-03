@@ -1,9 +1,9 @@
 #pragma once
 #define INCLUDE_SDL
 #include "SDL_include.h"
-#include "Resources.h"
-#include "Component.h"
 #include "GameObject.h"
+#include "Component.h"
+#include "Resources.h"
 #include "Camera.h"
 #include "Timer.h"
 #include "Vec2.h"

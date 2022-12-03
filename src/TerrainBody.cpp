@@ -1,11 +1,12 @@
 #include "TerrainBody.h"
+#include "RigidBody.h"
 #include <iostream>
 
 // define pra test -m
 using namespace std;
 #define p(x) cout << #x << ": " << x << endl;
 
-TerrainBody::TerrainBody(GameObject& associated):Component(associated){
+TerrainBody::TerrainBody(GameObject& associated):GameObject(associated){
     Sprite* pbody = new Sprite(associated, "assets/img/testterrain.png");
     associated.AddComponent(pbody);
 

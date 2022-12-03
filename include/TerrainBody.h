@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "Component.h"
 #include "GameObject.h"
+#include "Component.h"
 #include "InputManager.h"
 #include "Camera.h"
 #include "Sprite.h"
@@ -17,7 +17,7 @@
 #include <algorithm>
 
 
-class TerrainBody : public Component{
+class TerrainBody : public GameObject {
 private:
 public:
     TerrainBody(GameObject& associated);
@@ -28,7 +28,4 @@ public:
     void Render();
     bool Is(std::string type);
     void NotifyCollision(GameObject& other,Vec2 sep);
-
-    
-   
 };
