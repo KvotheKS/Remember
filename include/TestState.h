@@ -10,6 +10,8 @@
 #include "Alien.h"
 #include "PenguinBody.h"
 #include "RigidBody.h"
+#include "TerrainBody.h"
+
 #include "Collider.h"
 #include "Collision.h"
 #include "GameData.h"

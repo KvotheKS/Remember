@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-
+#include "Vec2.h"
 class GameObject;
 
 class Component{
@@ -17,5 +17,5 @@ class Component{
         virtual void Render() = 0;
         virtual void Print(float x = -1, float y = -1);
         virtual bool Is(std::string type) = 0;
-        virtual void NotifyCollision(GameObject& other);
+        virtual void NotifyCollision(GameObject& other,Vec2 sep);
 };

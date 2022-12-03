@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Collider.h"
 
 GameObject::GameObject(GameObject& associated) : associated(associated) 
 {
@@ -15,6 +16,7 @@ GameObject::~GameObject(){
 void GameObject::Start(){
     for(unsigned i = 0; i < components.size(); i++)
         components[i]->Start();
+    
     started = true;
 }
 
@@ -23,8 +25,15 @@ void GameObject::UpdateNodes(float dt)
     for(unsigned i = 0; i < components.size(); i++)
     {
         components[i]->Update(dt);
+
         components[i]->box = box + relative;
         components[i]->UpdateNodes(dt);
+
+    // para garantir que o collider seja atualizado depois de sprite, ele esta sendo atualizado 2 vezes todo frame
+    // pra concertar isso teria que ter um scheduler no Update() tambem.                                            -m
+    if(Collider* collider = (Collider*)GetComponent("Collider")){
+        collider->Update(dt);
+
     }
 }
 
@@ -89,6 +98,9 @@ std::vector<GameObject*> GameObject::GetComponents(std::string type)
 }
 
 void GameObject::NotifyCollision(GameObject& other){
+}
+
+void GameObject::NotifyCollision(GameObject& other,Vec2 sep){
     for(unsigned i = 0; i < components.size(); i++)
-        components[i]->NotifyCollision(other);
+        components[i]->NotifyCollision(other,sep);
 }

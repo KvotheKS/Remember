@@ -9,8 +9,10 @@ class State {
         bool quitRequested;
         bool started;
         std::vector<std::shared_ptr<GameObject>> objectArray;
+        
         virtual void StartArray();
         virtual void UpdateArray(float dt);
+        
         virtual void RenderArray();
         virtual void KillDeads();
     public:
@@ -26,4 +28,6 @@ class State {
         virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* object);
         bool PopRequested();
         bool QuitRequested();
+      
+        std::vector<std::shared_ptr<GameObject>> cameraFollowerObjectArray; //!! scheduler de update will fix this T_T
 };

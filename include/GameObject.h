@@ -1,5 +1,7 @@
 #pragma once
 #include "Component.h"
+#include "TerrainBody.h"
+#include "RigidBody.h"
 #include "Rect.h"
 #include <vector>
 #include <memory>
@@ -30,9 +32,12 @@ class GameObject {
         virtual void NotifyCollision(GameObject& other);
         bool IsDead();
         void RequestDelete();
+
         void AddComponent(GameObject* cpt);
         void AddComponents(std::initializer_list<GameObject*> cpts);
         void RemoveComponent(GameObject* cpt);
         GameObject* GetComponent(std::string type);
         std::vector<GameObject*> GetComponents(std::string type);
+        void NotifyCollision(GameObject& other,Vec2 sep);
+
 };

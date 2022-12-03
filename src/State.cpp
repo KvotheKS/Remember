@@ -16,6 +16,7 @@ void State::StartArray(){
     started = true;
 }
 
+
 void State::UpdateArray(float dt){
     for(unsigned i = 0; i < objectArray.size(); i++)
     {
@@ -30,6 +31,8 @@ void State::RenderArray(){
         objectArray[i]->Render();
         objectArray[i]->RenderNodes();
     }
+    for(unsigned i = 0; i < cameraFollowerObjectArray.size(); i++) //!! 
+        cameraFollowerObjectArray[i]->Render();
 }
 
 void State::KillDeads()

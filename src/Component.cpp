@@ -9,7 +9,7 @@ Component::~Component(){
 void Component::Start(){
 }
 
-void Component::NotifyCollision(GameObject& other){
+void Component::NotifyCollision(GameObject& other,Vec2 sep){
 }
 
 void Component::Print(float x, float y){}

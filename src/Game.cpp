@@ -2,6 +2,10 @@
 #include "Scheduler.h"
 #include "PingusState.h"
 
+
+
+
+
 std::unique_ptr<Game> Game::instance = nullptr;
 
 Game::Game(std::string title, int width, int height){
@@ -112,7 +116,8 @@ void Game::Run(){
         Scheduler::Render();
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(33);
+        SDL_Delay(15);
+        
     }
 
     while(!stateStack.empty())
@@ -130,7 +135,7 @@ State& Game::GetCurrentState(){
 
 Game& Game::GetInstance(){
     if(!instance)
-        instance.reset(new Game("Remember - 190031026", 1024, 600));
+        instance.reset(new Game("Remember - ♪♫", 1024, 600));
     return *instance;
 }
 

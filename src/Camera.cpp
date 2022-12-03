@@ -1,6 +1,12 @@
 #include "Camera.h"
 #include "Game.h"
 
+#include <iostream>
+
+// define pra test -m
+using namespace std;
+#define p(x) cout << #x << ": " << x <<" ";
+
 GameObject* Camera::focus = nullptr;
 Vec2 Camera::pos = Vec2();
 Vec2 Camera::speed = Vec2();
@@ -16,6 +22,7 @@ void Camera::Unfollow(){
 
 void Camera::Update(float dt){
     lpos = pos;
+
     if(focus != nullptr){
         int width, height;
         Vec2 focusCenter = focus->box.GetCenter();
@@ -23,8 +30,15 @@ void Camera::Update(float dt){
         SDL_GetRendererOutputSize(Game::GetInstance().GetRenderer(), &width, &height);
         pos.x = focusCenter.x - width/2;
         pos.y = focusCenter.y - height/2;
+
+        State& state = Game::GetInstance().GetCurrentState();
+    
+        for(unsigned i = 0; i < state.cameraFollowerObjectArray.size(); i++)
+            state.cameraFollowerObjectArray[i]->Update(dt);
+        
     }
     else{
+
         int linearSpeed = 325;
         InputManager& inManager = InputManager::GetInstance();
         Vec2 direction = Vec2();
@@ -41,4 +55,5 @@ void Camera::Update(float dt){
 
         pos += speed * dt;
     }
+    
 }
