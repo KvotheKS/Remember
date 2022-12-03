@@ -12,6 +12,7 @@ class State {
         virtual void StartArray();
         virtual void UpdateArray(float dt);
         virtual void RenderArray();
+        virtual void KillDeads();
     public:
         State();
         virtual ~State();

@@ -18,14 +18,22 @@ void GameObject::Start(){
     started = true;
 }
 
-void GameObject::UpdateNodes(float dt){
+void GameObject::UpdateNodes(float dt)
+{
     for(unsigned i = 0; i < components.size(); i++)
+    {
         components[i]->Update(dt);
+        components[i]->box = box + relative;
+        components[i]->UpdateNodes(dt);
+    }
 }
 
 void GameObject::RenderNodes(){
     for(unsigned i = 0; i < components.size(); i++)
+    {    
         components[i]->Render();
+        components[i]->RenderNodes();
+    }
 }
 
 void GameObject::Update(float dt){}
@@ -49,6 +57,11 @@ void GameObject::AddComponent(GameObject* cpt){
         cpt->Start();
 }
 
+void GameObject::AddComponents(std::initializer_list<GameObject*> cpts)
+{
+    for(auto& it : cpts) AddComponent(it);
+}
+
 void GameObject::RemoveComponent(GameObject* cpt){
     for(unsigned i = 0; i < components.size(); i++){
         if(components[i].get() == cpt){
@@ -63,6 +76,16 @@ GameObject* GameObject::GetComponent(std::string type){
         if(components[i]->Is(type))
             return components[i].get();
     return nullptr;
+}
+
+std::vector<GameObject*> GameObject::GetComponents(std::string type)
+{
+    std::vector<GameObject*> ret;
+    
+    for(unsigned i = 0; i < components.size(); i++)
+        if(components[i]->Is(type))
+            ret.push_back(components[i].get());
+    return ret;
 }
 
 void GameObject::NotifyCollision(GameObject& other){

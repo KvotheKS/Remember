@@ -32,6 +32,18 @@ void State::RenderArray(){
     }
 }
 
+void State::KillDeads()
+{
+    for(unsigned i = 0; i < objectArray.size(); i++)
+    {
+        if(objectArray[i]->IsDead())
+        {
+            objectArray.erase(objectArray.begin() + i);
+            i--;
+        }
+    }
+}
+
 std::weak_ptr<GameObject> State::AddObject(GameObject* object){
     std::shared_ptr<GameObject> shrd_obj(object);
     objectArray.push_back(shrd_obj);

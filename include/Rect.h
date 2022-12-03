@@ -7,7 +7,9 @@ class Rect {
         Rect();
         Rect(float x, float y, float w, float h);
         Rect operator+(Vec2 vec);
+        Rect operator+(Rect rct);
         Rect& operator+=(Vec2 vec);
+        Rect& operator+=(Rect rct);
         friend Rect operator+(Vec2 vec, Rect rect);
         Vec2 GetCenter();
         void SetCenter(float x, float y);

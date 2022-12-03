@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Scheduler.h"
+#include "PingusState.h"
 
 std::unique_ptr<Game> Game::instance = nullptr;
 
@@ -107,7 +108,9 @@ void Game::Run(){
         InputManager::GetInstance().Update();
         GetCurrentState().Update(dt);
         GetCurrentState().Render();
+        
         Scheduler::Render();
+
         SDL_RenderPresent(renderer);
         SDL_Delay(33);
     }

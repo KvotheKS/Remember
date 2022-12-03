@@ -8,6 +8,7 @@
 #include "Resources.h"
 #include "State.h"
 #include "TitleState.h"
+#include "PingusState.h"
 #include <iostream>
 #include <memory>
 #include <string>

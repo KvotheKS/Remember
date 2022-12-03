@@ -16,6 +16,7 @@ class GameObject {
         bool started;
         double angleDeg;
         float depth;
+    public:
         GameObject(GameObject& associated = *((GameObject*)nullptr));
         ~GameObject();
         virtual void Start();
@@ -30,6 +31,8 @@ class GameObject {
         bool IsDead();
         void RequestDelete();
         void AddComponent(GameObject* cpt);
+        void AddComponents(std::initializer_list<GameObject*> cpts);
         void RemoveComponent(GameObject* cpt);
         GameObject* GetComponent(std::string type);
+        std::vector<GameObject*> GetComponents(std::string type);
 };

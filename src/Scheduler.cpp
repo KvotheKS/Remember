@@ -10,6 +10,9 @@ bool SchedulerComp(__info a, __info b)
 
 void Scheduler::Render()
 {
+    SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
+    SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+    SDL_RenderClear(renderer);    
     std::stable_sort(Scheduler::textureVec.begin(), Scheduler::textureVec.end(), SchedulerComp);
     for(auto& it : Scheduler::textureVec)
         it.cpt->Print(it.x, it.y);
