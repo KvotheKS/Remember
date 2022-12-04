@@ -129,8 +129,9 @@ void StageState::Update(float dt){
 
             if((Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).first){
                 Vec2 sep = (Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).second;
-                objectArray[i]->NotifyCollision(*objectArray[j],sep);
-                objectArray[j]->NotifyCollision(*objectArray[i],sep);
+                
+                objectArray[i]->NotifyCollisionBehavior(*objectArray[j],sep);
+                objectArray[j]->NotifyCollisionBehavior(*objectArray[i],sep);
             }
         }
     }

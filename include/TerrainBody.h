@@ -28,4 +28,5 @@ public:
     void Render();
     bool Is(std::string type);
     void NotifyCollision(GameObject& other,Vec2 sep);
+   
 };

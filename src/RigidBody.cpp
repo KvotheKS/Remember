@@ -58,7 +58,7 @@ bool RigidBody::Is(std::string type){
     return type == "RigidBody";
 }
 void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
-
+ 
     if(TerrainBody * body = (TerrainBody*)other.GetComponent("TerrainBody")){
         // Lidar com Contato na Direita -m
         if(associated.box.GetCenter().x > other.box.GetCenter().x){
@@ -124,12 +124,7 @@ void RigidBody::Controls(float dt){
 
 void RigidBody::Physics(float dt){
       
-    // Queda
-    // double angle = 0;
-    // float rad = (angle) * M_PI/180;
-    // speed += Vec2(0,FALL_ACCELERATION*dt).Rotate(rad) * dt;
-
-   
+    // Queda 
     speed.y += FALL_ACCELERATION*dt; 
 
     
@@ -170,6 +165,6 @@ void RigidBody::Physics(float dt){
     associated.box.SetCenter(center.x,center.y);
 
 }
-int MoveonTopof(GameObject& target){
+void MoveonTopof(GameObject& target){
 
 }

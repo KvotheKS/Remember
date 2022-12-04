@@ -83,6 +83,7 @@ bool PenguinBody::Is(std::string type){
 }
 
 void PenguinBody::NotifyCollision(GameObject& other){
+    cout << "here\n";
     Bullet* bullet = (Bullet*) other.GetComponent("Bullet");
     if(bullet != nullptr && bullet->targetsPlayer){
         hp -= bullet->GetDamage();

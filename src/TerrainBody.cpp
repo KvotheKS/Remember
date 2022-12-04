@@ -30,10 +30,13 @@ bool TerrainBody::Is(std::string type){
     return type == "TerrainBody";
 }
 void TerrainBody::NotifyCollision(GameObject& other,Vec2 sep){
+    
     if(RigidBody * body = (RigidBody*)other.GetComponent("RigidBody")){
         
     }
 
-    
-    
 }
+
+
+
+

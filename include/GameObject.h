@@ -29,7 +29,7 @@ class GameObject {
         virtual void Print(float x = -1, float y = -1);
         virtual bool Is(std::string type);
         virtual std::string Is();
-        virtual void NotifyCollision(GameObject& other);
+       
         bool IsDead();
         void RequestDelete();
 
@@ -38,6 +38,8 @@ class GameObject {
         void RemoveComponent(GameObject* cpt);
         GameObject* GetComponent(std::string type);
         std::vector<GameObject*> GetComponents(std::string type);
-        void NotifyCollision(GameObject& other,Vec2 sep);
+
+        virtual void NotifyCollision(GameObject& other,Vec2 sep);
+        void NotifyCollisionBehavior(GameObject& other,Vec2 sep);
 
 };

@@ -15,8 +15,9 @@ TestState::~TestState(){
 }
 
 void TestState::LoadAssets(){
+
     GameObject* goBackground = new GameObject();
-    goBackground->depth = -1;
+    goBackground->depth = 1;
     Sprite* bg = new Sprite(*goBackground, "assets/img/space.jpg");
     goBackground->AddComponent(bg);
 
@@ -37,13 +38,13 @@ void TestState::LoadAssets(){
 
     
     
-    GameObject* fpsChecker = new GameObject();
-    fpsChecker->depth = 9999;
-    fpsChecker->AddComponent(new FpsPrinter(*fpsChecker));
-    std::string file = "assets/font/Call me maybe.ttf";
-    fpsChecker->AddComponent(new Text(*fpsChecker, file, 35, Text::TextStyle::BLENDED, "0", {0, 100, 255, 255}, 0.35));
-    fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
-    objectArray.emplace_back(fpsChecker);
+    // GameObject* fpsChecker = new GameObject();
+    // fpsChecker->depth = 9999;
+    // fpsChecker->AddComponent(new FpsPrinter(*fpsChecker));
+    // std::string file = "assets/font/Call me maybe.ttf";
+    // fpsChecker->AddComponent(new Text(*fpsChecker, file, 35, Text::TextStyle::BLENDED, "0", {0, 100, 255, 255}, 0.35));
+    // fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
+    // objectArray.emplace_back(fpsChecker);
     
     GameObject* goBox1 = new GameObject();
         RigidBody* box = new RigidBody(*goBox1,1);
@@ -54,6 +55,7 @@ void TestState::LoadAssets(){
     backgroundMusic.Play();
 
     Camera::Follow(goBox1);
+
     for(int i = 0; i<15; i++){
         GameObject* goBox2 = new GameObject();
         TerrainBody* box2 = new TerrainBody(*goBox2);
@@ -123,8 +125,9 @@ void TestState::Update(float dt){
 
             if((Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).first){
                 Vec2 sep = (Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).second;
-                objectArray[i]->NotifyCollision(*objectArray[j],sep);
-                objectArray[j]->NotifyCollision(*objectArray[i],sep);
+               
+                objectArray[i]->NotifyCollisionBehavior(*objectArray[j],sep);
+                objectArray[j]->NotifyCollisionBehavior(*objectArray[i],sep);
             }
         }
     }

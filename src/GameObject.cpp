@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Collider.h"
+#include "TerrainBody.h"
 
 GameObject::GameObject(GameObject& associated) : associated(associated) 
 {
@@ -98,10 +99,13 @@ std::vector<GameObject*> GameObject::GetComponents(std::string type)
     return ret;
 }
 
-void GameObject::NotifyCollision(GameObject& other){
-}
-
-void GameObject::NotifyCollision(GameObject& other,Vec2 sep){
-    for(unsigned i = 0; i < components.size(); i++)
+void GameObject::NotifyCollisionBehavior(GameObject& other,Vec2 sep){
+    NotifyCollision(other,sep);
+    for(unsigned i = 0; i < components.size(); i++){
+        
         components[i]->NotifyCollision(other,sep);
+    }
+}
+void GameObject::NotifyCollision(GameObject& other,Vec2 sep){ 
+        
 }
