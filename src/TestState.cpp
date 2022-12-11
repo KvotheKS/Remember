@@ -60,7 +60,7 @@ void TestState::LoadAssets(){
         GameObject* goBox2 = new GameObject();
         TerrainBody* box2 = new TerrainBody(*goBox2);
         goBox2->AddComponent(box2);
-        goBox2->box.SetCenter(i*100, 500);
+        goBox2->box.SetCenter(i*100-500, 500);
         goBox2->angleDeg = 0;
         objectArray.emplace_back(goBox2);
     }
@@ -103,13 +103,15 @@ void TestState::Update(float dt){
     }
         
 
-    
+    /* ordem de update necessaria
 
+    */
+    
     UpdateArray(dt);
     Camera::Update(dt);
     
     
-    
+     
 
     for(unsigned i = 0; i < objectArray.size(); i++){
         Collider* colliderA = (Collider*) objectArray[i]->GetComponent("Collider");

@@ -111,9 +111,10 @@ void StageState::Update(float dt){
     if(inManager.KeyPress(F3_KEY))
         Collider::debugMode = !Collider::debugMode;
 
-    Camera::Update(dt);
+   
 
     UpdateArray(dt);
+    Camera::Update(dt);
 
     for(unsigned i = 0; i < objectArray.size(); i++){
         Collider* colliderA = (Collider*) objectArray[i]->GetComponent("Collider");

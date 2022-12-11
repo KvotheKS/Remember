@@ -34,17 +34,20 @@ void Camera::Update(float dt){
         State& state = Game::GetInstance().GetCurrentState();
     
         for(unsigned i = 0; i < state.cameraFollowerObjectArray.size(); i++)
-            state.cameraFollowerObjectArray[i]->Update(dt);
+            state.cameraFollowerObjectArray[i]->UpdateNodes(dt);
         
     }
     else{
-
+        std::cout << "down\n";
         int linearSpeed = 325;
         InputManager& inManager = InputManager::GetInstance();
         Vec2 direction = Vec2();
 
-        if(inManager.IsKeyDown(LEFT_ARROW_KEY))
+        if(inManager.IsKeyDown(LEFT_ARROW_KEY)){
+            
             direction -= Vec2(1, 0);
+        }
+            
         if(inManager.IsKeyDown(RIGHT_ARROW_KEY))
             direction += Vec2(1, 0);
         if(inManager.IsKeyDown(UP_ARROW_KEY))

@@ -34,7 +34,9 @@ public:
     int modo;
 
     Vec2 speed;
+    Vec2 oldbox;
     bool grounded;
+
 
     bool inputdone;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE

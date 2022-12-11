@@ -31,8 +31,11 @@ void State::RenderArray(){
         objectArray[i]->Render();
         objectArray[i]->RenderNodes();
     }
-    for(unsigned i = 0; i < cameraFollowerObjectArray.size(); i++) //!! 
+    for(unsigned i = 0; i < cameraFollowerObjectArray.size(); i++){
         cameraFollowerObjectArray[i]->Render();
+        cameraFollowerObjectArray[i]->RenderNodes();
+    }
+        
 }
 
 void State::KillDeads()

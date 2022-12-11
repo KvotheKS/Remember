@@ -16,6 +16,7 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     associated.AddComponent(collider);
 
     speed =  Vec2(0,0);
+    oldbox = Vec2(0,0);
     grounded = false;
     inputdone = false;
 
@@ -46,6 +47,11 @@ void RigidBody::Update(float dt){
     Controls(dt);
     Physics(dt);
 
+    // p(MAX_MOVE_SPEED*dt)
+    // p(box.x-oldbox.x)p(box.y-oldbox.y)cout << endl;
+    // oldbox.x = box.x;
+    // oldbox.y = box.y;
+    
     grounded = false;
     inputdone = false;
     
@@ -79,10 +85,11 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
             
 
         }
+        // Lidar com Contato a baixo -m
         else{
             associated.box.y -= sep.y;
         }
-        // Lidar com Contato a baixo -m
+        
         if(Collider* collider = (Collider*)associated.GetComponent("Collider")){
         collider->Update(0);
         }
@@ -120,6 +127,13 @@ void RigidBody::Controls(float dt){
         associated.box.y = inManager.GetMouseY() + Camera::pos.y;
         speed = Vec2(0,0);
     }
+
+    if(inManager.MousePress(RIGHT_MOUSE_BUTTON) && modo == 1){
+        // associated.box.x = 0;
+        // associated.box.y = 0;
+        speed = Vec2(-100,0);
+        
+    }
 }
 
 void RigidBody::Physics(float dt){
@@ -127,7 +141,7 @@ void RigidBody::Physics(float dt){
     // Queda 
     speed.y += FALL_ACCELERATION*dt; 
 
-    
+    // slow down
     if(!inputdone){
             // desacelerar
         if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
@@ -139,16 +153,16 @@ void RigidBody::Physics(float dt){
         }
     }
 
-    
-              
+           
 
     // // limitar velocidade geral
     // if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
     //     speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
     // }
 
-    // limitar velocidade lateral
-    if(abs(speed.x) > MAX_MOVE_SPEED*dt){         
+    //limitar velocidade lateral
+    if(abs(speed.x) > MAX_MOVE_SPEED*dt){ 
+
         speed = Vec2((speed.x/abs(speed.x))*MAX_MOVE_SPEED*dt, speed.y );          
     }
 
