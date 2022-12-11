@@ -3,6 +3,10 @@
 #include <iostream> //por que n ter? -m
 using namespace std;
 
+// define pra test -m
+using namespace std;
+#define p(x) cout << #x << ": " << x <<" ";
+
 #define PI 3.14159265358979323846
 
 class Vec2 {

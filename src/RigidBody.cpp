@@ -9,7 +9,7 @@ using namespace std;
 
 
 RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), modo(modo){
-    Sprite* pbody = new Sprite(associated, "assets/img/testblock.jpg");
+    Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
     associated.AddComponent(pbody);
 
     Collider* collider = new Collider(associated);
@@ -68,20 +68,26 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
     if(TerrainBody * body = (TerrainBody*)other.GetComponent("TerrainBody")){
         // Lidar com Contato na Direita -m
         if(associated.box.GetCenter().x > other.box.GetCenter().x){
+            
             associated.box.x += sep.x;
         }
 
         // Lidar com Contato na Esquerda -m
         else{
+
             associated.box.x -= sep.x;
         }
 
         // Lidar com Contato no Topo -m
         if(associated.box.GetCenter().y < other.box.GetCenter().y){
-            speed = Vec2(speed.x,0);
-            grounded = true; 
-            associated.box.y += sep.y;
-            Camera::Update(0);
+            if(abs(sep.x) < abs(sep.y)){
+                
+                speed = Vec2(speed.x,0);
+                grounded = true; 
+                associated.box.y += sep.y;
+            }
+            
+            
             
 
         }
@@ -89,7 +95,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         else{
             associated.box.y -= sep.y;
         }
-        
+        Camera::Update(0);
         if(Collider* collider = (Collider*)associated.GetComponent("Collider")){
         collider->Update(0);
         }
@@ -141,9 +147,8 @@ void RigidBody::Physics(float dt){
     // Queda 
     speed.y += FALL_ACCELERATION*dt; 
 
-    // slow down
-    if(!inputdone){
-            // desacelerar
+    // desacelerar
+    if(!inputdone){   
         if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
             speed.x = 0;
         else if(speed.x > 0){
@@ -153,16 +158,13 @@ void RigidBody::Physics(float dt){
         }
     }
 
-           
-
-    // // limitar velocidade geral
+    // // limitar velocidade global
     // if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
     //     speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
     // }
 
     //limitar velocidade lateral
     if(abs(speed.x) > MAX_MOVE_SPEED*dt){ 
-
         speed = Vec2((speed.x/abs(speed.x))*MAX_MOVE_SPEED*dt, speed.y );          
     }
 

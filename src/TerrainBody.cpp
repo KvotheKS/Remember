@@ -2,9 +2,7 @@
 #include "RigidBody.h"
 #include <iostream>
 
-// define pra test -m
-using namespace std;
-#define p(x) cout << #x << ": " << x << endl;
+
 
 TerrainBody::TerrainBody(GameObject& associated):GameObject(associated){
     Sprite* pbody = new Sprite(associated, "assets/img/testterrain.png");
@@ -31,9 +29,9 @@ bool TerrainBody::Is(std::string type){
 }
 void TerrainBody::NotifyCollision(GameObject& other,Vec2 sep){
     
-    if(RigidBody * body = (RigidBody*)other.GetComponent("RigidBody")){
+    // if(RigidBody * body = (RigidBody*)other.GetComponent("RigidBody")){
         
-    }
+    // }
 
 }
 

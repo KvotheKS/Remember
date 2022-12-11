@@ -17,9 +17,9 @@
 
 class RigidBody : public GameObject{
 private:
-    void MoveonTopof(GameObject& target);
     void Controls(float dt);
     void Physics(float dt);
+    void MoveonTopof(GameObject& target);
     
 public:
     RigidBody(GameObject& associated,int modo);

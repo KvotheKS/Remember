@@ -17,15 +17,15 @@ TestState::~TestState(){
 void TestState::LoadAssets(){
 
     GameObject* goBackground = new GameObject();
-    goBackground->depth = 1;
-    Sprite* bg = new Sprite(*goBackground, "assets/img/space.jpg");
-    goBackground->AddComponent(bg);
+        goBackground->depth = 1;
+        Sprite* bg = new Sprite(*goBackground, "assets/img/space.jpg");
+        goBackground->AddComponent(bg);
 
-    CameraFollower* cf = new CameraFollower(*goBackground);
-    goBackground->AddComponent(cf);
+        CameraFollower* cf = new CameraFollower(*goBackground);
+        goBackground->AddComponent(cf);
 
-    goBackground->box.x = 0;
-    goBackground->box.y = 0;
+        goBackground->box.x = 0;
+        goBackground->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground);
 
     // GameObject* goTileMap = new GameObject();
@@ -38,13 +38,13 @@ void TestState::LoadAssets(){
 
     
     
-    // GameObject* fpsChecker = new GameObject();
-    // fpsChecker->depth = 9999;
-    // fpsChecker->AddComponent(new FpsPrinter(*fpsChecker));
-    // std::string file = "assets/font/Call me maybe.ttf";
-    // fpsChecker->AddComponent(new Text(*fpsChecker, file, 35, Text::TextStyle::BLENDED, "0", {0, 100, 255, 255}, 0.35));
-    // fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
-    // objectArray.emplace_back(fpsChecker);
+    GameObject* fpsChecker = new GameObject();
+        fpsChecker->depth = 9999;
+        fpsChecker->AddComponent(new FpsPrinter(*fpsChecker));
+        std::string file = "assets/font/Call me maybe.ttf";
+        fpsChecker->AddComponent(new Text(*fpsChecker, file, 35, Text::TextStyle::BLENDED, "0", {0, 100, 255, 255}, 0.35));
+        fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
+    cameraFollowerObjectArray.emplace_back(fpsChecker);
     
     GameObject* goBox1 = new GameObject();
         RigidBody* box = new RigidBody(*goBox1,1);
@@ -58,10 +58,10 @@ void TestState::LoadAssets(){
 
     for(int i = 0; i<15; i++){
         GameObject* goBox2 = new GameObject();
-        TerrainBody* box2 = new TerrainBody(*goBox2);
-        goBox2->AddComponent(box2);
-        goBox2->box.SetCenter(i*100-500, 500);
-        goBox2->angleDeg = 0;
+            TerrainBody* box2 = new TerrainBody(*goBox2);
+            goBox2->AddComponent(box2);
+            goBox2->box.SetCenter(i*100-500, 500);
+            goBox2->angleDeg = 0;
         objectArray.emplace_back(goBox2);
     }
     

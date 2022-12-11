@@ -4,11 +4,6 @@
 #include <iostream>
 
 
-
-// define pra test -m
-using namespace std;
-#define p(x) cout << #x << ": " << x <<" ";
-
 GameObject* Camera::focus = nullptr;
 Vec2 Camera::pos = Vec2();
 Vec2 Camera::speed = Vec2();
@@ -33,7 +28,7 @@ void Camera::Update(float dt){
         SDL_GetRendererOutputSize(Game::GetInstance().GetRenderer(), &width, &height);
 
         /*por algum motivo com floor o quadrado n treme, mas o penguin treme e visse versa*/
-        
+
         pos.x = floor(focusCenter.x) - width/2;
         pos.y = floor(focusCenter.y) - height/2;
 
@@ -43,9 +38,6 @@ void Camera::Update(float dt){
 
         //--- update objetos dependentes da posição da camera ---//
         State& state = Game::GetInstance().GetCurrentState();
-    
-        
-
         for(unsigned i = 0; i < state.cameraFollowerObjectArray.size(); i++)
             state.cameraFollowerObjectArray[i]->UpdateNodes(dt);
         
@@ -55,11 +47,9 @@ void Camera::Update(float dt){
         InputManager& inManager = InputManager::GetInstance();
         Vec2 direction = Vec2();
 
-        if(inManager.IsKeyDown(LEFT_ARROW_KEY)){
-            
+        if(inManager.IsKeyDown(LEFT_ARROW_KEY)){ 
             direction -= Vec2(1, 0);
         }
-            
         if(inManager.IsKeyDown(RIGHT_ARROW_KEY))
             direction += Vec2(1, 0);
         if(inManager.IsKeyDown(UP_ARROW_KEY))

@@ -2,10 +2,6 @@
 #include <vector>
 #include <iostream>
 
-// define pra test -m
-using namespace std;
-#define p(x) cout << #x << ": " << x << endl;
-
 
 //pair( bool = se ha colisao , Vec2() vetor com a distancia minima entre os Rect) -m
 pair<bool,Vec2> Collision::IsColliding(Rect& a, Rect& b, float angleOfA, float angleOfB){
