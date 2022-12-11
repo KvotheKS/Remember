@@ -14,6 +14,7 @@ Sprite::Sprite(GameObject& associated, std::string file, int frameCount, float f
     SetFrameTime(frameTime);
     this->secondsToSelfDestruct = secondsToSelfDestruct;
     selfDestructCount.Restart();
+    fliped = false;
 }
 
 Sprite::~Sprite(){
@@ -79,8 +80,14 @@ void Sprite::Print(float x, float y)
     dstRect.w = clipRect.w * scale.x;
     dstRect.h = clipRect.h * scale.y;
     SDL_SetTextureColorMod(texture.get(), r, g, b);
+
+    SDL_RendererFlip flip_val = SDL_FLIP_NONE;
+    if(fliped) {
+        flip_val = SDL_FLIP_HORIZONTAL;
+    }
     SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture.get(), &this->clipRect, &dstRect,
-            associated.angleDeg, nullptr, SDL_FLIP_NONE);
+            associated.angleDeg, nullptr,flip_val);
+            
     SDL_SetTextureColorMod(texture.get(), 255,255,255);
 }
 
@@ -136,4 +143,10 @@ void Sprite::SetTint(Uint8 r, Uint8 g, Uint8 b)
     this->r = r;
     this->g = g;
     this->b = b;
+}
+bool Sprite::GetFliped(){
+    return fliped;
+}
+void Sprite::SetFliped(bool value){
+    fliped = value;
 }

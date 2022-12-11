@@ -11,6 +11,8 @@
 #include <memory>
 #include <iostream>
 
+#define SPRITE_T "Sprite"
+
 class Sprite : public GameObject {
     private:
         std::shared_ptr<SDL_Texture> texture;
@@ -25,6 +27,7 @@ class Sprite : public GameObject {
         Timer selfDestructCount;
         float secondsToSelfDestruct;
         float depth;
+        bool fliped;
     public:
         Uint8 r=255, g=255, b=255;
 
@@ -40,13 +43,19 @@ class Sprite : public GameObject {
         void Render(float x, float y);
         void Print(float x=-1, float y=-1);
         bool Is(std::string type);
+
         int GetWidth();
         int GetHeight();
+        
         bool IsOpen();
+
         void SetScaleX(float scaleX, float scaleY);
         Vec2 GetScale();
+
         void SetFrame(int frame);
         void SetFrameCount(int frameCount);
         void SetFrameTime(float frameTime);
         void SetTint(Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
+        bool GetFliped();
+        void SetFliped(bool value);
 };

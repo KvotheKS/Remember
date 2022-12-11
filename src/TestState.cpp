@@ -99,7 +99,6 @@ void TestState::Update(float dt){
         popRequested = true;
     if(inManager.KeyPress(F3_KEY)){
         Collider::debugMode = !Collider::debugMode;
-        std::cout << "hit: " << Collider::debugMode << std::endl;
     }
         
 

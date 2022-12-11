@@ -17,8 +17,9 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
 
     speed =  Vec2(0,0);
     oldbox = Vec2(0,0);
-    grounded = false;
-    inputdone = false;
+    isGrounded = false;
+    hasDoubleJump = true;
+    inputDone = false;
 
     MAX_GLOBAL_SPEED = 3000;
 
@@ -32,6 +33,8 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     LATERAL_SPEED_THRESHOLD = 100;
 
     
+
+    
 }
 RigidBody::~RigidBody(){
 
@@ -42,18 +45,14 @@ void RigidBody::Start(){
 }
 void RigidBody::Update(float dt){
 
-    
-    
+
+    Animation(dt);
     Controls(dt);
     Physics(dt);
 
-    // p(MAX_MOVE_SPEED*dt)
-    // p(box.x-oldbox.x)p(box.y-oldbox.y)cout << endl;
-    // oldbox.x = box.x;
-    // oldbox.y = box.y;
 
-    grounded = false;
-    inputdone = false;
+    isGrounded = false;
+    inputDone = false;
     
    
 }
@@ -63,6 +62,8 @@ void RigidBody::Render(){
 bool RigidBody::Is(std::string type){
     return type == "RigidBody";
 }
+
+
 void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
  
     if(TerrainBody * body = (TerrainBody*)other.GetComponent("TerrainBody")){
@@ -82,9 +83,10 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         if(associated.box.GetCenter().y < other.box.GetCenter().y){
             if(abs(sep.x) < abs(sep.y)){
                 
-                speed = Vec2(speed.x,0);
-                grounded = true; 
+                
+                isGrounded = true; 
                 associated.box.y += sep.y;
+                speed.y = 0;
             }
             
             
@@ -106,11 +108,34 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         }
 }
 
+void RigidBody::Animation(float dt){
+    Sprite * spr = (Sprite*) associated.GetComponent(SPRITE_T);
+    
+    if(speed.y < 0 && !isGrounded){
+        spr->Open("assets/img/Zjump.png");
+    }
+    if(speed.y > 2 && !isGrounded){
+        spr->Open("assets/img/Zfall.png");
+    }
+    if(speed.x != 0 && isGrounded){   
+        spr->Open("assets/img/Zrun.png");
+    }
+    if(speed.x == 0 && isGrounded){
+        spr->Open("assets/img/Zidle.png");
+        speed.x = 0;
+    }
+    if(speed.x < 0){
+        spr->SetFliped(true);
+    }else if (speed.x > 0){
+        spr->SetFliped(false);
+    }
+}
+
 void RigidBody::Controls(float dt){
     
     InputManager& inManager = InputManager::GetInstance();
     if(inManager.IsKeyDown(W_KEY)){  
-        grounded = false;
+        isGrounded = false;
         speed = Vec2(speed.x,-JUMP_FORCE*dt);
    
     }
@@ -119,12 +144,12 @@ void RigidBody::Controls(float dt){
     }
     if(inManager.IsKeyDown(A_KEY)){
         speed.x -= MOVE_ACCELERATION*dt;
-        inputdone = true;
+        inputDone = true;
     }
     if(inManager.IsKeyDown(D_KEY)){
        
         speed.x += MOVE_ACCELERATION*dt;
-        inputdone = true;
+        inputDone = true;
         
     }
     
@@ -148,7 +173,7 @@ void RigidBody::Physics(float dt){
     speed.y += FALL_ACCELERATION*dt; 
 
     // desacelerar
-    if(!inputdone){   
+    if(!inputDone){   
         if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
             speed.x = 0;
         else if(speed.x > 0){
@@ -175,7 +200,7 @@ void RigidBody::Physics(float dt){
 
      
     // mova-se de acordo com a velocidade 
-    if(grounded) speed.y = 0;
+    if(isGrounded) speed.y = 0;
 
     Vec2 center = Vec2(associated.box.GetCenter() + speed);
     associated.box.SetCenter(center.x,center.y);

@@ -19,6 +19,7 @@ class RigidBody : public GameObject{
 private:
     void Controls(float dt);
     void Physics(float dt);
+    void Animation(float dt);
     void MoveonTopof(GameObject& target);
     
 public:
@@ -35,10 +36,9 @@ public:
 
     Vec2 speed;
     Vec2 oldbox;
-    bool grounded;
-
-
-    bool inputdone;
+    bool isGrounded;
+    bool hasDoubleJump;
+    bool inputDone;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE
     float MAX_GLOBAL_SPEED;// = 1200;
     float MAX_MOVE_SPEED;// = 400;
