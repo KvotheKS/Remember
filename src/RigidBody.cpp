@@ -51,7 +51,7 @@ void RigidBody::Update(float dt){
     // p(box.x-oldbox.x)p(box.y-oldbox.y)cout << endl;
     // oldbox.x = box.x;
     // oldbox.y = box.y;
-    
+
     grounded = false;
     inputdone = false;
     
@@ -129,9 +129,9 @@ void RigidBody::Controls(float dt){
     }
 
     if(inManager.MousePress(RIGHT_MOUSE_BUTTON) && modo == 1){
-        // associated.box.x = 0;
-        // associated.box.y = 0;
-        speed = Vec2(-100,0);
+        associated.box.x = 0;
+        associated.box.y = 0;
+        // speed = Vec2(-100,0);
         
     }
 }
@@ -172,9 +172,9 @@ void RigidBody::Physics(float dt){
     }
 
      
-
     // mova-se de acordo com a velocidade 
     if(grounded) speed.y = 0;
+
     Vec2 center = Vec2(associated.box.GetCenter() + speed);
     associated.box.SetCenter(center.x,center.y);
 

@@ -16,23 +16,23 @@ StageState::~StageState(){
 
 void StageState::LoadAssets(){
     GameObject* goBackground = new GameObject();
-    goBackground->depth = -1;
-    Sprite* bg = new Sprite(*goBackground, "assets/img/ocean.jpg");
-    goBackground->AddComponent(bg);
+        goBackground->depth = -1;
+        Sprite* bg = new Sprite(*goBackground, "assets/img/ocean.jpg");
+        goBackground->AddComponent(bg);
 
-    CameraFollower* cf = new CameraFollower(*goBackground);
-    goBackground->AddComponent(cf);
+        CameraFollower* cf = new CameraFollower(*goBackground);
+        goBackground->AddComponent(cf);
 
-    goBackground->box.x = 0;
-    goBackground->box.y = 0;
-    objectArray.emplace_back(goBackground);
+        goBackground->box.x = 0;
+        goBackground->box.y = 0;
+    cameraFollowerObjectArray.emplace_back(goBackground);
 
     GameObject* goTileMap = new GameObject();
-    goTileMap->depth = 0;
-    TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tileMap.txt", tileSet);
-    goTileMap->AddComponent(tileMap);
-    goTileMap->box.x = 0;
-    goTileMap->box.y = 0;
+        goTileMap->depth = 0;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tileMap.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
     objectArray.emplace_back(goTileMap);
 
     GameObject* goPBody = new GameObject();
