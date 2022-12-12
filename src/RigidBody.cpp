@@ -22,6 +22,9 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     hasDoubleJump = true;
     inputDone = false;
 
+
+    JUMP_TIMER = 0.2;
+    // jumpTimer.Update(0);
     MAX_GLOBAL_SPEED = 3000;
 
     JUMP_FORCE = 1200;
@@ -33,9 +36,6 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     LATERAL_FRICTION = 80;
     LATERAL_SPEED_THRESHOLD = 100;
 
-    
-
-    
 }
 RigidBody::~RigidBody(){
 
@@ -133,16 +133,22 @@ void RigidBody::Animation(float dt){
 }
 
 void RigidBody::Controls(float dt){
-    
+    p(jumpTimer.Get())cout << endl;
+    jumpTimer.Update(dt);
     InputManager& inManager = InputManager::GetInstance();
     if(inManager.IsKeyDown(W_KEY)){  
-        if (isGrounded){
-        isGrounded = false;
+        if (isGrounded ){
+            jumpTimer.Restart();
+            isGrounded = false;
+            Jump(dt);
+        }else if (jumpTimer.Get()<JUMP_TIMER){
+            
             Jump(dt);
         }
-       
-   
+    }else{
+        jumpTimer.Update(JUMP_TIMER);
     }
+
     if(inManager.IsKeyDown(S_KEY)){
         
     }

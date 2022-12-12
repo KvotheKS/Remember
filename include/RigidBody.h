@@ -34,6 +34,9 @@ public:
 
     void Jump(float dt);
 
+    Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, float dt);
+
+
     int modo;
 
     Vec2 speed;
@@ -41,6 +44,9 @@ public:
     bool isGrounded;
     bool hasDoubleJump;
     bool inputDone;
+    Timer jumpTimer;
+    float JUMP_TIMER;
+
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE
     float MAX_GLOBAL_SPEED;// = 1200;
     float MAX_MOVE_SPEED;// = 400;
