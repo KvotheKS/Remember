@@ -223,3 +223,4 @@ void RigidBody::MoveonTopof(GameObject& target){
 void RigidBody::Jump (float dt){
     speed.y = -JUMP_FORCE*dt;
 }
+

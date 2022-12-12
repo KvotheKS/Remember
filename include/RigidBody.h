@@ -34,7 +34,7 @@ public:
 
     void Jump(float dt);
 
-    Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, float dt);
+    // Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, float dt);
 
 
     int modo;
