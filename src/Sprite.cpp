@@ -59,6 +59,8 @@ void Sprite::Update(float dt){
         else
             SetFrame(currentFrame + 1);
     }
+
+   
 }
 
 void Sprite::Render(){
@@ -75,10 +77,12 @@ void Sprite::Render(float x, float y){
 void Sprite::Print(float x, float y)
 {
     SDL_Rect dstRect;
-    dstRect.x = x;
-    dstRect.y = y;
+    dstRect.x = x - (clipRect.w * scale.x/2)+clipRect.w/2;
+    dstRect.y = y - (clipRect.h * scale.y/2)+clipRect.h/2;
+ 
     dstRect.w = clipRect.w * scale.x;
     dstRect.h = clipRect.h * scale.y;
+
     SDL_SetTextureColorMod(texture.get(), r, g, b);
 
     SDL_RendererFlip flip_val = SDL_FLIP_NONE;

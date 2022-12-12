@@ -11,8 +11,9 @@ using namespace std;
 RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), modo(modo){
     Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
     associated.AddComponent(pbody);
-
+    pbody->SetScaleX(2,2);
     Collider* collider = new Collider(associated);
+    collider->SetScale(Vec2(2,2));
     associated.AddComponent(collider);
 
     speed =  Vec2(0,0);
@@ -23,7 +24,7 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
 
     MAX_GLOBAL_SPEED = 3000;
 
-    JUMP_FORCE = 800;
+    JUMP_FORCE = 1200;
     MAX_FALL_SPEED = 800;
     FALL_ACCELERATION = 100;
 
@@ -135,8 +136,11 @@ void RigidBody::Controls(float dt){
     
     InputManager& inManager = InputManager::GetInstance();
     if(inManager.IsKeyDown(W_KEY)){  
+        if (isGrounded){
         isGrounded = false;
-        speed = Vec2(speed.x,-JUMP_FORCE*dt);
+            Jump(dt);
+        }
+       
    
     }
     if(inManager.IsKeyDown(S_KEY)){
@@ -206,6 +210,10 @@ void RigidBody::Physics(float dt){
     associated.box.SetCenter(center.x,center.y);
 
 }
-void MoveonTopof(GameObject& target){
+void RigidBody::MoveonTopof(GameObject& target){
 
+}
+
+void RigidBody::Jump (float dt){
+    speed.y = -JUMP_FORCE*dt;
 }

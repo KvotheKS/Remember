@@ -32,6 +32,8 @@ public:
     bool Is(std::string type);
     void NotifyCollision(GameObject& other,Vec2 sep);
 
+    void Jump(float dt);
+
     int modo;
 
     Vec2 speed;
