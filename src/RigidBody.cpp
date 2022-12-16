@@ -13,7 +13,8 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     associated.AddComponent(pbody);
     pbody->SetScaleX(2,2);
     Collider* collider = new Collider(associated);
-    collider->SetScale(Vec2(2,2));
+    collider->SetScale(Vec2(0.8,1));
+    collider->SetOffset(Vec2(0,10));
     associated.AddComponent(collider);
 
     speed =  Vec2(0,0);
@@ -49,7 +50,7 @@ void RigidBody::Update(float dt){
 
     Animation(dt);
     Controls(dt);
-    Physics(dt);
+    Physics(dt);//!!check weird hitbox when this is off -m
 
 
     isGrounded = false;
@@ -68,6 +69,7 @@ bool RigidBody::Is(std::string type){
 void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
  
     if(TerrainBody * body = (TerrainBody*)other.GetComponent("TerrainBody")){
+
         // Lidar com Contato na Direita -m
         if(associated.box.GetCenter().x > other.box.GetCenter().x){
             
@@ -83,8 +85,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         // Lidar com Contato no Topo -m
         if(associated.box.GetCenter().y < other.box.GetCenter().y){
             if(abs(sep.x) < abs(sep.y)){
-                
-                
+
                 isGrounded = true; 
                 associated.box.y += sep.y;
                 speed.y = 0;
@@ -133,7 +134,7 @@ void RigidBody::Animation(float dt){
 }
 
 void RigidBody::Controls(float dt){
-    p(jumpTimer.Get())cout << endl;
+    // p(jumpTimer.Get())cout << endl;
     jumpTimer.Update(dt);
     InputManager& inManager = InputManager::GetInstance();
     if(inManager.IsKeyDown(W_KEY)){  
@@ -172,7 +173,7 @@ void RigidBody::Controls(float dt){
     if(inManager.MousePress(RIGHT_MOUSE_BUTTON) && modo == 1){
         associated.box.x = 0;
         associated.box.y = 0;
-        // speed = Vec2(-100,0);
+       
         
     }
 }
@@ -222,5 +223,32 @@ void RigidBody::MoveonTopof(GameObject& target){
 
 void RigidBody::Jump (float dt){
     speed.y = -JUMP_FORCE*dt;
+}
+
+Vec2 RigidBody::Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float t) {
+    return Vec2( std::pow((1 - t), 3) * a.x + 3 * std::pow((1 - t), 2) * t * b.x + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * c.x + std::pow(t, 3) * d.x
+                ,std::pow((1 - t), 3) * a.y + 3 * std::pow((1 - t), 2) * t * b.y + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * c.y + std::pow(t, 3) * d.y);
+}
+
+Vec2 RigidBody::Bcurve(std::vector<Vec2> vec, float t) {
+    
+   
+    auto fac = [](const int n){
+        int ret = n;
+        if(n == 0) return 1;
+        for(int i = n-1; i>0 ;i--)ret = ret * i;
+        return ret;
+    };
+
+    int n = vec.size();
+    float x,y = 0;
+    
+    for (int k = 0; k<n; k++){
+        x += fac(n)/fac(k)*fac(n-k) * std::pow((1-t),(n-k)) * std::pow((t),(k)) * vec[k].x;
+        y += fac(n)/fac(k)*fac(n-k) * std::pow((1-t),(n-k)) * std::pow((t),(k)) * vec[k].y;
+    }
+
+    return Vec2(x,y);
+
 }
 

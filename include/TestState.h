@@ -22,16 +22,19 @@
 #include <memory>
 
 class TestState : public State {
-    private:
-        TileSet* tileSet;
-        Music backgroundMusic;
-    public:
-        TestState();
-        ~TestState();
-        void LoadAssets();
-        void Start();
-        void Update(float dt);
-        void Render();
-        void Pause();
-        void Resume();
+private:
+    TileSet* tileSet;
+    Music backgroundMusic;
+public:
+    TestState();
+    ~TestState();
+    void LoadAssets();
+    void Start();
+    void Update(float dt);
+    void Render();
+    void Pause();
+    void Resume();
+
+    Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float dt);
+    Vec2 Bcurve2(std::vector<Vec2> vec,float dt);
 };

@@ -34,7 +34,7 @@ void Collider::Print(float x, float y){
     this->Update(0);
         
     if(debugMode){    
-        associated.depth = associated.depth + 100; //fodase tudo que tem collider fica em cima removame depois -m
+        // associated.depth = associated.depth + 100; //fodase tudo que tem collider fica em cima removame depois -m
         
         Vec2 center = box.GetCenter();
         SDL_Point points[5];
