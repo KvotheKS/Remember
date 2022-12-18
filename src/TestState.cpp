@@ -108,7 +108,7 @@ void TestState::LoadAssets(){
             TerrainBody* box2 = new TerrainBody(*terrainbox);
             terrainbox->AddComponent(box2);
             float t = i/tot ;
-            Vec2 temp = Bcurve2(std::vector<Vec2> {Vec2(100,400),Vec2(500,100)},t);
+            Vec2 temp = Bcurve2(std::vector<Vec2> {Vec2(100,400),Vec2(500,170)},t);
 
             terrainbox->box.SetCenter(temp.x+600, temp.y);
             terrainbox->angleDeg = -30;

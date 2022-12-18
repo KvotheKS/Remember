@@ -49,6 +49,9 @@ public:
     bool hasDoubleJump;
     bool inputDone;
     Timer jumpTimer;
+
+    float surface_inclination;
+
     float JUMP_TIMER;
 
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE

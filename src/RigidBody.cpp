@@ -23,10 +23,10 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     isGrounded = false;
     hasDoubleJump = true;
     inputDone = false;
-
+    surface_inclination = 0;
 
     JUMP_TIMER = 0.2;
-    // jumpTimer.Update(0);
+    
     MAX_GLOBAL_SPEED = 3000;
 
     JUMP_FORCE = 1200;
@@ -123,7 +123,8 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         }
         
 
-       
+
+        surface_inclination = other.angleDeg;
 
         if((((int)other.angleDeg+45)%90)==0) idx == 4;
 
@@ -241,10 +242,12 @@ void RigidBody::Controls(float dt){
     }
     if(inManager.IsKeyDown(A_KEY)){
         speed.x -= MOVE_ACCELERATION*dt;
+
+        
+
         inputDone = true;
     }
     if(inManager.IsKeyDown(D_KEY)){
-        
         speed.x += MOVE_ACCELERATION*dt;
         inputDone = true;
         
@@ -269,6 +272,13 @@ void RigidBody::Physics(float dt){
     // Queda 
     speed.y += FALL_ACCELERATION*dt; 
 
+    // grudar em rampas
+    if(isGrounded){
+     
+        associated.box.y += MAX_MOVE_SPEED* 0.030;
+            
+    }
+
     // desacelerar
     if(!inputDone){   
         if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
@@ -280,10 +290,10 @@ void RigidBody::Physics(float dt){
         }
     }
 
-    // // limitar velocidade global
-    // if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
-    //     speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
-    // }
+    // limitar velocidade global
+    if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
+        speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
+    }
 
     //limitar velocidade lateral
     if(abs(speed.x) > MAX_MOVE_SPEED*dt){ 
