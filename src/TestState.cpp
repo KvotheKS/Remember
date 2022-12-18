@@ -78,16 +78,16 @@ void TestState::LoadAssets(){
             terrainbox->angleDeg = 0;
         objectArray.emplace_back(terrainbox);
     }
-    // // diagonal cubes
-    // for(int i = 0; i<5; i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth = 999;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         terrainbox->box.SetCenter(i*100*3+300, 100);
-    //         terrainbox->angleDeg = 30*(i+1);
-    //     objectArray.emplace_back(terrainbox);
-    // }
+    // diagonal cubes
+    for(int i = 0; i<20; i++){
+        GameObject* terrainbox = new GameObject();
+            terrainbox->depth = 999;
+            TerrainBody* box2 = new TerrainBody(*terrainbox);
+            terrainbox->AddComponent(box2);
+            terrainbox->box.SetCenter(i*100+300, 100);
+            terrainbox->angleDeg = 20*(i+1);
+        objectArray.emplace_back(terrainbox);
+    }
    
     // jump platforms
     for(int i = 0; i<5; i++){
@@ -111,7 +111,7 @@ void TestState::LoadAssets(){
             Vec2 temp = Bcurve2(std::vector<Vec2> {Vec2(100,400),Vec2(500,100)},t);
 
             terrainbox->box.SetCenter(temp.x+600, temp.y);
-            terrainbox->angleDeg = -45;
+            terrainbox->angleDeg = -30;
         objectArray.emplace_back(terrainbox);
     }
     

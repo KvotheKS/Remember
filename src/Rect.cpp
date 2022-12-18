@@ -23,6 +23,19 @@ Rect operator+(Vec2 vec, Rect rect){
     return Rect(vec.x + rect.x, vec.y + rect.y, rect.w, rect.h);
 }
 
+Rect Rect::operator-(Vec2 vec){
+    return Rect(this->x - vec.x, this->y - vec.y, this->w, this->h);
+}
+
+Rect Rect::operator-(Rect rct)
+{
+    return Rect(this->x - rct.x, this->y - rct.y, this->w, this->h);
+}
+
+Rect operator-(Vec2 vec, Rect rect){
+    return Rect(vec.x - rect.x, vec.y - rect.y, rect.w, rect.h);
+}
+
 Rect& Rect::operator+=(Vec2 vec){
     *this = *this + vec;
     return *this;
@@ -31,6 +44,14 @@ Rect& Rect::operator+=(Vec2 vec){
 Rect& Rect::operator+=(Rect rct)
 {
     *this = *this + rct;
+    return *this;
+}
+Rect& Rect::operator-=(Vec2 vec){
+    *this = *this - vec;
+    return *this;
+}
+Rect& Rect::operator-=(Rect rct){
+    *this = *this - rct;
     return *this;
 }
 

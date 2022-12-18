@@ -36,6 +36,8 @@ public:
 
     Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float dt);
     Vec2 Bcurve(std::vector<Vec2> vec,float dt);
+
+    
     
 
 

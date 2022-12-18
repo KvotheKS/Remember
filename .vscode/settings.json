@@ -52,6 +52,7 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "complex": "cpp"
     }
 }

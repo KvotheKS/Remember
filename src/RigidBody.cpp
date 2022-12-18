@@ -13,8 +13,9 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     associated.AddComponent(pbody);
     pbody->SetScaleX(2,2);
     Collider* collider = new Collider(associated);
-    collider->SetScale(Vec2(0.8,1));
-    collider->SetOffset(Vec2(0,10));
+    collider->SetScale(Vec2(1,1));
+    collider->SetOffset(Vec2(0,0));
+    
     associated.AddComponent(collider);
 
     speed =  Vec2(0,0);
@@ -33,7 +34,7 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     FALL_ACCELERATION = 100;
 
     MAX_MOVE_SPEED = 600;
-    MOVE_ACCELERATION = 400;
+    MOVE_ACCELERATION = 100;
     LATERAL_FRICTION = 80;
     LATERAL_SPEED_THRESHOLD = 100;
 
@@ -67,41 +68,203 @@ bool RigidBody::Is(std::string type){
 
 
 void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
- 
-    if(TerrainBody * body = (TerrainBody*)other.GetComponent("TerrainBody")){
+    
+    Collider * ass_collider = (Collider*)associated.GetComponent("Collider");
+    Collider * terrain_collider = (Collider*)other.GetComponent("Collider");
+    auto GoUp = [&](float d){
+        associated.box.y -= d;
+    };
+    auto GoDown = [&](float d){
+        associated.box.y += d;
+    };
+    auto GoLeft = [&](float d){
+        associated.box.x -= d;
+    };
+    auto GoRight = [&](float d){
+        associated.box.x += d;
+    };
+    if(TerrainBody * terrain = (TerrainBody*)other.GetComponent("TerrainBody")){
+        // Lidar com Contato em cima -m
+        Vec2 top = (Vec2(0,-1).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.h/2) + terrain_collider->box.GetCenter();
+        Vec2 right = (Vec2(1,0).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.w/2)+ terrain_collider->box.GetCenter();
+        Vec2 down = (Vec2(0,1).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.h/2)+ terrain_collider->box.GetCenter();
+        Vec2 left = (Vec2(-1,0).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.w/2)+ terrain_collider->box.GetCenter();
+       
+        
+        
+       
+        vector<float> distances;
+        
+        distances.push_back(top.Distance(ass_collider->box.GetCenter()));
+        distances.push_back(right.Distance(ass_collider->box.GetCenter()));
+        distances.push_back(down.Distance(ass_collider->box.GetCenter()));
+        distances.push_back(left.Distance(ass_collider->box.GetCenter()));
 
-        // Lidar com Contato na Direita -m
-        if(associated.box.GetCenter().x > other.box.GetCenter().x){
-            
-            associated.box.x += sep.x;
+        
+        // for(auto dis : distances){
+        //     cout << dis << " - ";
+        // }
+        
+        min_element(distances.begin(), distances.end());
+        auto it = std::min_element(std::begin(distances), std::end(distances));
+        int idx = std::distance(std::begin(distances), it);
+
+
+        int ang = (int)other.angleDeg % 360;
+        ang = (ang+45)/90;
+        idx += ang;
+
+        idx = idx%4;
+        
+        float C = abs(180 - ((int)other.angleDeg%45) - 90) ;
+        float b = sin(C*PI/180);
+        if(b == 0){
+            b =  sep.Magnitude();
+        }else{
+            b = sin(90*PI/180) * sep.Magnitude()/b;
         }
+        p(C)
 
-        // Lidar com Contato na Esquerda -m
-        else{
-
-            associated.box.x -= sep.x;
-        }
-
-        // Lidar com Contato no Topo -m
-        if(associated.box.GetCenter().y < other.box.GetCenter().y){
-            if(abs(sep.x) < abs(sep.y)){
-
+        // float largura_tranversal_terreno = sqrt(pow((terrain_collider->box.h/2),2)*2);
+        // float height = largura_tranversal_terreno * sin((45-other.angleDeg)*PI/180)/sin(90*PI/180);
+        if((((int)other.angleDeg+45)%90)==0){
+            if(idx == 0 || idx == 1){
+             
+                cout << "up1\n";
+                GoUp(b);
+                
                 isGrounded = true; 
-                associated.box.y += sep.y;
-                speed.y = 0;
+                speed.y =0;
+            }else{
+                GoDown(b);
+                cout << "down1\n";
             }
+        }
+        else if(idx == 0){
+            cout << "up\n";
+            GoUp(b);
+                
+            isGrounded = true; 
+            speed.y =0;
+        }
+        else if(idx == 1){
+            GoRight(b);
+            cout << "right\n";
+        }
+        else if(idx == 2){
+            GoDown(b);
+            cout << "down\n";
             
-            
+        }
+        else{
+            GoLeft(b);
+            cout << "left\n";
+        }
+     
+
+
+
+        // // Lidar com Contato na Direita -m
+        // if (associated.box.GetCenter().x > other.box.GetCenter().x){
             
 
-        }
-        // Lidar com Contato a baixo -m
-        else{
-            associated.box.y -= sep.y;
-        }
+        //     if(abs(sep.x) >= abs(sep.y)){
+                
+        //         float C = abs(180 - other.angleDeg - 90) ;
+        //         if(C == 0){
+        //             associated.box.x += sep.x;
+                    
+        //         }else{
+        //             float b = sin(90*PI/180) * sep.Magnitude() /sin(C*PI/180);
+
+                 
+                    
+        //             float largura_tranversal_terreno = sqrt(pow((terrain_collider->box.h/2),2)*2);
+        //             float height = largura_tranversal_terreno * sin((45-other.angleDeg)*PI/180)/sin(90*PI/180);
+                
+        //             if(( (other.box.GetCenter().y -height) > associated.box.GetCenter().y + ass_collider->box.h/2*ass_collider->GetScale().y)){
+                                      
+        //                 GoUp(b);
+        //                 cout << "up\n";
+        //                 isGrounded = true; 
+        //                 speed.y =0;
+        //             }
+        //             else if(other.box.GetCenter().y < associated.box.GetCenter().y - ass_collider->box.h/2*ass_collider->GetScale().y ){
+        //                 GoDown(b);
+        //                 cout<< "down\n";
+        //             }
+        //             else{
+        //                 GoRight(sep.x);
+        //                 cout<< "side\n";
+        //             }
+                    
+        //         }
+        //     }
+            
+           
+        // }
+
+        // // // Lidar com Contato na Esquerda -m
+        // // else{
+        // //     if(abs(sep.x) >= abs(sep.y)){
+        // //         float C = abs(180 - other.angleDeg - 90) ;
+        // //         if(C == 0){
+        // //             associated.box.x -= sep.x;
+                    
+        // //         }else{
+        // //             float b = sin(90*PI/180) * sep.Magnitude() /sin(C*PI/180);
+        // //             if(other.angleDeg==45 && (associated.box.GetCenter().y < other.box.GetCenter().y)){
+        // //                 associated.box.y -= b;
+        // //                 isGrounded = true; 
+        // //             }else if(other.angleDeg>45){
+        // //                 associated.box.x += b;
+        // //             }else{
+        // //                 associated.box.x -= b;
+        // //             }
+        // //         }
+        // //     }
+            
+        // // }
+
+
+        // // Lidar com Contato no Topo -m
+        // if(associated.box.GetCenter().y < other.box.GetCenter().y){
+        //     float C2 = 180 - (45-associated.angleDeg) - 90;
+        //     float b2 = sin((45-associated.angleDeg)*PI/180) * sep.x /sin(C2*PI/180);
+
+        //     float largura_tranversal_terreno = sqrt(pow((terrain_collider->box.h/2),2)*2);
+        //     float height = largura_tranversal_terreno * sin((45-other.angleDeg)*PI/180)/sin(90*PI/180);
+        //     if((abs(sep.y)> abs(sep.x)) && (associated.box.GetCenter().y - height <  associated.box.GetCenter().y + ass_collider->box.h/2*ass_collider->GetScale().y)){
+        //         cout << "it was me \n";
+        //         isGrounded = true; 
+                
+        //         float C = abs(180 - other.angleDeg - 90) ;
+                
+        //         if(C == 0  ){//cubo de ponta cabeca
+        //             GoDown(sep.y);
+                    
+        //         }else{
+        //             float b = sin(90*PI/180) * sep.Magnitude() /sin(C*PI/180);
+        //             GoUp(b);
+                    
+        //         }
+                
+                
+        //         // associated.box.y += sep.y;
+        //         speed.y = 0;
+        //     }
+            
+
+        // }
+        // // Lidar com Contato a baixo -m
+        // else{
+
+        //     // associated.box.y -= sep.y;
+            
+        // }
         Camera::Update(0);
         if(Collider* collider = (Collider*)associated.GetComponent("Collider")){
-        collider->Update(0);
+            collider->Update(0);
         }
             
         }

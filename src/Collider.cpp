@@ -70,3 +70,10 @@ void Collider::SetScale(Vec2 scale){
 void Collider::SetOffset(Vec2 offset){
     this->offset = offset;
 }
+
+Vec2 Collider::GetScale(){
+    return scale;
+}
+Vec2 Collider::GetOffset(){
+    return offset;
+}

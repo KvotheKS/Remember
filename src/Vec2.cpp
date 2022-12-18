@@ -65,8 +65,14 @@ Vec2 Vec2::Rotate(float angle){
     float xr = x * cosTh - y * sinTh;
     float yr = x * sinTh + y * cosTh;
     return Vec2(xr, yr);
+
 }
 
 float Vec2::Dot(Vec2 vec){
     return this->x * vec.x + this->y * vec.y;
+}
+
+ostream& operator<<(ostream& out,Vec2 const& v){
+    out << "Vec2: "<< v.x << " , "<< v.y << "\n";
+    return out ;
 }
