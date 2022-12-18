@@ -74,7 +74,7 @@ void TestState::LoadAssets(){
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);
             terrainbox->AddComponent(box2);
-            terrainbox->box.SetCenter(i*100-1300, 100);
+            terrainbox->box.SetCenter(i*100-1300, 300);
             terrainbox->angleDeg = 0;
         objectArray.emplace_back(terrainbox);
     }
@@ -84,7 +84,7 @@ void TestState::LoadAssets(){
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);
             terrainbox->AddComponent(box2);
-            terrainbox->box.SetCenter(i*100+300, 100);
+            terrainbox->box.SetCenter(i*100+300, 000);
             terrainbox->angleDeg = 20*(i+1);
         objectArray.emplace_back(terrainbox);
     }

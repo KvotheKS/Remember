@@ -8,4 +8,5 @@ class Timer {
         void Update(float dt);
         void Restart();
         float Get();
+        void Set(float t);
 };
