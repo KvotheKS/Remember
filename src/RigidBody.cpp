@@ -9,9 +9,9 @@ using namespace std;
 
 
 RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), modo(modo){
-    Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
-    associated.AddComponent(pbody);
-    pbody->SetScaleX(2,2);
+    // Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
+    // associated.AddComponent(pbody);
+    // pbody->SetScaleX(2,2);
     Collider* collider = new Collider(associated);
     collider->SetScale(Vec2(1,1));
     collider->SetOffset(Vec2(0,0));
@@ -51,7 +51,7 @@ void RigidBody::Start(){
 void RigidBody::Update(float dt){
 
 
-    Animation(dt);
+    // Animation(dt);
     Controls(dt);
     Physics(dt);//!!check weird hitbox when this is off -m
 
@@ -196,6 +196,8 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         }
         
 }
+
+
 
 void RigidBody::Animation(float dt){
     Sprite * spr = (Sprite*) associated.GetComponent(SPRITE_T);
@@ -348,3 +350,13 @@ Vec2 RigidBody::Bcurve(std::vector<Vec2> vec, float t) {
 
 }
 
+int RigidBody::GetState()
+{
+    return  RBSTATE::RIGHT*(speed.x > 0 && isGrounded) +
+            RBSTATE::LEFT*(speed.x < 0 && isGrounded) +
+            RBSTATE::STILL*(speed.x == 0 && isGrounded) +
+            RBSTATE::JUMP*(speed.y < 0 && !isGrounded) +
+            RBSTATE::FALL*(speed.y > 2 && !isGrounded) +
+            RBSTATE::RUN*(speed.x != 0 && isGrounded) +
+            RBSTATE::IDLE*(speed.x == 0 && isGrounded);
+}

@@ -1,6 +1,8 @@
 #include "TestState.h"
 #include "FpsPrinter.h"
 #include "Game.h"
+#include "StateMac.h"
+#include "SpriteSheetNode.h"
 
 //test stage pra mecher em collision
 
@@ -50,6 +52,12 @@ void TestState::LoadAssets(){
         RigidBody* box = new RigidBody(*player,1);
         player->AddComponent(box);
         player->box.SetCenter(100, 100);
+        SSNode* primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 118, 476, 100}, 8, 0.4);
+        StateMachine* st = new StateMachine(*player);
+        st->AddNode(RBSTATE::RUN, primbus); //st->ChangeState(RBSTATE::RUN);
+        primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 0, 424, 114}, 8, 0.1);
+        st->AddNode(0, primbus); st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
+        player->AddComponent(st);
     objectArray.emplace_back(player);
 
     backgroundMusic.Play();
