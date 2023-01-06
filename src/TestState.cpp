@@ -6,7 +6,7 @@
 
 TestState::TestState() : State(){
     backgroundMusic.Open("assets/audio/StageState.ogg");
-    tileSet = new TileSet(64, 64, "assets/img/tileset.png");
+    tileSet = new TileSet(60, 60, "assets/img/Tileset01.png");
 }
 
 TestState::~TestState(){
@@ -28,13 +28,7 @@ void TestState::LoadAssets(){
         goBackground->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground);
 
-    // GameObject* goTileMap = new GameObject();
-    // goTileMap->depth = 0;
-    // TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tileMap.txt", tileSet);
-    // goTileMap->AddComponent(tileMap);
-    // goTileMap->box.x = 0;
-    // goTileMap->box.y = 0;
-    // objectArray.emplace_back(goTileMap);
+
 
 
     GameObject* fpsChecker = new GameObject();
@@ -128,6 +122,14 @@ void TestState::LoadAssets(){
     //         terrainbox->angleDeg = 0;
     //     objectArray.emplace_back(terrainbox);
     // }
+
+    GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 1;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
     
 
     

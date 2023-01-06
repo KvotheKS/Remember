@@ -54,7 +54,9 @@ void TileMap::Render(){
 void TileMap::Print(float x, float y)
 {
     float layerSpeed = 1.0 + 0.25 * x;
-    RenderLayer(x, Camera::pos.x * layerSpeed, Camera::pos.y * layerSpeed);
+    // RenderLayer(x, Camera::pos.x * layerSpeed, Camera::pos.y * layerSpeed);
+    RenderLayer(x, Camera::pos.x , Camera::pos.y );
+    
 }
 
 bool TileMap::Is(std::string type){

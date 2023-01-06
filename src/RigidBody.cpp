@@ -14,7 +14,7 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     pbody->SetScaleX(2,2);
     Collider* collider = new Collider(associated);
     collider->SetScale(Vec2(1,1));
-    collider->SetOffset(Vec2(0,0));
+    collider->SetOffset(Vec2(0,8));
     
     associated.AddComponent(collider);
 

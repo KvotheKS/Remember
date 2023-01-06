@@ -135,7 +135,7 @@ State& Game::GetCurrentState(){
 
 Game& Game::GetInstance(){
     if(!instance)
-        instance.reset(new Game("Remember - ♪♫", 1024, 600));
+        instance.reset(new Game("Remember - ♪♫", 1280, 720));
     return *instance;
 }
 

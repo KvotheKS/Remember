@@ -77,6 +77,7 @@ void Sprite::Render(float x, float y){
 void Sprite::Print(float x, float y)
 {
     SDL_Rect dstRect;
+    
     dstRect.x = x - (clipRect.w * scale.x/2)+clipRect.w/2;
     dstRect.y = y - (clipRect.h * scale.y/2)+clipRect.h/2;
  
