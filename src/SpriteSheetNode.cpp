@@ -28,6 +28,7 @@ BVNode::BVNode(std::string file, SDL_Rect clip_line, int frameCount, float frame
 
 void BVNode::Update(float dt)
 {
+    totalTime += dt;
     timeElapsed += dt;
     if(timeElapsed > frameTime){
         if(rev)

@@ -8,6 +8,11 @@
 class AnimNode
 {
 public:
+    bool rendered;
+    float totalTime;
+    std::set<int> possibleActions;
+
+public:
     std::shared_ptr<SDL_Texture> texture;
     int width;
     int height;
@@ -27,11 +32,12 @@ public:
 
 public:
     virtual void Update(float dt);
+    void Render();
     virtual void Print(float x = 0.0f, float y = 0.0f, float angle = 0.0f);
     virtual int GetWidth();
     virtual int GetHeight();
     virtual void Reset();
-    void Open(std::string);
+    virtual void Open(std::string);
     bool IsOpen();
 
     void SetScaleX(float scaleX, float scaleY);
@@ -49,6 +55,7 @@ public:
 
 class StateMachine : public GameObject
 {
+    bool just_finished;
     int __curr = 0;
     std::unordered_map<int,std::unique_ptr<AnimNode>> states;
     std::unordered_map<int,int> transitions;

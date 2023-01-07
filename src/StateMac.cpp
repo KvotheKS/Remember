@@ -60,6 +60,7 @@ void AnimNode::Print(float x, float y, float angle)
 
 void AnimNode::Update(float dt){
     timeElapsed += dt;
+    totalTime += dt;
     if(timeElapsed > frameTime){
         if(reverse)
         {
@@ -80,8 +81,13 @@ void AnimNode::Update(float dt){
     }
 }
 
+void AnimNode::Render()
+{ rendered = true; }
+
 void AnimNode::Reset()
 {
+    totalTime = 0.0f;
+    timeElapsed = 0.0f;
     finished = false;
     SetFrame(reverse*(frameCount - 1));
 }
@@ -144,16 +150,22 @@ bool AnimNode::IsDone()
 }
 
 StateMachine::StateMachine(GameObject& associated)
-    : GameObject(associated), __curr(0)
+    : GameObject(associated), __curr(0), just_finished(false)
 {}
 
 void StateMachine::Update(float dt)
 {
     if(!states.empty())
     {
-        states[__curr]->Update(dt);
-        if(states[__curr]->IsDone())
+        auto it = states.find(__curr);
+        if(it->second->rendered) 
+            it->second->Update(dt);
+        if(it->second->IsDone())
+        {
             ChangeState(transitions[__curr]);
+            just_finished = true;
+        }
+        else just_finished = false;
     }
 }
 
@@ -208,6 +220,8 @@ void StateMachine::ChangeState(int newSt)
     if(it != states.end()) 
         it->second->Reset();
     __curr = newSt;
+    it = states.find(__curr);
+    it->second->rendered = false;
     CenterBox(associated.box);
 }
 
