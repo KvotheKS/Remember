@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
+#include "ActionMachine.h"
 
 //test stage pra mecher em collision
 
@@ -50,14 +51,18 @@ void TestState::LoadAssets(){
     GameObject* player = new GameObject();
         player->depth = 999;
         RigidBody* box = new RigidBody(*player,1);
-        player->AddComponent(box);
-        player->box.SetCenter(100, 100);
         SSNode* primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 118, 476, 100}, 8, 0.4);
         StateMachine* st = new StateMachine(*player);
-        st->AddNode(RBSTATE::RUN, primbus); //st->ChangeState(RBSTATE::RUN);
+        st->AddNode(RBSTATE::RUN, primbus); 
         primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 0, 424, 114}, 8, 0.1);
-        st->AddNode(0, primbus); st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
+        st->AddNode(RBSTATE::IDLE, primbus); st->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
         player->AddComponent(st);
+        player->AddComponent(box);
+        player->box.SetCenter(100, 100);
+        // ActionMachine* act = new ActionMachine(*player);
+        // act->AddState({RBSTATE::IDLE, ActionInfo({RBSTATE::RUN}, 3)});
+        // act->AddState({RBSTATE::RUN, ActionInfo({}, 3)});
+        // player->AddComponent(act);
     objectArray.emplace_back(player);
 
     backgroundMusic.Play();

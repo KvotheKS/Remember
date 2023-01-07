@@ -25,6 +25,7 @@ dep/GameBoxT.d bin/GameBoxT.o: src/GameBoxT.cpp include/GameBoxT.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/cpu_defines.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/pstl_config.h \
  C:/TDM-GCC-32/include/stdlib.h C:/TDM-GCC-32/include/errno.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_abs.h \
  C:/TDM-GCC-32/include/errno.h \
@@ -161,6 +162,9 @@ dep/GameBoxT.d bin/GameBoxT.o: src/GameBoxT.cpp include/GameBoxT.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uses_allocator.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/invoke.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/limits \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/node_handle.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstring \
@@ -196,6 +200,8 @@ dep/GameBoxT.d bin/GameBoxT.o: src/GameBoxT.cpp include/GameBoxT.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_lockfree_defines.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/backward/auto_ptr.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstdint \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/glue_memory_defs.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/execution_defs.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/char_traits.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/localefwd.h \
@@ -207,6 +213,8 @@ dep/GameBoxT.d bin/GameBoxT.o: src/GameBoxT.cpp include/GameBoxT.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ostream_insert.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cxxabi_forced.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_string.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string_view \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/string_view.tcc \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/string_conversions.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstdio \
  C:/TDM-GCC-32/include/stdio.h \
@@ -216,6 +224,19 @@ dep/GameBoxT.d bin/GameBoxT.o: src/GameBoxT.cpp include/GameBoxT.h \
  include/State.h include/GameObject.h include/Rect.h include/Vec2.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/include/math.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/specfun.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/gamma.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/special_function_util.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/bessel_function.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/beta_function.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/ell_integral.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/exp_integral.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/hypergeometric.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/legendre_function.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/modified_bessel_func.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/poly_hermite.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/poly_laguerre.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/riemann_zeta.tcc \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/iostream \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ostream \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ios \
@@ -261,6 +282,9 @@ dep/GameBoxT.d bin/GameBoxT.o: src/GameBoxT.cpp include/GameBoxT.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/glue_algorithm_defs.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/functional \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_function.h \
  include/Collision.h include/GameData.h include/EndState.h include/Text.h \
  include/PingusState.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime \
@@ -312,6 +336,7 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstdlib:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/cpu_defines.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/pstl_config.h:
 C:/TDM-GCC-32/include/stdlib.h:
 C:/TDM-GCC-32/include/errno.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_abs.h:
@@ -468,6 +493,9 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_cmp.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uses_allocator.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/invoke.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/limits:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/node_handle.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstring:
@@ -508,6 +536,8 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_base.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_lockfree_defines.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/backward/auto_ptr.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstdint:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/glue_memory_defs.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/execution_defs.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/char_traits.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/localefwd.h:
@@ -520,6 +550,8 @@ C:/TDM-GCC-32/include/wctype.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ostream_insert.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cxxabi_forced.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_string.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string_view:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/string_view.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/string_conversions.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstdio:
 C:/TDM-GCC-32/include/stdio.h:
@@ -532,6 +564,19 @@ include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:
 C:/TDM-GCC-32/include/math.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/specfun.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/gamma.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/special_function_util.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/bessel_function.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/beta_function.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/ell_integral.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/exp_integral.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/hypergeometric.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/legendre_function.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/modified_bessel_func.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/poly_hermite.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/poly_laguerre.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/riemann_zeta.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/iostream:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ostream:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ios:
@@ -588,6 +633,9 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/glue_algorithm_defs.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/functional:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_function.h:
 include/Collision.h:
 include/GameData.h:
 include/EndState.h:

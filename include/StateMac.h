@@ -50,7 +50,7 @@ public:
 class StateMachine : public GameObject
 {
     int __curr = 0;
-    std::unordered_map<int,std::shared_ptr<AnimNode>> states;
+    std::unordered_map<int,std::unique_ptr<AnimNode>> states;
     std::unordered_map<int,int> transitions;
 
 public:
@@ -62,10 +62,11 @@ public:
     void Print(float x, float y);
 
 public:
+    bool Is(std::string);
     void AddTransition(int,int);
     void AddNode(int,AnimNode*);
-    AnimNode* CurrentState();
+    std::pair<const int, AnimNode*> GetCurrent();
     void ChangeState(int);
     void CenterBox(Rect&);
-    std::unordered_map<int, std::shared_ptr<AnimNode>>& GetStates();
+    std::unordered_map<int, std::unique_ptr<AnimNode>>& GetStates();
 };

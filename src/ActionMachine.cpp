@@ -1,40 +1,50 @@
 #include "ActionMachine.h"
 
+ActionInfo::ActionInfo(std::set<int> actions, float actionTime)
+    : actions(actions), actionTime(actionTime)
+{}
+
 ActionMachine::ActionMachine(GameObject& Associated)
     : GameObject(Associated)
-{ __curr = 0; }
+{ __curr = 0; current_changed = false; just_finished = false; }
 
 void ActionMachine::Update(float dt)
 {
     auto it = states.find(__curr);
     if(it == states.end()) return;
     
+    just_finished = false;
     auto& info = it->second;
     if(info.timeElapsed > info.actionTime)
     {
+        just_finished = true;
         Reset();
-        if(info.noAction != -1)
-            __curr = info.noAction;
+        if(info.nxtState != -1)
+            __curr = info.nxtState;
     }
-
-    info.timeElapsed += dt;
-    info.count++;
+    if(!current_changed)
+    {
+        info.timeElapsed += dt;
+        info.count++;
+    }
+    current_changed = false;
 }
 
-void AddState(std::pair<int,ActionInfo> singleState)
+void ActionMachine::Render()
+{ current_changed = true; }
+
+void ActionMachine::AddState(std::pair<int,ActionInfo> singleState)
 { states.insert(singleState); }
 
-void AddStates(std::vector<std::pair<int,ActionInfo>> multipleStates)
+void ActionMachine::AddStates(std::vector<std::pair<int,ActionInfo>> multipleStates)
 {
     for(auto& it : multipleStates)
         states.insert(it);
 }
 
-std::pair<int,ActionInfo>& GetCurrent()
+std::pair<const int, ActionInfo&> ActionMachine::GetCurrent()
 {
-    auto it = states.find(__curr);
-    if(it != states.end()) return *it;
-    return {__curr, {}};
+    return {__curr, states[__curr]};
 }
 
 void ActionMachine::Reset()
@@ -44,8 +54,19 @@ void ActionMachine::Reset()
     info.count = 0;
 }
 
+bool ActionMachine::CanChangeTo(int st)
+{
+    auto& it = states[__curr];
+    return it.actions.find(st) != it.actions.end(); 
+}
+
 void ActionMachine::ChangeState(int st)
 {
     Reset();
     __curr = st;
+}
+
+bool ActionMachine::Is(std::string type)
+{
+    return type == "ActionMachine";
 }

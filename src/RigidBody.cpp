@@ -1,5 +1,7 @@
 #include "RigidBody.h"
 #include "TerrainBody.h"
+#include "ActionMachine.h"
+#include "StateMac.h"
 #include <iostream>
 #include "Game.h"
 // define pra test -m
@@ -51,7 +53,7 @@ void RigidBody::Start(){
 void RigidBody::Update(float dt){
 
 
-    // Animation(dt);
+    Animation(dt);
     Controls(dt);
     Physics(dt);//!!check weird hitbox when this is off -m
 
@@ -126,7 +128,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
         surface_inclination = other.angleDeg;
 
-        if((((int)other.angleDeg+45)%90)==0) idx == 4;
+        if((((int)other.angleDeg+45)%90)==0) idx = 4;
 
         switch(idx){//up
             case 0:
@@ -200,26 +202,27 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
 
 void RigidBody::Animation(float dt){
-    Sprite * spr = (Sprite*) associated.GetComponent(SPRITE_T);
+    StateMachine * spr = (StateMachine*) associated.GetComponent("StateMachine");
+    // ActionMachine * act = (ActionMachine*) associated.GetComponent("ActionMachine");
+    // if(speed.y < 0 && !isGrounded){
+    //     spr->Open("assets/img/Zjump.png");
+    // }
+    // if(speed.y > 2 && !isGrounded){
+    //     spr->Open("assets/img/Zfall.png");
+    // }
+    auto [idx, cr_state] = spr->GetCurrent();
+    // auto [idxa, cr_statea] = act->GetCurrent();
+    if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN)
+        spr->ChangeState(RBSTATE::RUN);
+
+    if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE)
+        spr->ChangeState(RBSTATE::IDLE);
+
+    if(speed.x < 0) cr_state->SetFliped(true);
+
+    else if (speed.x > 0)
+        cr_state->SetFliped(false);
     
-    if(speed.y < 0 && !isGrounded){
-        spr->Open("assets/img/Zjump.png");
-    }
-    if(speed.y > 2 && !isGrounded){
-        spr->Open("assets/img/Zfall.png");
-    }
-    if(speed.x != 0 && isGrounded){   
-        spr->Open("assets/img/Zrun.png");
-    }
-    if(speed.x == 0 && isGrounded){
-        spr->Open("assets/img/Zidle.png");
-        speed.x = 0;
-    }
-    if(speed.x < 0){
-        spr->SetFliped(true);
-    }else if (speed.x > 0){
-        spr->SetFliped(false);
-    }
 }
 
 void RigidBody::Controls(float dt){

@@ -180,22 +180,18 @@ void StateMachine::AddTransition(int from, int to)
 
 void StateMachine::AddNode(int id, AnimNode* anm)
 {
-    states.insert({id, std::shared_ptr<AnimNode>(anm)});
+    states.insert({id, std::unique_ptr<AnimNode>(anm)});
     transitions.insert({id,id});
 }
 
-AnimNode* StateMachine::CurrentState()
+std::pair<const int, AnimNode*> StateMachine::GetCurrent()
 {
-    auto it = states.find(__curr);
-    if(it == states.end()) return nullptr;
-    return it->second.get();
+    return {__curr, states[__curr].get()};
 }
 
 void StateMachine::CenterBox(Rect& bx)
 {
-    auto cr = CurrentState();
-
-    if(!cr) return;
+    auto [__, cr] = GetCurrent();
 
     Vec2 center = bx.GetCenter();
     bx.w = cr->GetWidth();
@@ -203,7 +199,7 @@ void StateMachine::CenterBox(Rect& bx)
     bx.SetCenter(center.x, center.y);
 }
 
-std::unordered_map<int, std::shared_ptr<AnimNode>>& StateMachine::GetStates()
+std::unordered_map<int, std::unique_ptr<AnimNode>>& StateMachine::GetStates()
 { return states; }
 
 void StateMachine::ChangeState(int newSt)
@@ -214,3 +210,6 @@ void StateMachine::ChangeState(int newSt)
     __curr = newSt;
     CenterBox(associated.box);
 }
+
+bool StateMachine::Is(std::string type)
+{return "StateMachine";}
