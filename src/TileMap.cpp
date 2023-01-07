@@ -1,9 +1,13 @@
 #include "TileMap.h"
 #include "Scheduler.h"
+#include "State.h"
+#include "Game.h"
+#include "TerrainBody.h"
 
 TileMap::TileMap(GameObject& associated, std::string file, TileSet* tileSet) : GameObject(associated){
-    Load(file);
+    
     this->tileSet = tileSet;
+    Load(file);
 }
 
 void TileMap::Load(std::string file){
@@ -31,6 +35,46 @@ void TileMap::Load(std::string file){
             tileMatrix.push_back(stoi(value) - 1);
     }
 
+
+    State& state = Game::GetInstance().GetCurrentState();
+
+    for(int i = 0; i < mapHeight; i++){
+        
+        for(int j = 0; j < mapWidth; j++){
+           
+            //if (At(j, i, 0) == 16){     //?? At() n funciona aqui...por
+            if (tileMatrix[j+i*mapWidth]== 16){
+                int tileX = j * tileSet->GetTileWidth() ;
+                int tileY = i * tileSet->GetTileHeight() ;
+                
+            
+                GameObject* terrainbox = new GameObject();
+                    terrainbox->depth =999;
+                    TerrainBody* box2 = new TerrainBody(*terrainbox);
+                    terrainbox->AddComponent(box2);
+                    terrainbox->box.SetCenter(tileX,tileY);
+                    terrainbox->angleDeg = 0;
+                state.AddObject(terrainbox);
+            }
+            
+           
+        }
+       
+        
+        
+    }
+
+    // for(int i = 0; i < 100;i++){
+    //     GameObject* terrainbox = new GameObject();
+    //         terrainbox->depth =999;
+    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
+    //         terrainbox->AddComponent(box2);
+    //         terrainbox->box.SetCenter(i*10,0);
+    //         terrainbox->angleDeg = 0;
+    //     state.AddObject(terrainbox);
+    // }//!!para testar limites da colisão,delete me
+   
+
     inFile.close();
 }
 
@@ -54,8 +98,7 @@ void TileMap::Render(){
 void TileMap::Print(float x, float y)
 {
     float layerSpeed = 1.0 + 0.25 * x;
-    // RenderLayer(x, Camera::pos.x * layerSpeed, Camera::pos.y * layerSpeed);
-    RenderLayer(x, Camera::pos.x , Camera::pos.y );
+    RenderLayer(x, Camera::pos.x * layerSpeed, Camera::pos.y * layerSpeed);
     
 }
 
@@ -66,9 +109,13 @@ bool TileMap::Is(std::string type){
 void TileMap::RenderLayer(int layer, int cameraX, int cameraY){
     for(int i = 0; i < mapHeight; i++){
         for(int j = 0; j < mapWidth; j++){
+
             int tileX = j * tileSet->GetTileWidth() - cameraX;
             int tileY = i * tileSet->GetTileHeight() - cameraY;
             tileSet->RenderTile(At(j, i, layer), tileX, tileY);
+
+
+            
         }
     }
 }

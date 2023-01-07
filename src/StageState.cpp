@@ -150,7 +150,9 @@ void StageState::Update(float dt){
 void StageState::Render(){
     RenderArray();
 }
+void StageState::Collision(){
 
+}
 void StageState::Pause(){
 }
 

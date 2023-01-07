@@ -16,7 +16,6 @@ void TileSet::RenderTile(unsigned index, float x, float y){
         int clipY = (index / columns) * tileHeight;
 
         tileSet.SetClip(clipX, clipY, tileWidth, tileHeight);
-
         
         tileSet.Print(x, y);
     }

@@ -31,4 +31,5 @@ class StageState : public State {
         void Render();
         void Pause();
         void Resume();
+        void Collision();
 };

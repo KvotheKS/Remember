@@ -18,4 +18,5 @@ class TitleState : public State {
         void Render();
         void Pause();
         void Resume();
+        void Collision();
 };

@@ -70,3 +70,7 @@ void EndState::Pause(){
 
 void EndState::Resume(){
 }
+
+void EndState::Collision(){
+    
+}

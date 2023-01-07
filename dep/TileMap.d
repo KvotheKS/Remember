@@ -1,6 +1,5 @@
 dep/TileMap.d bin/TileMap.o: src/TileMap.cpp include/TileMap.h \
- include/GameObject.h include/Rect.h include/Vec2.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
+ include/Vec2.h C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/cpu_defines.h \
@@ -113,6 +112,7 @@ dep/TileMap.d bin/TileMap.o: src/TileMap.cpp include/TileMap.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ostream.tcc \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/istream \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/istream.tcc \
+ include/GameObject.h include/Rect.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/vector \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_uninitialized.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_vector.h \
@@ -252,10 +252,26 @@ dep/TileMap.d bin/TileMap.o: src/TileMap.cpp include/TileMap.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/fstream.tcc \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/sstream \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/sstream.tcc \
- include/Scheduler.h
+ include/Scheduler.h include/State.h include/Game.h include/TitleState.h \
+ include/StageState.h include/Music.h include/CameraFollower.h \
+ include/Alien.h include/Minion.h include/Bullet.h include/Collider.h \
+ include/PenguinBody.h include/PenguinCannon.h include/Sound.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/algorithm \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h \
+ include/Collision.h include/GameData.h include/EndState.h include/Text.h \
+ include/PingusState.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime \
+ C:/TDM-GCC-32/include/time.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/stack \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/deque \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_deque.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/deque.tcc \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h \
+ include/TerrainBody.h
 include/TileMap.h:
-include/GameObject.h:
-include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h:
@@ -380,6 +396,8 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_ios.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ostream.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/istream:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/istream.tcc:
+include/GameObject.h:
+include/Rect.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/vector:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_uninitialized.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_vector.h:
@@ -552,3 +570,34 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/fstream.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/sstream:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/sstream.tcc:
 include/Scheduler.h:
+include/State.h:
+include/Game.h:
+include/TitleState.h:
+include/StageState.h:
+include/Music.h:
+include/CameraFollower.h:
+include/Alien.h:
+include/Minion.h:
+include/Bullet.h:
+include/Collider.h:
+include/PenguinBody.h:
+include/PenguinCannon.h:
+include/Sound.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/algorithm:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h:
+include/Collision.h:
+include/GameData.h:
+include/EndState.h:
+include/Text.h:
+include/PingusState.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime:
+C:/TDM-GCC-32/include/time.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/stack:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/deque:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_deque.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/deque.tcc:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h:
+include/TerrainBody.h:

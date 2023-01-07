@@ -35,6 +35,8 @@ public:
     void Pause();
     void Resume();
 
-    Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float dt);
+    void Collision();
+
+    Vec2 Bcurve(Vec2 a, Vec2 b, Vec2 c, Vec2 d, float dt);
     Vec2 Bcurve2(std::vector<Vec2> vec,float dt);
 };

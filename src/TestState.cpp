@@ -178,8 +178,6 @@ void TestState::Update(float dt){
     Camera::Update(dt);
     
     
-     
-
     for(unsigned i = 0; i < objectArray.size(); i++){
         Collider* colliderA = (Collider*) objectArray[i]->GetComponent("Collider");
         if(colliderA == nullptr)
@@ -200,6 +198,8 @@ void TestState::Update(float dt){
             }
         }
     }
+    
+    
 
     for(unsigned i = 0; i < objectArray.size(); i++){
         if(objectArray[i]->IsDead()){
@@ -219,7 +219,9 @@ void TestState::Pause(){
 void TestState::Resume(){
 }
 
-
+void TestState::Collision(){
+    cout << "how\n";
+}
 Vec2 TestState::Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float t) {
     return Vec2( std::pow((1 - t), 3) * a.x + 3 * std::pow((1 - t), 2) * t * b.x + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * c.x + std::pow(t, 3) * d.x
                 ,std::pow((1 - t), 3) * a.y + 3 * std::pow((1 - t), 2) * t * b.y + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * c.y + std::pow(t, 3) * d.y);

@@ -1,8 +1,10 @@
 #pragma once
+#include "Vec2.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "TileSet.h"
 #include "Camera.h"
+
 #include <vector>
 #include <string>
 #include <fstream>

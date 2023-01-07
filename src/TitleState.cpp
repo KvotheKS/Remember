@@ -58,3 +58,7 @@ void TitleState::Pause(){
 void TitleState::Resume(){
     Camera::pos = {0, 0};
 }
+
+void TitleState::Collision(){
+
+}

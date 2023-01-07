@@ -55,7 +55,7 @@ pair<bool,Vec2> Collision::IsColliding(Rect& a, Rect& b, float angleOfA, float a
         // diferente da função base precisamos olhar todos os vertices pra pegar o vetor de distancia minima -m
         if(maxA < minB || minA > maxB){
             collide = false;
-            // return false;
+            return make_pair(collide,sep_vector);
         }  
     }
     
