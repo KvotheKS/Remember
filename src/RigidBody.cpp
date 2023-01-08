@@ -1,5 +1,7 @@
 #include "RigidBody.h"
 #include "TerrainBody.h"
+#include "ActionMachine.h"
+#include "StateMac.h"
 #include <iostream>
 #include "Game.h"
 // define pra test -m
@@ -9,9 +11,9 @@ using namespace std;
 
 
 RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), modo(modo){
-    Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
-    associated.AddComponent(pbody);
-    pbody->SetScaleX(2,2);
+    // Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
+    // associated.AddComponent(pbody);
+    // pbody->SetScaleX(2,2);
     Collider* collider = new Collider(associated);
     collider->SetScale(Vec2(1.3,1));
     collider->SetOffset(Vec2(0,8));
@@ -126,7 +128,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
         surface_inclination = other.angleDeg;
 
-        if((((int)other.angleDeg+45)%90)==0) idx == 4;
+        if((((int)other.angleDeg+45)%90)==0) idx = 4;
 
         switch(idx){//up
             
@@ -201,27 +203,33 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         
 }
 
+
+
 void RigidBody::Animation(float dt){
-    Sprite * spr = (Sprite*) associated.GetComponent(SPRITE_T);
+    StateMachine * spr = (StateMachine*) associated.GetComponent("StateMachine");
+    // ActionMachine * act = (ActionMachine*) associated.GetComponent("ActionMachine");
+    // if(speed.y < 0 && !isGrounded){
+    //     spr->Open("assets/img/Zjump.png");
+    // }
+    // if(speed.y > 2 && !isGrounded){
+    //     spr->Open("assets/img/Zfall.png");
+    // }
+    auto [idx, cr_state] = spr->GetCurrent();
+    // auto [idxa, cr_statea] = act->GetCurrent();
+    if(spr->ActionFinished())
+    {
+        if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN)
+            spr->ChangeState(RBSTATE::RUN);
+
+        if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE)
+            spr->ChangeState(RBSTATE::IDLE);
+    }
+
+    if(speed.x < 0) cr_state->SetFliped(true);
+
+    else if (speed.x > 0)
+        cr_state->SetFliped(false);
     
-    if(speed.y < 0 && !isGrounded){
-        spr->Open("assets/img/Zjump.png");
-    }
-    if(speed.y > 2 && !isGrounded){
-        spr->Open("assets/img/Zfall.png");
-    }
-    if(speed.x != 0 && isGrounded){   
-        spr->Open("assets/img/Zrun.png");
-    }
-    if(speed.x == 0 && isGrounded){
-        spr->Open("assets/img/Zidle.png");
-        speed.x = 0;
-    }
-    if(speed.x < 0){
-        spr->SetFliped(true);
-    }else if (speed.x > 0){
-        spr->SetFliped(false);
-    }
 }
 
 void RigidBody::Controls(float dt){
@@ -358,3 +366,13 @@ Vec2 RigidBody::Bcurve(std::vector<Vec2> vec, float t) {
 
 }
 
+int RigidBody::GetState()
+{
+    return  RBSTATE::RIGHT*(speed.x > 0 && isGrounded) +
+            RBSTATE::LEFT*(speed.x < 0 && isGrounded) +
+            RBSTATE::STILL*(speed.x == 0 && isGrounded) +
+            RBSTATE::JUMP*(speed.y < 0 && !isGrounded) +
+            RBSTATE::FALL*(speed.y > 2 && !isGrounded) +
+            RBSTATE::RUN*(speed.x != 0 && isGrounded) +
+            RBSTATE::IDLE*(speed.x == 0 && isGrounded);
+}
