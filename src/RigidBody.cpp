@@ -212,11 +212,14 @@ void RigidBody::Animation(float dt){
     // }
     auto [idx, cr_state] = spr->GetCurrent();
     // auto [idxa, cr_statea] = act->GetCurrent();
-    if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN)
-        spr->ChangeState(RBSTATE::RUN);
+    if(spr->ActionFinished())
+    {
+        if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN)
+            spr->ChangeState(RBSTATE::RUN);
 
-    if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE)
-        spr->ChangeState(RBSTATE::IDLE);
+        if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE)
+            spr->ChangeState(RBSTATE::IDLE);
+    }
 
     if(speed.x < 0) cr_state->SetFliped(true);
 

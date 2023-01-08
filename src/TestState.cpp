@@ -51,10 +51,10 @@ void TestState::LoadAssets(){
     GameObject* player = new GameObject();
         player->depth = 999;
         RigidBody* box = new RigidBody(*player,1);
-        SSNode* primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 118, 476, 100}, 8, 0.4);
         StateMachine* st = new StateMachine(*player);
+        SSNode* primbus = new SSNode(3.2f, {RBSTATE::RUN}, "assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 118, 476, 100}, 8, 0.4);
         st->AddNode(RBSTATE::RUN, primbus); 
-        primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 0, 424, 114}, 8, 0.1);
+        primbus = new SSNode(0,{RBSTATE::RUN},"assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 0, 424, 114}, 8, 0.1);
         st->AddNode(RBSTATE::IDLE, primbus); st->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
         player->AddComponent(st);
         player->AddComponent(box);

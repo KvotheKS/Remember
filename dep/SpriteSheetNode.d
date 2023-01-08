@@ -259,7 +259,11 @@ dep/SpriteSheetNode.d bin/SpriteSheetNode.o: src/SpriteSheetNode.cpp \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/set \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_set.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multiset.h
 include/SpriteSheetNode.h:
 include/StateMac.h:
 include/SDL_include.h:
@@ -560,3 +564,7 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/set:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_set.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multiset.h:

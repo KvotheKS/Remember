@@ -260,6 +260,10 @@ dep/StateMac.d bin/StateMac.o: src/StateMac.cpp include/StateMac.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/set \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_set.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multiset.h \
  include/Resources.h include/SDL2/SDL_image.h include/SDL2/SDL.h \
  include/SDL2/SDL_mixer.h include/SDL2/SDL_ttf.h include/Game.h \
  include/InputManager.h \
@@ -595,6 +599,10 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/set:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_set.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multiset.h:
 include/Resources.h:
 include/SDL2/SDL_image.h:
 include/SDL2/SDL.h:
