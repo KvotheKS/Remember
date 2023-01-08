@@ -13,7 +13,7 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     associated.AddComponent(pbody);
     pbody->SetScaleX(2,2);
     Collider* collider = new Collider(associated);
-    collider->SetScale(Vec2(1,1));
+    collider->SetScale(Vec2(1.3,1));
     collider->SetOffset(Vec2(0,8));
     
     associated.AddComponent(collider);
@@ -107,8 +107,8 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         auto it = std::min_element(std::begin(distances), std::end(distances));
         int idx = std::distance(std::begin(distances), it); 
         
-        int ang = (int)other.angleDeg % 360; // limitar angulo a 360°
-        ang = (ang+45)/90;                   //  tecnicamente um cubo girado a 40° eh o mesmo que um em 95º .
+        float ang = fmod(other.angleDeg, 360); // limitar angulo a 360°
+        ang = (ang+45)/90;                   //  tecnicamente um cubo girado a 45° eh o mesmo que um em 90º .
         idx += ang;             
 
         idx = idx%4;
@@ -129,22 +129,24 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         if((((int)other.angleDeg+45)%90)==0) idx == 4;
 
         switch(idx){//up
+            
             case 0:
-                
-                GoUp(b);
+                // cout << "up:";
+                associated.box.y -= b;
                 if(speed.y >= 0){
                     isGrounded = true; 
                     speed.y =0;
                 }    
-                
 
             break;
             case 1://right
+                // cout << "right\n";
                 GoRight(b);
                
 
             break;
-            case 2://down
+            case 2://down]
+                // cout << "down\n";
                 GoDown(b);
                 
                 if(speed.y<0){
@@ -156,44 +158,46 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
             break;
             case 3://left
+                // cout << "left\n";
                 GoLeft(b);
 
               
 
             break;
-            case 4://45° degree
-                if(idx == 0 || idx == 1){//up
-             
+            // case 4://45° degree
+            //     if(idx == 0 || idx == 1){//up
                     
-                    GoUp(b);
+            //         GoUp(b);
                 
-                    if(speed.y >= 0){//down
-                        isGrounded = true; 
-                        speed.y =0;
-                    }    
-                }else{
-                    GoDown(b);
-                    if(speed.y<0){
+            //         if(speed.y >= 0){//down
+            //             isGrounded = true; 
+            //             speed.y =0;
+            //         }    
+            //     }else{
+            //         GoDown(b);
+            //         if(speed.y<0){
                         
-                        // jumpTimer.Set(JUMP_TIMER);
-                        // speed.y =0;
-                    }
+            //             // jumpTimer.Set(JUMP_TIMER);
+            //             // speed.y =0;
+            //         }
                     
                   
-                }
+            //     }
 
-            break;
+            // break;
         }
+
         
+        surface_inclination =  other.angleDeg;
      
-
-
-        Camera::Update(0);
+        // Camera::Update(0);
         if(Collider* collider = (Collider*)associated.GetComponent("Collider")){
             collider->Update(0);
         }
+        
             
-        }
+            
+    }
         
 }
 
@@ -240,14 +244,26 @@ void RigidBody::Controls(float dt){
     if(inManager.IsKeyDown(S_KEY)){
         
     }
+    
     if(inManager.IsKeyDown(A_KEY)){
         speed.x -= MOVE_ACCELERATION*dt;
 
-        
+         
+        // grudar em rampas
+        if(isGrounded&& (surface_inclination != 0)){
+            
+            associated.box.y += MAX_MOVE_SPEED* 0.030 ;
+                
+        }
 
         inputDone = true;
     }
     if(inManager.IsKeyDown(D_KEY)){
+        if(isGrounded ){
+            
+            associated.box.y += MAX_MOVE_SPEED* 0.030 ;
+                
+        }
         speed.x += MOVE_ACCELERATION*dt;
         inputDone = true;
         
@@ -271,13 +287,7 @@ void RigidBody::Physics(float dt){
       
     // Queda 
     speed.y += FALL_ACCELERATION*dt; 
-
-    // grudar em rampas
-    if(isGrounded){
-     
-        associated.box.y += MAX_MOVE_SPEED* 0.030;
-            
-    }
+   
 
     // desacelerar
     if(!inputDone){   

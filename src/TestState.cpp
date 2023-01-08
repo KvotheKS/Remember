@@ -53,7 +53,7 @@ void TestState::LoadAssets(){
     /*STAGE TERRAIN*/
     float tot = 50;
     //first platform
-    for(int i = 0; i<20; i++){
+    for(int i = 0; i<250; i++){
         GameObject* terrainbox = new GameObject();
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);
@@ -63,25 +63,25 @@ void TestState::LoadAssets(){
         objectArray.emplace_back(terrainbox);
     }
     // west celling
-    for(int i = 0; i<10; i++){
-        GameObject* terrainbox = new GameObject();
-            terrainbox->depth = 999;
-            TerrainBody* box2 = new TerrainBody(*terrainbox);
-            terrainbox->AddComponent(box2);
-            terrainbox->box.SetCenter(i*100-1300, 300);
-            terrainbox->angleDeg = 0;
-        objectArray.emplace_back(terrainbox);
-    }
+    // for(int i = 0; i<10; i++){
+    //     GameObject* terrainbox = new GameObject();
+    //         terrainbox->depth = 999;
+    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
+    //         terrainbox->AddComponent(box2);
+    //         terrainbox->box.SetCenter(i*100-1300, 300);
+    //         terrainbox->angleDeg = 0;
+    //     objectArray.emplace_back(terrainbox);
+    // }
     // diagonal cubes
-    for(int i = 0; i<20; i++){
-        GameObject* terrainbox = new GameObject();
-            terrainbox->depth = 999;
-            TerrainBody* box2 = new TerrainBody(*terrainbox);
-            terrainbox->AddComponent(box2);
-            terrainbox->box.SetCenter(i*100+300, 000);
-            terrainbox->angleDeg = 20*(i+1);
-        objectArray.emplace_back(terrainbox);
-    }
+    // for(int i = 0; i<20; i++){
+    //     GameObject* terrainbox = new GameObject();
+    //         terrainbox->depth = 999;
+    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
+    //         terrainbox->AddComponent(box2);
+    //         terrainbox->box.SetCenter(i*100+300, 000);
+    //         terrainbox->angleDeg = 20*(i+1);
+    //     objectArray.emplace_back(terrainbox);
+    // }
    
     // jump platforms
     for(int i = 0; i<5; i++){
@@ -174,31 +174,53 @@ void TestState::Update(float dt){
 
     */
     
+    
     UpdateArray(dt);
-    Camera::Update(dt);
     
     
     for(unsigned i = 0; i < objectArray.size(); i++){
+        std::vector<string> collision_targets;
+
         Collider* colliderA = (Collider*) objectArray[i]->GetComponent("Collider");
         if(colliderA == nullptr)
             continue;
         float angleOfA = objectArray[i]->angleDeg * (PI / 180.0);
 
+        // marcar tipos de objetos pra checar col
+        if(objectArray[i]->GetComponent("RigidBody")){
+            collision_targets.push_back("TerrainBody");
+        }
+        if(objectArray[i]->GetComponent("TerrainBody")){
+            collision_targets.push_back("RigidBody");
+        }
+
         for(unsigned j = i + 1; j < objectArray.size(); j++){
+            // checar se o tipo de objeto i vai precisar testar colisão com objeto j
+            bool check = false;
+            for(string s : collision_targets){
+                
+                if(objectArray[j]->GetComponent(s) != nullptr){
+                    
+                    check = true;
+                }
+            }
+            if(!check) continue;
+
             Collider* colliderB = (Collider*) objectArray[j]->GetComponent("Collider");
             if(colliderB == nullptr)
                 continue;
             float angleOfB = objectArray[j]->angleDeg * (PI / 180.0);
-
+            
             if((Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).first){
                 Vec2 sep = (Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).second;
-               
+                
                 objectArray[i]->NotifyCollisionBehavior(*objectArray[j],sep);
                 objectArray[j]->NotifyCollisionBehavior(*objectArray[i],sep);
             }
         }
     }
     
+    Camera::Update(dt);
     
 
     for(unsigned i = 0; i < objectArray.size(); i++){
