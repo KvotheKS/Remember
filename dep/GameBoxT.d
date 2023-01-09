@@ -221,8 +221,8 @@ dep/GameBoxT.d bin/GameBoxT.o: src/GameBoxT.cpp include/GameBoxT.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cerrno \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/charconv.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_string.tcc \
- include/State.h include/GameObject.h include/Rect.h include/Vec2.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
+ include/State.h include/GameObject.h include/ObjectId.h include/Rect.h \
+ include/Vec2.h C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/include/math.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/specfun.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tr1/gamma.tcc \
@@ -560,6 +560,7 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/charconv.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_string.tcc:
 include/State.h:
 include/GameObject.h:
+include/ObjectId.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:

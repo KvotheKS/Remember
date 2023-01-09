@@ -27,6 +27,7 @@ public:
     void Update(float dt);
     void Render();
     bool Is(std::string type);
+    bool Is(C_ID);
     void NotifyCollision(GameObject& other,Vec2 sep);
    
 };

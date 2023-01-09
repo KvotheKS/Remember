@@ -10,9 +10,7 @@ class AnimNode
 {
 public:
     bool rendered;
-    float actionTime, totalTime;
-    std::set<int> possibleActions;
-
+    
 public:
     std::shared_ptr<SDL_Texture> texture;
     int width;
@@ -29,7 +27,7 @@ public:
     Uint8 r=255, g=255, b=255;
 
 public:
-    AnimNode(float actionTime, std::set<int> possibleActions,std::string file, int frameCount, float frameTime, Vec2 scale = Vec2(1,1), bool reverse = false, bool flipped = false);
+    AnimNode(std::string file, int frameCount, float frameTime, Vec2 scale = Vec2(1,1), bool reverse = false, bool flipped = false);
 
 public:
     virtual void Update(float dt);
@@ -57,7 +55,7 @@ public:
 
 class StateMachine : public GameObject
 {
-    bool justFinished, actionFinished;
+    bool justFinished;
     int __curr = 0;
     std::unordered_map<int,std::unique_ptr<AnimNode>> states;
     std::unordered_map<int,int> transitions;
@@ -72,12 +70,11 @@ public:
 
 public:
     bool Is(std::string);
+    bool Is(C_ID);
     void AddTransition(int,int);
     void AddNode(int,AnimNode*);
     std::pair<const int, AnimNode*> GetCurrent();
     bool IsDone();
-    bool ActionFinished();
-    std::set<int>& GetActions();
     void ChangeState(int);
     void CenterBox(Rect&);
     std::unordered_map<int, std::unique_ptr<AnimNode>>& GetStates();

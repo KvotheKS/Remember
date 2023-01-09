@@ -1,5 +1,5 @@
 dep/GameObject.d bin/GameObject.o: src/GameObject.cpp \
- include/GameObject.h include/Rect.h include/Vec2.h \
+ include/GameObject.h include/ObjectId.h include/Rect.h include/Vec2.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h \
@@ -275,6 +275,7 @@ dep/GameObject.d bin/GameObject.o: src/GameObject.cpp \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/functional \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_function.h
 include/GameObject.h:
+include/ObjectId.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:

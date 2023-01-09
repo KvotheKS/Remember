@@ -4,18 +4,15 @@
 #include "Vec2.h"
 #include "Scheduler.h"
 
-AnimNode::AnimNode(float actionTime, std::set<int> possibleActions, std::string file, int frameCount, float frameTime, Vec2 scale, bool reverse, bool flipped)
-    : possibleActions(possibleActions)
+AnimNode::AnimNode(std::string file, int frameCount, float frameTime, Vec2 scale, bool reverse, bool flipped)
 {
     texture = nullptr;
     this->scale = scale;
-    this->actionTime = actionTime;
     Open(file);
     SetFrameCount(frameCount);
     SetFrameTime(frameTime);
     fliped = flipped;
     finished = false;
-    totalTime = 0.0f;
     rendered = true;
     this->reverse = reverse;
 }
@@ -69,7 +66,8 @@ void AnimNode::Update(float dt){
         {
             if(currentFrame == 0)
                 finished = true;
-            SetFrame(currentFrame - 1);
+            else
+                SetFrame(currentFrame - 1);
             return;
         }
 
@@ -90,7 +88,6 @@ void AnimNode::Render()
 
 void AnimNode::Reset()
 {
-    // totalTime = 0.0f;
     timeElapsed = 0.0f;
     finished = false;
     SetFrame(reverse*(frameCount - 1));
@@ -150,34 +147,32 @@ void AnimNode::SetFliped(bool value){
 bool AnimNode::IsDone()
 { return finished; }
 
-bool AnimNode::ActionFinished()
-{ return actionTime <= totalTime; }
-
 StateMachine::StateMachine(GameObject& associated)
-    : GameObject(associated), __curr(0), justFinished(false), actionFinished(false)
+    : GameObject(associated), __curr(0), justFinished(false)
 {}
 
 void StateMachine::Update(float dt)
 {
     if(!states.empty())
     {
+        // std::cout << "1\n";
         auto it = states.find(__curr);
+        // std::cout << it->second->rendered;
         if(it->second->rendered)
         {
-            it->second->totalTime+=dt;
+            // std::cout << "tt1\n";1
             it->second->timeElapsed+=dt;
             it->second->Update(dt);
+            // std::cout << "2\n";
         }
-        
-        actionFinished=it->second->ActionFinished();
         
         if(it->second->IsDone())
         {
+            // std::cout << "3\n";
             ChangeState(transitions[__curr]);
             justFinished = true;
         }
         else justFinished = false;
-        
     }
 }
 
@@ -217,12 +212,6 @@ std::pair<const int, AnimNode*> StateMachine::GetCurrent()
 bool StateMachine::IsDone()
 { return justFinished; }
 
-bool StateMachine::ActionFinished()
-{ return actionFinished; }
-
-std::set<int>& StateMachine::GetActions()
-{ return states[__curr]->possibleActions; }
-
 void StateMachine::CenterBox(Rect& bx)
 {
     auto [__, cr] = GetCurrent();
@@ -244,9 +233,11 @@ void StateMachine::ChangeState(int newSt)
     __curr = newSt;
     it = states.find(__curr);
     it->second->rendered = false;
-    it->second->totalTime = 0.0f;
     CenterBox(associated.box);
 }
 
 bool StateMachine::Is(std::string type)
-{return "StateMachine";}
+{return type == "StateMachine"; }
+
+bool StateMachine::Is(C_ID type)
+{ return type == C_ID::StateMachine; }

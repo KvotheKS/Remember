@@ -34,4 +34,5 @@ public:
     virtual void Print(float x, float y);
     void Render();
     bool Is(std::string type);
+    bool Is(C_ID);
 };

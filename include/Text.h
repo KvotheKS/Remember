@@ -34,6 +34,7 @@ class Text : public GameObject {
         void Render();
         void Print(float x = -1, float y = -1);
         bool Is(std::string type);
+        bool Is(C_ID);
         void SetText(std::string text);
         void SetColor(SDL_Color color);
         void SetStyle(TextStyle style);

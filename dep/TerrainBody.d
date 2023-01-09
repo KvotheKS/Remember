@@ -1,5 +1,6 @@
 dep/TerrainBody.d bin/TerrainBody.o: src/TerrainBody.cpp \
- include/TerrainBody.h include/GameObject.h include/Rect.h include/Vec2.h \
+ include/TerrainBody.h include/GameObject.h include/ObjectId.h \
+ include/Rect.h include/Vec2.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h \
@@ -276,6 +277,7 @@ dep/TerrainBody.d bin/TerrainBody.o: src/TerrainBody.cpp \
  include/RigidBody.h
 include/TerrainBody.h:
 include/GameObject.h:
+include/ObjectId.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:

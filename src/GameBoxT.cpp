@@ -28,3 +28,6 @@ bool GameBoxT::Is(std::string type)
 
 std::string GameBoxT::Is()
 {return "GameBoxT"; }
+
+bool GameBoxT::Is(C_ID type)
+{ return type == C_ID::GameBoxT; }

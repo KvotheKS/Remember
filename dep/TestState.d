@@ -1,6 +1,6 @@
 dep/TestState.d bin/TestState.o: src/TestState.cpp include/TestState.h \
- include/State.h include/GameObject.h include/Rect.h include/Vec2.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
+ include/State.h include/GameObject.h include/ObjectId.h include/Rect.h \
+ include/Vec2.h C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/cpu_defines.h \
@@ -286,6 +286,10 @@ dep/TestState.d bin/TestState.o: src/TestState.cpp include/TestState.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_function.h \
  include/RigidBody.h include/TerrainBody.h include/Collision.h \
  include/GameData.h include/EndState.h include/Text.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/map \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_map.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multimap.h \
  include/FpsPrinter.h include/Game.h include/TitleState.h \
  include/StageState.h include/PingusState.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime \
@@ -296,13 +300,13 @@ dep/TestState.d bin/TestState.o: src/TestState.cpp include/TestState.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/deque.tcc \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h \
  include/StateMac.h C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/set \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_set.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multiset.h \
  include/SpriteSheetNode.h include/ActionMachine.h
 include/TestState.h:
 include/State.h:
 include/GameObject.h:
+include/ObjectId.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:
@@ -644,6 +648,10 @@ include/Collision.h:
 include/GameData.h:
 include/EndState.h:
 include/Text.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/map:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_map.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multimap.h:
 include/FpsPrinter.h:
 include/Game.h:
 include/TitleState.h:
@@ -658,7 +666,6 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/deque.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_stack.h:
 include/StateMac.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/set:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_set.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multiset.h:
 include/SpriteSheetNode.h:

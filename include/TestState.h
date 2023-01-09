@@ -20,11 +20,15 @@
 #include "Vec2.h"
 #include <vector>
 #include <memory>
+#include <map>
 
 class TestState : public State {
 private:
+    GameObject* player;
     TileSet* tileSet;
     Music backgroundMusic;
+    std::vector<std::vector<C_ID>> collision_targets;
+    enum {RigidBody_e=0, TerrainBody_e};
 public:
     TestState();
     ~TestState();

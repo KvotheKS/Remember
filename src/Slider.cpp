@@ -62,3 +62,6 @@ void Slider::Print(float x, float y)
 
 bool Slider::Is(std::string type)
 { return type == "Slider"; }
+
+bool Slider::Is(C_ID type)
+{ return type == C_ID::Slider; }

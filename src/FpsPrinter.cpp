@@ -23,3 +23,6 @@ void FpsPrinter::Render()
 
 bool FpsPrinter::Is(std::string type)
 { return type == "FpsPrinter"; }
+
+bool FpsPrinter::Is(C_ID type)
+{ return type == C_ID::FpsPrinter; }

@@ -86,6 +86,9 @@ bool Text::Is(std::string type){
     return type == "Text";
 }
 
+bool Text::Is(C_ID type)
+{ return type == C_ID::Text; }
+
 void Text::SetText(std::string text){
     this->text = text;
     RemakeTexture();

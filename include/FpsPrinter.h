@@ -16,4 +16,5 @@ public:
 
 public:
     bool Is(std::string type);
+    bool Is(C_ID);
 };

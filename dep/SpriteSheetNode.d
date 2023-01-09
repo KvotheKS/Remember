@@ -109,7 +109,7 @@ dep/SpriteSheetNode.d bin/SpriteSheetNode.o: src/SpriteSheetNode.cpp \
  include/SDL2/SDL_shape.h include/SDL2/SDL_system.h \
  include/SDL2/SDL_timer.h include/SDL2/SDL_version.h \
  include/SDL2/SDL_locale.h include/SDL2/SDL_misc.h include/GameObject.h \
- include/Rect.h include/Vec2.h \
+ include/ObjectId.h include/Rect.h include/Vec2.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cpp_type_traits.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/type_traits.h \
@@ -407,6 +407,7 @@ include/SDL2/SDL_version.h:
 include/SDL2/SDL_locale.h:
 include/SDL2/SDL_misc.h:
 include/GameObject.h:
+include/ObjectId.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:

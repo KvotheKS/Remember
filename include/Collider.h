@@ -18,6 +18,7 @@ class Collider : public GameObject {
         void Render();
         void Print(float x=-1, float y=-1);
         bool Is(std::string type);
+        bool Is(C_ID);
         void SetScale(Vec2 scale);
         void SetOffset(Vec2 offset);
         Vec2 GetScale();

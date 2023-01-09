@@ -26,10 +26,9 @@ void GameObject::UpdateNodes(float dt)
     for(unsigned i = 0; i < components.size(); i++)
     {
         components[i]->Update(dt);
-
         components[i]->box = box + relative;
         components[i]->UpdateNodes(dt);
-
+        
     
     }
     // para garantir que o collider seja atualizado depois de sprite, ele esta sendo atualizado 2 vezes todo frame
@@ -38,6 +37,7 @@ void GameObject::UpdateNodes(float dt)
             collider->Update(dt);
 
         }
+    
 }
 
 void GameObject::RenderNodes(){
@@ -52,6 +52,7 @@ void GameObject::Update(float dt){}
 void GameObject::Render(){}
 void GameObject::Print(float x, float y){}
 bool GameObject::Is(std::string type){ return type == "GameObject"; }
+bool GameObject::Is(C_ID type){ return C_ID::GameObject == type; }
 std::string GameObject::Is() { return "GameObject"; }
 void NotifyCollision(GameObject& other){}
 
@@ -90,7 +91,25 @@ GameObject* GameObject::GetComponent(std::string type){
     return nullptr;
 }
 
+GameObject* GameObject::GetComponent(C_ID type){
+    for(unsigned i = 0; i < components.size(); i++)
+        if(components[i]->Is(type))
+            return components[i].get();
+    return nullptr;
+}
+
+
 std::vector<GameObject*> GameObject::GetComponents(std::string type)
+{
+    std::vector<GameObject*> ret;
+    
+    for(unsigned i = 0; i < components.size(); i++)
+        if(components[i]->Is(type))
+            ret.push_back(components[i].get());
+    return ret;
+}
+
+std::vector<GameObject*> GameObject::GetComponents(C_ID type)
 {
     std::vector<GameObject*> ret;
     

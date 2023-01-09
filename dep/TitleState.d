@@ -1,6 +1,7 @@
 dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
- include/TitleState.h include/State.h include/GameObject.h include/Rect.h \
- include/Vec2.h C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
+ include/TitleState.h include/State.h include/GameObject.h \
+ include/ObjectId.h include/Rect.h include/Vec2.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/cpu_defines.h \
@@ -286,6 +287,10 @@ dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_function.h \
  include/Collision.h include/GameData.h include/EndState.h include/Text.h \
  include/TestState.h include/RigidBody.h include/TerrainBody.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/map \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_map.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multimap.h \
  include/Game.h include/PingusState.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime \
  C:/TDM-GCC-32/include/time.h \
@@ -297,6 +302,7 @@ dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
 include/TitleState.h:
 include/State.h:
 include/GameObject.h:
+include/ObjectId.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:
@@ -640,6 +646,10 @@ include/Text.h:
 include/TestState.h:
 include/RigidBody.h:
 include/TerrainBody.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/map:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_map.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multimap.h:
 include/Game.h:
 include/PingusState.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ctime:

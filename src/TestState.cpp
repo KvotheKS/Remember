@@ -19,6 +19,13 @@ TestState::~TestState(){
 
 void TestState::LoadAssets(){
 
+    collision_targets.assign(
+        {
+            {C_ID::TerrainBody}, 
+            {C_ID::RigidBody}
+        }
+    );
+
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
         Sprite* bg = new Sprite(*goBackground, "assets/img/space.jpg");
@@ -42,15 +49,18 @@ void TestState::LoadAssets(){
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
-    GameObject* player = new GameObject();
+    player = new GameObject();
         player->depth = 999;
         RigidBody* box = new RigidBody(*player,1);
+        
         StateMachine* st = new StateMachine(*player);
-        SSNode* primbus = new SSNode(3.2f, {RBSTATE::RUN}, "assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 118, 476, 100}, 8, 0.4);
+        SSNode* primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 118, 476, 100}, 8, 0.4);
         st->AddNode(RBSTATE::RUN, primbus); 
-        primbus = new SSNode(0,{RBSTATE::RUN},"assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 0, 424, 114}, 8, 0.1);
+        
+        primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 0, 424, 114}, 8, 0.1);
         st->AddNode(RBSTATE::IDLE, primbus); st->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
         player->AddComponent(st);
+        
         player->AddComponent(box);
         player->box.SetCenter(100, 100);
         // ActionMachine* act = new ActionMachine(*player);
@@ -66,7 +76,7 @@ void TestState::LoadAssets(){
     /*STAGE TERRAIN*/
     float tot = 50;
     //first platform
-    for(int i = 0; i<250; i++){
+    for(int i = 0; i<1500; i++){
         GameObject* terrainbox = new GameObject();
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);
@@ -184,52 +194,35 @@ void TestState::Update(float dt){
         
 
     /* ordem de update necessaria
-
     */
     
-    
     UpdateArray(dt);
-    
-    
-    for(unsigned i = 0; i < objectArray.size(); i++){
-        std::vector<string> collision_targets;
 
-        Collider* colliderA = (Collider*) objectArray[i]->GetComponent("Collider");
-        if(colliderA == nullptr)
+    Collider* colliderA = (Collider*) player->GetComponent(C_ID::Collider);
+    if(!colliderA)
+        return;
+
+    float angleOfA = player->angleDeg * (PI / 180.0);
+
+    for(unsigned j = 0; j < objectArray.size(); j++){
+        // checar se o tipo de objeto i vai precisar testar colisão com objeto j
+        bool check = false;
+        for(C_ID s : collision_targets[RigidBody_e]){
+            if(objectArray[j]->GetComponent(s))
+                check = true;
+        }
+        if(!check) continue;
+
+        Collider* colliderB = (Collider*) objectArray[j]->GetComponent(C_ID::Collider);
+        if(colliderB == nullptr)
             continue;
-        float angleOfA = objectArray[i]->angleDeg * (PI / 180.0);
-
-        // marcar tipos de objetos pra checar col
-        if(objectArray[i]->GetComponent("RigidBody")){
-            collision_targets.push_back("TerrainBody");
-        }
-        if(objectArray[i]->GetComponent("TerrainBody")){
-            collision_targets.push_back("RigidBody");
-        }
-
-        for(unsigned j = i + 1; j < objectArray.size(); j++){
-            // checar se o tipo de objeto i vai precisar testar colisão com objeto j
-            bool check = false;
-            for(string s : collision_targets){
-                
-                if(objectArray[j]->GetComponent(s) != nullptr){
-                    
-                    check = true;
-                }
-            }
-            if(!check) continue;
-
-            Collider* colliderB = (Collider*) objectArray[j]->GetComponent("Collider");
-            if(colliderB == nullptr)
-                continue;
-            float angleOfB = objectArray[j]->angleDeg * (PI / 180.0);
-            
-            if((Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).first){
-                Vec2 sep = (Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB)).second;
-                
-                objectArray[i]->NotifyCollisionBehavior(*objectArray[j],sep);
-                objectArray[j]->NotifyCollisionBehavior(*objectArray[i],sep);
-            }
+        float angleOfB = objectArray[j]->angleDeg * (PI / 180.0);
+        
+        auto [flag, sep] = Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB);
+        
+        if(flag){    
+            player->NotifyCollisionBehavior(*objectArray[j],sep);
+            objectArray[j]->NotifyCollisionBehavior(*player,sep);
         }
     }
     
@@ -255,16 +248,14 @@ void TestState::Resume(){
 }
 
 void TestState::Collision(){
-    cout << "how\n";
 }
+
 Vec2 TestState::Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float t) {
     return Vec2( std::pow((1 - t), 3) * a.x + 3 * std::pow((1 - t), 2) * t * b.x + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * c.x + std::pow(t, 3) * d.x
                 ,std::pow((1 - t), 3) * a.y + 3 * std::pow((1 - t), 2) * t * b.y + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * c.y + std::pow(t, 3) * d.y);
 }
 
 Vec2 TestState::Bcurve2(std::vector<Vec2> vec, float t) {
-    
-   
     auto fac = [](const int n){
         int ret = n;
         if(n == 0) return 1;

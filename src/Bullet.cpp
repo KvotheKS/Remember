@@ -33,6 +33,9 @@ bool Bullet::Is(std::string type){
     return type == "Bullet";
 }
 
+bool Bullet::Is(C_ID type)
+{ return type == C_ID::Bullet; }
+
 int Bullet::GetDamage(){
     return damage;
 }

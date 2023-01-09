@@ -53,3 +53,6 @@ void Sound::Render(){
 bool Sound::Is(std::string type){
     return type == "Sound";
 }
+
+bool Sound::Is(C_ID type)
+{ return type == C_ID::Sound; }

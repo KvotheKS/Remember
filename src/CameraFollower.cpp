@@ -14,3 +14,6 @@ void CameraFollower::Render(){
 bool CameraFollower::Is(std::string type){
     return type == "CameraFollower";
 }
+
+bool CameraFollower::Is(C_ID type)
+{ return type == C_ID::CameraFollower; }

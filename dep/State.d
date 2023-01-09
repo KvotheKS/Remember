@@ -1,5 +1,5 @@
 dep/State.d bin/State.o: src/State.cpp include/State.h \
- include/GameObject.h include/Rect.h include/Vec2.h \
+ include/GameObject.h include/ObjectId.h include/Rect.h include/Vec2.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/c++config.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/os_defines.h \
@@ -160,6 +160,7 @@ dep/State.d bin/State.o: src/State.cpp include/State.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/execution_defs.h
 include/State.h:
 include/GameObject.h:
+include/ObjectId.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:

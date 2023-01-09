@@ -27,6 +27,10 @@ void TerrainBody::Render(){
 bool TerrainBody::Is(std::string type){
     return type == "TerrainBody";
 }
+
+bool TerrainBody::Is(C_ID type)
+{ return type == C_ID::TerrainBody; }
+
 void TerrainBody::NotifyCollision(GameObject& other,Vec2 sep){
     
     // if(RigidBody * body = (RigidBody*)other.GetComponent("RigidBody")){

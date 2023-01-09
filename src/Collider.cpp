@@ -17,10 +17,8 @@ void Collider::Update(float dt){
     box = associated.box;
     box.w *= scale.x;
     box.h *= scale.y;
-
     float angle = associated.angleDeg * (PI / 180.0);
     Vec2 offsetR = offset.Rotate(angle);
-
     Vec2 center = associated.box.GetCenter();
     box.SetCenter(center.x + offsetR.x, center.y + offsetR.y);
 }
@@ -62,6 +60,9 @@ void Collider::Print(float x, float y){
 bool Collider::Is(std::string type){
     return type == "Collider";
 }
+
+bool Collider::Is(C_ID type)
+{ return type == C_ID::Collider; }
 
 void Collider::SetScale(Vec2 scale){
     this->scale = scale;

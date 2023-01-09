@@ -2,10 +2,12 @@
 // #include "Component.h"
 // #include "TerrainBody.h"
 // #include "RigidBody.h"
+#include "ObjectId.h"
 #include "Rect.h"
 #include <vector>
 #include <memory>
 #include <string>
+
 
 class GameObject {
     private:
@@ -28,6 +30,7 @@ class GameObject {
         virtual void Render();
         virtual void Print(float x = -1, float y = -1);
         virtual bool Is(std::string type);
+        virtual bool Is(C_ID);
         virtual std::string Is();
        
         bool IsDead();
@@ -36,8 +39,13 @@ class GameObject {
         void AddComponent(GameObject* cpt);
         void AddComponents(std::initializer_list<GameObject*> cpts);
         void RemoveComponent(GameObject* cpt);
+        
         GameObject* GetComponent(std::string type);
+        GameObject* GetComponent(C_ID type);
+        
+
         std::vector<GameObject*> GetComponents(std::string type);
+        std::vector<GameObject*> GetComponents(C_ID type);
 
         virtual void NotifyCollision(GameObject& other,Vec2 sep);
         void NotifyCollisionBehavior(GameObject& other,Vec2 sep);

@@ -106,6 +106,9 @@ bool TileMap::Is(std::string type){
     return type == "TileMap";
 }
 
+bool TileMap::Is(C_ID type)
+{ return type == C_ID::TileMap; }
+
 void TileMap::RenderLayer(int layer, int cameraX, int cameraY){
     for(int i = 0; i < mapHeight; i++){
         for(int j = 0; j < mapWidth; j++){

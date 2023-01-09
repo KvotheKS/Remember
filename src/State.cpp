@@ -18,6 +18,7 @@ void State::StartArray(){
 
 
 void State::UpdateArray(float dt){
+    
     for(unsigned i = 0; i < objectArray.size(); i++)
     {
         objectArray[i]->Update(dt);

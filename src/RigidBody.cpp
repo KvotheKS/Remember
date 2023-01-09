@@ -70,11 +70,14 @@ bool RigidBody::Is(std::string type){
     return type == "RigidBody";
 }
 
+bool RigidBody::Is(C_ID type){
+    return type == C_ID::RigidBody;
+}
 
 void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
     
-    Collider * ass_collider = (Collider*)associated.GetComponent("Collider");
-    Collider * terrain_collider = (Collider*)other.GetComponent("Collider");
+    Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
+    Collider * terrain_collider = (Collider*)other.GetComponent(C_ID::Collider);
     auto GoUp = [&](float d){
         associated.box.y -= d;
     };
@@ -87,7 +90,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
     auto GoRight = [&](float d){
         associated.box.x += d;
     };
-    if(TerrainBody * terrain = (TerrainBody*)other.GetComponent("TerrainBody")){
+    if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::TerrainBody)){
         /* pegar ponto central de cada aresta */
         Vec2 top = (Vec2(0,-1).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.h/2) + terrain_collider->box.GetCenter();
         Vec2 right = (Vec2(1,0).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.w/2)+ terrain_collider->box.GetCenter();
@@ -193,7 +196,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         surface_inclination =  other.angleDeg;
      
         // Camera::Update(0);
-        if(Collider* collider = (Collider*)associated.GetComponent("Collider")){
+        if(Collider* collider = (Collider*)associated.GetComponent(C_ID::Collider)){
             collider->Update(0);
         }
         
@@ -206,7 +209,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
 
 void RigidBody::Animation(float dt){
-    StateMachine * spr = (StateMachine*) associated.GetComponent("StateMachine");
+    StateMachine * spr = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
     // ActionMachine * act = (ActionMachine*) associated.GetComponent("ActionMachine");
     // if(speed.y < 0 && !isGrounded){
     //     spr->Open("assets/img/Zjump.png");
@@ -216,14 +219,13 @@ void RigidBody::Animation(float dt){
     // }
     auto [idx, cr_state] = spr->GetCurrent();
     // auto [idxa, cr_statea] = act->GetCurrent();
-    if(spr->ActionFinished())
-    {
-        if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN)
-            spr->ChangeState(RBSTATE::RUN);
+    
+    if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN)
+        spr->ChangeState(RBSTATE::RUN);
 
-        if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE)
-            spr->ChangeState(RBSTATE::IDLE);
-    }
+    if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE)
+        spr->ChangeState(RBSTATE::IDLE);
+
 
     if(speed.x < 0) cr_state->SetFliped(true);
 
@@ -236,6 +238,7 @@ void RigidBody::Controls(float dt){
     // p(jumpTimer.Get())cout << endl;
     jumpTimer.Update(dt);
     InputManager& inManager = InputManager::GetInstance();
+
     if(inManager.IsKeyDown(W_KEY)){  
         if (isGrounded ){
             jumpTimer.Restart();

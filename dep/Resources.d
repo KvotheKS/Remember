@@ -221,7 +221,7 @@ dep/Resources.d bin/Resources.o: src/Resources.cpp include/Resources.h \
  include/Game.h include/SDL2/SDL.h include/InputManager.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstring \
  C:/TDM-GCC-32/include/string.h include/State.h include/GameObject.h \
- include/Rect.h include/Vec2.h \
+ include/ObjectId.h include/Rect.h include/Vec2.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath \
  C:/TDM-GCC-32/include/math.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/specfun.h \
@@ -558,6 +558,7 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstring:
 C:/TDM-GCC-32/include/string.h:
 include/State.h:
 include/GameObject.h:
+include/ObjectId.h:
 include/Rect.h:
 include/Vec2.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cmath:

@@ -42,6 +42,7 @@ class Sprite : public GameObject {
         void Render(float x, float y);
         void Print(float x=-1, float y=-1);
         bool Is(std::string type);
+        bool Is(C_ID);
 
         int GetWidth();
         int GetHeight();

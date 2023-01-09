@@ -100,6 +100,9 @@ bool Sprite::Is(std::string type){
     return type == "Sprite";
 }
 
+bool Sprite::Is(C_ID type)
+{ return type == C_ID::Sprite; }
+
 int Sprite::GetWidth(){
     return (width / frameCount) * scale.x;
 }

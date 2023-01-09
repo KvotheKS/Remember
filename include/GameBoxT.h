@@ -18,4 +18,5 @@ public:
     void Print(float x, float y);
     bool Is(std::string type);
     std::string Is();
+    bool Is(C_ID);
 };
