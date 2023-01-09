@@ -5,14 +5,19 @@
 
 //pair( bool = se ha colisao , Vec2() vetor com a distancia minima entre os Rect) -m
 pair<bool,Vec2> Collision::IsColliding(Rect& a, Rect& b, float angleOfA, float angleOfB){
-            
+    auto c_a = a.GetCenter(), c_b = b.GetCenter();
+    {
+        Vec2 s_a = Vec2(a.w,a.h)*0.5f, s_b = Vec2(b.w, b.h)*0.5f;
+        if((c_a-c_b).Magnitude() > (s_a+s_b).Magnitude())
+            return make_pair(false, Vec2::ZERO);
+    }
     Vec2 A[] = {Vec2(a.x, a.y + a.h), Vec2(a.x + a.w, a.y + a.h), Vec2(a.x + a.w, a.y), Vec2(a.x, a.y)};
     Vec2 B[] = {Vec2(b.x, b.y + b.h), Vec2(b.x + b.w, b.y + b.h), Vec2(b.x + b.w, b.y), Vec2(b.x, b.y)};
 
     for(auto& v : A)
-        v = (v - a.GetCenter()).Rotate(angleOfA) + a.GetCenter();
+        v = (v - c_a).Rotate(angleOfA) + c_a;
     for(auto& v : B)
-        v = (v - b.GetCenter()).Rotate(angleOfB) + b.GetCenter();
+        v = (v - c_b).Rotate(angleOfB) + c_b;
 
 
     Vec2 axes[] = {(A[0] - A[1]).Normalize(), (A[1] - A[2]).Normalize(),

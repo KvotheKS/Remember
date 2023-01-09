@@ -11,6 +11,8 @@ using namespace std;
 
 class Vec2 {
     public:
+        static Vec2 ZERO;
+    public:
         float x, y;
         Vec2();
         Vec2(float x, float y);

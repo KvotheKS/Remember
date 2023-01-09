@@ -54,6 +54,7 @@ void TestState::LoadAssets(){
         RigidBody* box = new RigidBody(*player,1);
         
         StateMachine* st = new StateMachine(*player);
+        
         SSNode* primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 118, 476, 100}, 8, 0.4);
         st->AddNode(RBSTATE::RUN, primbus); 
         
@@ -76,7 +77,7 @@ void TestState::LoadAssets(){
     /*STAGE TERRAIN*/
     float tot = 50;
     //first platform
-    for(int i = 0; i<1500; i++){
+    for(int i = 0; i<10000; i++){
         GameObject* terrainbox = new GameObject();
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);

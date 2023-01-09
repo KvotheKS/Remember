@@ -6,6 +6,11 @@
 #include <set>
 #include <memory>
 
+/*
+    para inicializar o Node de animacao, bastar incializa-lo da mesma maneira q o Sprite!
+    (so vale para o AnimNode)
+*/
+
 class AnimNode
 {
 public:
