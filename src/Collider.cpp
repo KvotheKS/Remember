@@ -12,7 +12,16 @@ Collider::Collider(GameObject& associated, Vec2 scale, Vec2 offset) : GameObject
     this->scale = scale;
     this->offset = offset;
 }
-
+void Collider::Start(){
+    if(associated.GetComponent(C_ID::RigidBody)){
+        local_type = C_ID::Collider;
+    }else if (associated.GetComponent(C_ID::TerrainBody)){
+        local_type = C_ID::TerrainCollider;
+    }else{
+        local_type = C_ID::Collider;
+    }
+    
+}
 void Collider::Update(float dt){
     box = associated.box;
     box.w *= scale.x;
@@ -62,7 +71,7 @@ bool Collider::Is(std::string type){
 }
 
 bool Collider::Is(C_ID type)
-{ return type == C_ID::Collider; }
+{ return type == local_type; }
 
 void Collider::SetScale(Vec2 scale){
     this->scale = scale;

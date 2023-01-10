@@ -15,6 +15,7 @@ enum class C_ID
     Sound,
     StateMachine,
     TerrainBody,
+    TerrainCollider,
     Text,
     TileMap,
 
