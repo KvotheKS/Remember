@@ -279,8 +279,9 @@ dep/RigidBody.d bin/RigidBody.o: src/RigidBody.cpp include/RigidBody.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_set.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multiset.h \
- include/StateMac.h include/Game.h include/State.h include/TitleState.h \
- include/StageState.h include/Music.h include/TileSet.h include/TileMap.h \
+ include/StateMac.h include/SpriteSheetNode.h include/Game.h \
+ include/State.h include/TitleState.h include/StageState.h \
+ include/Music.h include/TileSet.h include/TileMap.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/fstream \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/codecvt.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/mingw32/bits/basic_file.h \
@@ -628,6 +629,7 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tree.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_set.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_multiset.h:
 include/StateMac.h:
+include/SpriteSheetNode.h:
 include/Game.h:
 include/State.h:
 include/TitleState.h:

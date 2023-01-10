@@ -53,6 +53,9 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "functional": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "xtree": "cpp"
     }
 }

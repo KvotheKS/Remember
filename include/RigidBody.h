@@ -16,7 +16,7 @@
 
 enum RBSTATE
 {
-    LEFT, RIGHT, STILL, IDLE = 4, RUN, FALL, JUMP
+    LEFT, RIGHT, STILL, IDLE = 4, RUN, FALL, JUMP, DASH
 };
 
 class RigidBody : public GameObject{

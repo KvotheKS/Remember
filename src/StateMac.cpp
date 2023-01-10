@@ -42,8 +42,10 @@ void AnimNode::SetClip(int x, int y, int w, int h){
 void AnimNode::Print(float x, float y, float angle)
 {
     SDL_Rect dstRect;
-    dstRect.x = x - (clipRect.w * scale.x/2)+clipRect.w/2;
-    dstRect.y = y - (clipRect.h * scale.y/2)+clipRect.h/2;
+    dstRect.x = x ;
+    dstRect.y = y;
+    // dstRect.x = x - (clipRect.w * scale.x/2)+clipRect.w/2;
+    // dstRect.y = y - (clipRect.h * scale.y/2)+clipRect.h/2;
  
     dstRect.w = clipRect.w * scale.x;
     dstRect.h = clipRect.h * scale.y;
@@ -108,6 +110,8 @@ bool AnimNode::IsOpen(){
 void AnimNode::SetScaleX(float scaleX, float scaleY){
     scale.x = !scaleX ? scale.x : scaleX;
     scale.y = !scaleY ? scale.y : scaleY;
+
+    
     
 }
 

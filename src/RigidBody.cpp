@@ -2,6 +2,7 @@
 #include "TerrainBody.h"
 #include "ActionMachine.h"
 #include "StateMac.h"
+#include "SpriteSheetNode.h"
 #include <iostream>
 #include "Game.h"
 // define pra test -m
@@ -15,8 +16,8 @@ RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), m
     // associated.AddComponent(pbody);
     // pbody->SetScaleX(2,2);
     Collider* collider = new Collider(associated);
-    collider->SetScale(Vec2(1.3,1));
-    collider->SetOffset(Vec2(0,8));
+
+    
     
     associated.AddComponent(collider);
 
@@ -48,10 +49,38 @@ RigidBody::~RigidBody(){
 }
 
 void RigidBody::Start(){
+    // ------------------ STATE MACHINE SETUP --------------------
+    StateMachine * state_machine = (StateMachine*)associated.GetComponent(C_ID::StateMachine);
+    Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
 
+    // state creation
+    SSNode* sprite_sheet_node = new SSNode("assets/img/Zrun.png", {0, 0, 60, 80}, 1, 0.3,Vec2(2,2));
+    state_machine->AddNode(RBSTATE::RUN, sprite_sheet_node); 
+        
+    sprite_sheet_node = new SSNode("assets/img/Zidle.png",  {0, 0, 60, 80}, 1, 1,Vec2(2,2));
+    state_machine->AddNode(RBSTATE::IDLE, sprite_sheet_node); 
+    
+    sprite_sheet_node = new SSNode("assets/img/Zjump.png",  {0, 0, 60, 80}, 1, 1,Vec2(2,2));
+    state_machine->AddNode(RBSTATE::JUMP, sprite_sheet_node); 
+
+    sprite_sheet_node = new SSNode("assets/img/Zfall.png",  {0, 0, 60, 80}, 1, 1,Vec2(2,2));
+    state_machine->AddNode(RBSTATE::FALL, sprite_sheet_node); 
+
+    sprite_sheet_node = new SSNode("assets/img/Zdash.png",  {0, 0, 60, 80}, 1, 1,Vec2(2,2));
+    state_machine->AddNode(RBSTATE::DASH, sprite_sheet_node); 
+
+    // transition creation
+    state_machine->AddTransition(RBSTATE::RUN,RBSTATE::DASH);
+
+    // set first colider e state
+    ass_collider->SetScale(Vec2(0.65,0.5)); 
+    ass_collider->SetOffset(Vec2(0,8));
+
+    state_machine->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
 }
-void RigidBody::Update(float dt){
 
+/// @brief RigidBody Update
+void RigidBody::Update(float dt){
 
     Animation(dt);
     Controls(dt);
@@ -210,21 +239,35 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
 void RigidBody::Animation(float dt){
     StateMachine * spr = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
+    Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
     // ActionMachine * act = (ActionMachine*) associated.GetComponent("ActionMachine");
-    // if(speed.y < 0 && !isGrounded){
-    //     spr->Open("assets/img/Zjump.png");
-    // }
-    // if(speed.y > 2 && !isGrounded){
-    //     spr->Open("assets/img/Zfall.png");
-    // }
+    if(speed.y < 0 && !isGrounded){
+        spr->ChangeState(RBSTATE::JUMP);
+        ass_collider->SetScale(Vec2(0.65,0.5)); 
+        ass_collider->SetOffset(Vec2(0,8));
+    }
+    if(speed.y > 2 && !isGrounded){
+        spr->ChangeState(RBSTATE::FALL);
+        ass_collider->SetScale(Vec2(0.65,0.5)); 
+        ass_collider->SetOffset(Vec2(0,8));
+    }
     auto [idx, cr_state] = spr->GetCurrent();
     // auto [idxa, cr_statea] = act->GetCurrent();
     
-    if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN)
+    if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN && idx != RBSTATE::DASH){
+        
         spr->ChangeState(RBSTATE::RUN);
+        ass_collider->SetScale(Vec2(0.65,0.5)); 
+        ass_collider->SetOffset(Vec2(0,8));
+    }
+        
 
-    if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE)
+    if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE){
         spr->ChangeState(RBSTATE::IDLE);
+        ass_collider->SetScale(Vec2(0.65,0.5)); 
+        ass_collider->SetOffset(Vec2(0,8));
+    }
+        
 
 
     if(speed.x < 0) cr_state->SetFliped(true);
@@ -257,6 +300,9 @@ void RigidBody::Controls(float dt){
     }
     
     if(inManager.IsKeyDown(A_KEY)){
+        if(speed.x>20){
+            
+        }
         speed.x -= MOVE_ACCELERATION*dt;
 
          
@@ -264,7 +310,7 @@ void RigidBody::Controls(float dt){
         if(isGrounded&& (surface_inclination != 0)){
             
             associated.box.y += MAX_MOVE_SPEED* 0.030 ;
-                
+
         }
 
         inputDone = true;
@@ -273,7 +319,7 @@ void RigidBody::Controls(float dt){
         if(isGrounded ){
             
             associated.box.y += MAX_MOVE_SPEED* 0.030 ;
-                
+                  
         }
         speed.x += MOVE_ACCELERATION*dt;
         inputDone = true;

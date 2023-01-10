@@ -9,6 +9,7 @@ enum class C_ID
     FpsPrinter,
     GameBoxT,
     RigidBody,
+    Player,
     Slider, 
     Sprite,
     Sound,
@@ -16,4 +17,5 @@ enum class C_ID
     TerrainBody,
     Text,
     TileMap,
+
 };
