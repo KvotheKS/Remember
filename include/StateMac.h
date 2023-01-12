@@ -15,7 +15,7 @@ class AnimNode
 {
 public:
     bool rendered;
-    
+    float actionTime;
 public:
     std::shared_ptr<SDL_Texture> texture;
     int width;
