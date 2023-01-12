@@ -14,9 +14,12 @@
 #include <memory>
 #include <algorithm>
 
+enum RBSTATE
+{
+    LEFT, RIGHT, STILL, IDLE, RUN, FALL, JUMP, DASH
+};
 
-
-class RigidBody : public GameObject{
+class Player : public GameObject{
 private:
     void Controls(float dt);
     void Physics(float dt);
@@ -26,15 +29,15 @@ private:
 public:
     
 
-    RigidBody(GameObject& associated);
-    ~RigidBody();
+    Player(GameObject& associated);
+    ~Player();
 
     void Start();
     void Update(float dt);
     void Render();
     bool Is(std::string type);
     bool Is(C_ID);
-    void NotifyCollision(GameObject& other,Vec2 sep);
+
 
     void Jump(float dt);
 
@@ -42,11 +45,10 @@ public:
     Vec2 Bcurve(std::vector<Vec2> vec,float dt);
     int GetState();
 
-    int modo;
-
+    
     Vec2 speed;
     Vec2 oldbox;
-    bool isGrounded;
+    bool* isGrounded;
     bool hasDoubleJump;
     bool inputDone;
     Timer jumpTimer;
@@ -67,7 +69,5 @@ public:
     float LATERAL_SPEED_THRESHOLD;
 
     float JUMP_FORCE;
-    
-    
 
 };

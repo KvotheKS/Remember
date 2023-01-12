@@ -5,7 +5,7 @@
     SSNode serve para usarmos arquivos de animação como os do mk3
 */
 SSNode::SSNode(std::string file, SDL_Rect clip_line, int frameCount, float frameTime, Vec2 scale,bool reverse, bool flipped)
-    : AnimNode(file, frameCount,frameTime,scale, reverse, flipped)
+    : AnimNode(file, frameCount,frameTime, scale, reverse, flipped)
 { this->clip_line = clip_line; SetFrame(0); }
 
 void SSNode::SetFrame(int id)

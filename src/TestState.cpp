@@ -4,6 +4,7 @@
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
 #include "ActionMachine.h"
+#include "Player.h"
 
 //test stage pra mecher em collision
 
@@ -19,12 +20,12 @@ TestState::~TestState(){
 
 void TestState::LoadAssets(){
 
-    collision_targets.assign(
-        {
-            {C_ID::TerrainBody}, 
-            {C_ID::RigidBody}
-        }
-    );
+    // collision_targets.assign(
+    //     {
+    //         {C_ID::TerrainBody}, 
+    //         {C_ID::RigidBody}
+    //     }
+    // );
 
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
@@ -49,53 +50,57 @@ void TestState::LoadAssets(){
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
-    player = new GameObject();
+    GameObject* player = new GameObject();
         player->depth = 999;
-        RigidBody* box = new RigidBody(*player,1);
+        //morte ao primbus
+
+
         
+
         StateMachine* st = new StateMachine(*player);
-        
-        SSNode* primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 118, 476, 100}, 8, 0.4);
-        st->AddNode(RBSTATE::RUN, primbus); 
-        
-        primbus = new SSNode("assets/img/SNES - Ultimate Mortal Kombat 3 - Cyrax.png", {0, 0, 424, 114}, 8, 0.1);
-        st->AddNode(RBSTATE::IDLE, primbus); st->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
         player->AddComponent(st);
-        
+        Collider* collider = new Collider(*player);
+        player->AddComponent(collider);
+        RigidBody* box = new RigidBody(*player);
         player->AddComponent(box);
-        player->box.SetCenter(100, 100);
-        // ActionMachine* act = new ActionMachine(*player);
-        // act->AddState({RBSTATE::IDLE, ActionInfo({RBSTATE::RUN}, 3)});
-        // act->AddState({RBSTATE::RUN, ActionInfo({}, 3)});
-        // player->AddComponent(act);
-    objectArray.emplace_back(player);
+        Player* pl = new Player(*player);
+        player->AddComponent(pl);
+        
+        
+        player->box.SetCenter(0, 0);
+      
+    rigidArray.emplace_back(player);
 
     backgroundMusic.Play();
 
     Camera::Follow(player);
 
     /*STAGE TERRAIN*/
-    float tot = 50;
-    //first platform
-    for(int i = 0; i<10000; i++){
+   
+    // first platform
+
+    for(int i = 0; i<100; i++){
         GameObject* terrainbox = new GameObject();
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);
             terrainbox->AddComponent(box2);
             terrainbox->box.SetCenter(i*100-1000, 400);
             terrainbox->angleDeg = 0;
-        objectArray.emplace_back(terrainbox);
+        terrainArray.emplace_back(terrainbox);
     }
+
     // west celling
-    // for(int i = 0; i<10; i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth = 999;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         terrainbox->box.SetCenter(i*100-1300, 300);
-    //         terrainbox->angleDeg = 0;
-    //     objectArray.emplace_back(terrainbox);
-    // }
+
+    for(int i = 0; i<10; i++){
+        GameObject* terrainbox = new GameObject();
+            terrainbox->depth = 999;
+            TerrainBody* box2 = new TerrainBody(*terrainbox);
+            terrainbox->AddComponent(box2);
+            terrainbox->box.SetCenter(i*100-1300, 300);
+            terrainbox->angleDeg = 0;
+        terrainArray.emplace_back(terrainbox);
+    }
+
     // diagonal cubes
     // for(int i = 0; i<20; i++){
     //     GameObject* terrainbox = new GameObject();
@@ -104,34 +109,34 @@ void TestState::LoadAssets(){
     //         terrainbox->AddComponent(box2);
     //         terrainbox->box.SetCenter(i*100+300, 000);
     //         terrainbox->angleDeg = 20*(i+1);
-    //     objectArray.emplace_back(terrainbox);
+    //     terrainArray.emplace_back(terrainbox);
     // }
    
     // jump platforms
-    for(int i = 0; i<5; i++){
+    for(int i = 0; i<1; i++){
         GameObject* terrainbox = new GameObject();
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);
             terrainbox->AddComponent(box2);
-            terrainbox->box.SetCenter(0, i*300 - 200);
+            terrainbox->box.SetCenter(0, i*300 +300);
             terrainbox->angleDeg = 0;
-        objectArray.emplace_back(terrainbox);
+        terrainArray.emplace_back(terrainbox);
     }
     // ramp 
-    Vec2 p1 = Vec2(0,0), p2 = Vec2(100,100), p3 =Vec2(200,200) ,p4 =Vec2(300,100),p5 =Vec2(300,400),p6 =Vec2(200,500),p7 =Vec2(100,300),p8 =Vec2(300,300);
+    // Vec2 p1 = Vec2(0,0), p2 = Vec2(100,100), p3 =Vec2(200,200) ,p4 =Vec2(300,100),p5 =Vec2(300,400),p6 =Vec2(200,500),p7 =Vec2(100,300),p8 =Vec2(300,300);
     
-    for(int i = 0; i<(tot=5); i++){
-        GameObject* terrainbox = new GameObject();
-            terrainbox->depth = 999;
-            TerrainBody* box2 = new TerrainBody(*terrainbox);
-            terrainbox->AddComponent(box2);
-            float t = i/tot ;
-            Vec2 temp = Bcurve2(std::vector<Vec2> {Vec2(100,400),Vec2(500,170)},t);
+    // for(int i = 0; i<(tot=5); i++){
+    //     GameObject* terrainbox = new GameObject();
+    //         terrainbox->depth = 999;
+    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
+    //         terrainbox->AddComponent(box2);
+    //         float t = i/tot ;
+    //         Vec2 temp = Bcurve2(std::vector<Vec2> {Vec2(100,400),Vec2(500,170)},t);
 
-            terrainbox->box.SetCenter(temp.x+600, temp.y);
-            terrainbox->angleDeg = -30;
-        objectArray.emplace_back(terrainbox);
-    }
+    //         terrainbox->box.SetCenter(temp.x+600, temp.y);
+    //         terrainbox->angleDeg = -30;
+    //     terrainArray.emplace_back(terrainbox);
+    // }
     
 
     // for(float i = 0;i<tot;i++){
@@ -144,24 +149,26 @@ void TestState::LoadAssets(){
 
     //         terrainbox->box.SetCenter(temp.x, temp.y+200);
     //         terrainbox->angleDeg = 0;
-    //     objectArray.emplace_back(terrainbox);
+    //     terrainArray.emplace_back(terrainbox);
     // }
 
-    GameObject* goTileMap = new GameObject();
-        goTileMap->depth = 1;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
-        goTileMap->AddComponent(tileMap);
-        goTileMap->box.x = 0;
-        goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
+    // GameObject* goTileMap = new GameObject();
+    //     goTileMap->depth = 1;
+    //     TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
+    //     goTileMap->AddComponent(tileMap);
+    //     goTileMap->box.x = 0;
+    //     goTileMap->box.y = 0;
+    // objectArray.emplace_back(goTileMap);
     
 
     
 }
 
 void TestState::Start(){
+    
     LoadAssets();
     StartArray();
+   
 }
 
 void TestState::Update(float dt){
@@ -196,44 +203,48 @@ void TestState::Update(float dt){
 
     /* ordem de update necessaria
     */
-    
+    // std::cout << "ENTRA";
     UpdateArray(dt);
+    // std::cout << "SAI";
 
-    Collider* colliderA = (Collider*) player->GetComponent(C_ID::Collider);
-    if(!colliderA)
-        return;
-
-    float angleOfA = player->angleDeg * (PI / 180.0);
-
-    for(unsigned j = 0; j < objectArray.size(); j++){
-        // checar se o tipo de objeto i vai precisar testar colisão com objeto j
-        bool check = false;
-        for(C_ID s : collision_targets[RigidBody_e]){
-            if(objectArray[j]->GetComponent(s))
-                check = true;
-        }
-        if(!check) continue;
-
-        Collider* colliderB = (Collider*) objectArray[j]->GetComponent(C_ID::Collider);
-        if(colliderB == nullptr)
-            continue;
-        float angleOfB = objectArray[j]->angleDeg * (PI / 180.0);
-        
-        auto [flag, sep] = Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB);
-        
-        if(flag){    
-            player->NotifyCollisionBehavior(*objectArray[j],sep);
-            objectArray[j]->NotifyCollisionBehavior(*player,sep);
-        }
-    }
-    
+    CollideVectors(rigidArray, terrainArray);
+    // std::cout << "colidiu";
     Camera::Update(dt);
     
 
-    for(unsigned i = 0; i < objectArray.size(); i++){
-        if(objectArray[i]->IsDead()){
-            objectArray.erase(objectArray.begin() + i);
-            i--;
+    KillDeads();
+}
+
+void TestState::CollideVectors(std::vector<std::shared_ptr<GameObject>>& alpha, std::vector<std::shared_ptr<GameObject>>& beta)
+{
+    int i = 0;
+    for(auto& alphaObj : alpha)
+    {
+        Collider* colliderA = (Collider*) alphaObj->GetComponent(C_ID::Collider);
+        // if(!colliderA)
+            // std::cout << "JASOTJASO`TJSAÒTJSAO";
+        // std::cout << "ue";
+        float angleOfA = alphaObj->angleDeg * (PI / 180.0);
+        for(auto& betaObj : beta)
+        {
+            
+            Collider* colliderB = (Collider*) betaObj->GetComponent(C_ID::Collider);
+            if(colliderB == nullptr)
+                continue;
+            
+            float angleOfB = betaObj->angleDeg * (PI / 180.0);
+            
+            auto [flag, sep] = Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB);
+            // std::cout << "\nCOLLISION TESTED";
+            if(flag){    
+                std::cout << "COL MSG\n";
+                alphaObj->NotifyCollisionBehavior(*betaObj,sep);
+                std::cout << "B INFORMED\n";
+                betaObj->NotifyCollisionBehavior(*alphaObj,sep);
+
+            }
+            // std::cout << '\n' << i;
+            i++;
         }
     }
 }

@@ -42,8 +42,10 @@ void AnimNode::SetClip(int x, int y, int w, int h){
 void AnimNode::Print(float x, float y, float angle)
 {
     SDL_Rect dstRect;
-    dstRect.x = x - (clipRect.w * scale.x/2)+clipRect.w/2;
-    dstRect.y = y - (clipRect.h * scale.y/2)+clipRect.h/2;
+    dstRect.x = x ;
+    dstRect.y = y;
+    // dstRect.x = x - (clipRect.w * scale.x/2)+clipRect.w/2;
+    // dstRect.y = y - (clipRect.h * scale.y/2)+clipRect.h/2;
  
     dstRect.w = clipRect.w * scale.x;
     dstRect.h = clipRect.h * scale.y;
@@ -84,7 +86,7 @@ void AnimNode::Update(float dt){
 }
 
 void AnimNode::Render()
-{ rendered = true; }
+{rendered = true;}
 
 void AnimNode::Reset()
 {
@@ -108,6 +110,8 @@ bool AnimNode::IsOpen(){
 void AnimNode::SetScaleX(float scaleX, float scaleY){
     scale.x = !scaleX ? scale.x : scaleX;
     scale.y = !scaleY ? scale.y : scaleY;
+
+    
     
 }
 
@@ -178,9 +182,12 @@ void StateMachine::Update(float dt)
 
 void StateMachine::Render()
 {
+    // std::cout << "SUSUSYSY";
     states[__curr]->Render();
+    // std::cout << "RENDENRING STATE\n";
     float x = associated.box.x - Camera::pos.x;
     float y = associated.box.y - Camera::pos.y;
+    // std::cout << "STATEMACHIEN";
     Scheduler::Push(this, associated.depth + depth, x, y);
 }
 

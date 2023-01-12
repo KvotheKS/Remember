@@ -2,6 +2,7 @@
 #include "TerrainBody.h"
 #include "ActionMachine.h"
 #include "StateMac.h"
+#include "SpriteSheetNode.h"
 #include <iostream>
 #include "Game.h"
 // define pra test -m
@@ -10,16 +11,11 @@ using namespace std;
 
 
 
-RigidBody::RigidBody(GameObject& associated, int modo):GameObject(associated), modo(modo){
+RigidBody::RigidBody(GameObject& associated):GameObject(associated){
     // Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
     // associated.AddComponent(pbody);
     // pbody->SetScaleX(2,2);
-    Collider* collider = new Collider(associated);
-    collider->SetScale(Vec2(1.3,1));
-    collider->SetOffset(Vec2(0,8));
-    
-    associated.AddComponent(collider);
-
+   
     speed =  Vec2(0,0);
     oldbox = Vec2(0,0);
     isGrounded = false;
@@ -48,19 +44,12 @@ RigidBody::~RigidBody(){
 }
 
 void RigidBody::Start(){
-
+  
 }
+
+/// @brief RigidBody Update
 void RigidBody::Update(float dt){
 
-
-    Animation(dt);
-    Controls(dt);
-    Physics(dt);//!!check weird hitbox when this is off -m
-
-
-    isGrounded = false;
-    inputDone = false;
-    
    
 }
 void RigidBody::Render(){
@@ -77,7 +66,7 @@ bool RigidBody::Is(C_ID type){
 void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
     
     Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
-    Collider * terrain_collider = (Collider*)other.GetComponent(C_ID::Collider);
+    
     auto GoUp = [&](float d){
         associated.box.y -= d;
     };
@@ -91,6 +80,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         associated.box.x += d;
     };
     if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::TerrainBody)){
+        Collider * terrain_collider = (Collider*)other.GetComponent(C_ID::Collider);
         /* pegar ponto central de cada aresta */
         Vec2 top = (Vec2(0,-1).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.h/2) + terrain_collider->box.GetCenter();
         Vec2 right = (Vec2(1,0).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.w/2)+ terrain_collider->box.GetCenter();
@@ -206,176 +196,3 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         
 }
 
-
-
-void RigidBody::Animation(float dt){
-    StateMachine * spr = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
-    // ActionMachine * act = (ActionMachine*) associated.GetComponent("ActionMachine");
-    // if(speed.y < 0 && !isGrounded){
-    //     spr->Open("assets/img/Zjump.png");
-    // }
-    // if(speed.y > 2 && !isGrounded){
-    //     spr->Open("assets/img/Zfall.png");
-    // }
-    auto [idx, cr_state] = spr->GetCurrent();
-    // auto [idxa, cr_statea] = act->GetCurrent();
-    
-    if(speed.x != 0 && isGrounded && idx != RBSTATE::RUN)
-        spr->ChangeState(RBSTATE::RUN);
-
-    if(speed.x == 0 && isGrounded && idx != RBSTATE::IDLE)
-        spr->ChangeState(RBSTATE::IDLE);
-
-
-    if(speed.x < 0) cr_state->SetFliped(true);
-
-    else if (speed.x > 0)
-        cr_state->SetFliped(false);
-    
-}
-
-void RigidBody::Controls(float dt){
-    // p(jumpTimer.Get())cout << endl;
-    jumpTimer.Update(dt);
-    InputManager& inManager = InputManager::GetInstance();
-
-    if(inManager.IsKeyDown(W_KEY)){  
-        if (isGrounded ){
-            jumpTimer.Restart();
-            isGrounded = false;
-            Jump(dt);
-        }else if (jumpTimer.Get()<JUMP_TIMER){
-            
-            Jump(dt);
-        }
-    }else{
-        jumpTimer.Update(JUMP_TIMER);
-    }
-
-    if(inManager.IsKeyDown(S_KEY)){
-        
-    }
-    
-    if(inManager.IsKeyDown(A_KEY)){
-        speed.x -= MOVE_ACCELERATION*dt;
-
-         
-        // grudar em rampas
-        if(isGrounded&& (surface_inclination != 0)){
-            
-            associated.box.y += MAX_MOVE_SPEED* 0.030 ;
-                
-        }
-
-        inputDone = true;
-    }
-    if(inManager.IsKeyDown(D_KEY)){
-        if(isGrounded ){
-            
-            associated.box.y += MAX_MOVE_SPEED* 0.030 ;
-                
-        }
-        speed.x += MOVE_ACCELERATION*dt;
-        inputDone = true;
-        
-    }
-    
-    if(inManager.MousePress(LEFT_MOUSE_BUTTON) && modo == 1){
-        associated.box.x = inManager.GetMouseX() + Camera::pos.x;
-        associated.box.y = inManager.GetMouseY() + Camera::pos.y;
-        speed = Vec2(0,0);
-    }
-
-    if(inManager.MousePress(RIGHT_MOUSE_BUTTON) && modo == 1){
-        associated.box.x = 0;
-        associated.box.y = 0;
-       
-        
-    }
-}
-
-void RigidBody::Physics(float dt){
-      
-    // Queda 
-    speed.y += FALL_ACCELERATION*dt; 
-   
-
-    // desacelerar
-    if(!inputDone){   
-        if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
-            speed.x = 0;
-        else if(speed.x > 0){
-            speed.x = speed.x - LATERAL_FRICTION*dt; 
-        }else{
-            speed.x = speed.x + LATERAL_FRICTION*dt; 
-        }
-    }
-
-    // limitar velocidade global
-    if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
-        speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
-    }
-
-    //limitar velocidade lateral
-    if(abs(speed.x) > MAX_MOVE_SPEED*dt){ 
-        speed = Vec2((speed.x/abs(speed.x))*MAX_MOVE_SPEED*dt, speed.y );          
-    }
-
-    //limitar velocidade de queda
-    if(speed.y > MAX_FALL_SPEED*dt){         
-        speed.y =  MAX_FALL_SPEED*dt;          
-    }
-
-     
-    // mova-se de acordo com a velocidade 
-    if(isGrounded) speed.y = 0;
-
-    Vec2 center = Vec2(associated.box.GetCenter() + speed);
-    associated.box.SetCenter(center.x,center.y);
-
-}
-void RigidBody::MoveonTopof(GameObject& target){
-
-}
-
-void RigidBody::Jump (float dt){
-    speed.y = -JUMP_FORCE*dt;
-}
-
-Vec2 RigidBody::Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float t) {
-    return Vec2( std::pow((1 - t), 3) * a.x + 3 * std::pow((1 - t), 2) * t * b.x + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * c.x + std::pow(t, 3) * d.x
-                ,std::pow((1 - t), 3) * a.y + 3 * std::pow((1 - t), 2) * t * b.y + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * c.y + std::pow(t, 3) * d.y);
-}
-
-Vec2 RigidBody::Bcurve(std::vector<Vec2> vec, float t) {
-    
-   
-    auto fac = [](const int n){
-        int ret = n;
-        if(n == 0) return 1;
-        for(int i = n-1; i>0 ;i--)ret = ret * i;
-        return ret;
-    };
-
-    int n = vec.size();
-    float x,y = 0;
-    
-    for (int k = 0; k<n; k++){
-        x += fac(n)/fac(k)*fac(n-k) * std::pow((1-t),(n-k)) * std::pow((t),(k)) * vec[k].x;
-        y += fac(n)/fac(k)*fac(n-k) * std::pow((1-t),(n-k)) * std::pow((t),(k)) * vec[k].y;
-    }
-
-    return Vec2(x,y);
-
-}
-
-int RigidBody::GetState()
-{
-    return  RBSTATE::RIGHT*(speed.x > 0 && isGrounded) +
-            RBSTATE::LEFT*(speed.x < 0 && isGrounded) +
-            RBSTATE::STILL*(speed.x == 0 && isGrounded) +
-            RBSTATE::JUMP*(speed.y < 0 && !isGrounded) +
-            RBSTATE::FALL*(speed.y > 2 && !isGrounded) +
-            RBSTATE::RUN*(speed.x != 0 && isGrounded) +
-            RBSTATE::IDLE*(speed.x == 0 && isGrounded);
-}

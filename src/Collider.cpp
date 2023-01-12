@@ -12,7 +12,8 @@ Collider::Collider(GameObject& associated, Vec2 scale, Vec2 offset) : GameObject
     this->scale = scale;
     this->offset = offset;
 }
-
+void Collider::Start(){
+}
 void Collider::Update(float dt){
     box = associated.box;
     box.w *= scale.x;
@@ -25,6 +26,7 @@ void Collider::Update(float dt){
 
 void Collider::Render()
 {
+    // std::cout << "COLLIDER RENDER\n";
     Scheduler::Push(this, associated.depth);
 }
 

@@ -24,11 +24,11 @@
 
 class TestState : public State {
 private:
-    GameObject* player;
+    // GameObject* player;
     TileSet* tileSet;
     Music backgroundMusic;
-    std::vector<std::vector<C_ID>> collision_targets;
-    enum {RigidBody_e=0, TerrainBody_e};
+    // std::vector<std::vector<C_ID>> collision_targets;
+    // enum C_E{RigidBody_e=0, TerrainBody_e, Bullet_e}; // Collision_Enum
 public:
     TestState();
     ~TestState();
@@ -40,7 +40,7 @@ public:
     void Resume();
 
     void Collision();
-
+    void CollideVectors(std::vector<std::shared_ptr<GameObject>>&, std::vector<std::shared_ptr<GameObject>>&);
     Vec2 Bcurve(Vec2 a, Vec2 b, Vec2 c, Vec2 d, float dt);
     Vec2 Bcurve2(std::vector<Vec2> vec,float dt);
 };
