@@ -221,7 +221,7 @@ void TestState::Update(float dt){
         }
         if(!check) continue;
 
-        Collider* colliderB = (Collider*) objectArray[j]->GetComponent(C_ID::TerrainCollider);
+        Collider* colliderB = (Collider*) objectArray[j]->GetComponent(C_ID::Collider);
         if(colliderB == nullptr)
             continue;
         float angleOfB = objectArray[j]->angleDeg * (PI / 180.0);

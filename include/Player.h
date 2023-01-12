@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "InputManager.h"
+#include "StateMac.h"
 #include "Camera.h"
 #include "Sprite.h"
 #include "Sound.h"
@@ -16,7 +17,7 @@
 
 enum RBSTATE
 {
-    LEFT, RIGHT, STILL, IDLE, RUN, FALL, JUMP, DASH
+    LEFT, RIGHT, STILL, CROUCH, IDLE, WALK, RUN, JUMP, FALL, DASH , MELEE, SHOT, SKID
 };
 
 class Player : public GameObject{
@@ -51,12 +52,15 @@ public:
     bool* isGrounded;
     bool hasDoubleJump;
     bool inputDone;
+   
+    bool crouchHeld;
     Timer jumpTimer;
 
     float surface_inclination;
 
     float JUMP_TIMER;
 
+    StateMachine * state_machine;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE
     float MAX_GLOBAL_SPEED;// = 1200;
     float MAX_MOVE_SPEED;// = 400;

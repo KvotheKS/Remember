@@ -234,7 +234,9 @@ void StateMachine::ChangeState(int newSt)
     auto it = states.find(__curr);
     if(it != states.end()) 
         it->second->Reset();
+   
     __curr = newSt;
+    
     it = states.find(__curr);
     it->second->rendered = false;
     CenterBox(associated.box);
