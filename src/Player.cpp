@@ -123,7 +123,6 @@ void Player::Update(float dt){
    
 }
 void Player::Render(){
-
 }
 bool Player::Is(std::string type){
     return type == "Player";

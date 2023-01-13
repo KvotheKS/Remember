@@ -20,12 +20,12 @@ TestState::~TestState(){
 
 void TestState::LoadAssets(){
 
-    collision_targets.assign(
-        {
-            {C_ID::TerrainBody}, 
-            {C_ID::RigidBody}
-        }
-    );
+    // collision_targets.assign(
+    //     {
+    //         {C_ID::TerrainBody}, 
+    //         {C_ID::RigidBody}
+    //     }
+    // );
 
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
@@ -50,7 +50,7 @@ void TestState::LoadAssets(){
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
-    player = new GameObject();
+    GameObject* player = new GameObject();
         player->depth = 999;
         //morte ao primbus
 
@@ -69,7 +69,7 @@ void TestState::LoadAssets(){
         
         player->box.SetCenter(0, 0);
       
-    objectArray.emplace_back(player);
+    rigidArray.emplace_back(player);
 
     backgroundMusic.Play();
 
@@ -86,7 +86,7 @@ void TestState::LoadAssets(){
             terrainbox->AddComponent(box2);
             terrainbox->box.SetCenter(i*100-1000, 400);
             terrainbox->angleDeg = 0;
-        objectArray.emplace_back(terrainbox);
+        terrainArray.emplace_back(terrainbox);
     }
 
     // west celling
@@ -98,7 +98,7 @@ void TestState::LoadAssets(){
             terrainbox->AddComponent(box2);
             terrainbox->box.SetCenter(i*100-1300, 300);
             terrainbox->angleDeg = 0;
-        objectArray.emplace_back(terrainbox);
+        terrainArray.emplace_back(terrainbox);
     }
 
     // diagonal cubes
@@ -109,7 +109,7 @@ void TestState::LoadAssets(){
     //         terrainbox->AddComponent(box2);
     //         terrainbox->box.SetCenter(i*100+300, 000);
     //         terrainbox->angleDeg = 20*(i+1);
-    //     objectArray.emplace_back(terrainbox);
+    //     terrainArray.emplace_back(terrainbox);
     // }
    
     // jump platforms
@@ -120,7 +120,7 @@ void TestState::LoadAssets(){
             terrainbox->AddComponent(box2);
             terrainbox->box.SetCenter(0, i*300 +300);
             terrainbox->angleDeg = 0;
-        objectArray.emplace_back(terrainbox);
+        terrainArray.emplace_back(terrainbox);
     }
     // ramp 
     // Vec2 p1 = Vec2(0,0), p2 = Vec2(100,100), p3 =Vec2(200,200) ,p4 =Vec2(300,100),p5 =Vec2(300,400),p6 =Vec2(200,500),p7 =Vec2(100,300),p8 =Vec2(300,300);
@@ -135,7 +135,7 @@ void TestState::LoadAssets(){
 
     //         terrainbox->box.SetCenter(temp.x+600, temp.y);
     //         terrainbox->angleDeg = -30;
-    //     objectArray.emplace_back(terrainbox);
+    //     terrainArray.emplace_back(terrainbox);
     // }
     
 
@@ -149,7 +149,7 @@ void TestState::LoadAssets(){
 
     //         terrainbox->box.SetCenter(temp.x, temp.y+200);
     //         terrainbox->angleDeg = 0;
-    //     objectArray.emplace_back(terrainbox);
+    //     terrainArray.emplace_back(terrainbox);
     // }
 
     // GameObject* goTileMap = new GameObject();
@@ -203,44 +203,49 @@ void TestState::Update(float dt){
 
     /* ordem de update necessaria
     */
-    std::cout << 'a';
+    // std::cout << "ENTRA";
     UpdateArray(dt);
-    std::cout<<'b';
-    Collider* colliderA = (Collider*) player->GetComponent(C_ID::Collider);
-    if(!colliderA)
-        return;
+    // std::cout << "SAI";
 
-    float angleOfA = player->angleDeg * (PI / 180.0);
+    CollideVectors(rigidArray, terrainArray);
+    // std::cout << "colidiu";
 
-    for(unsigned j = 0; j < objectArray.size(); j++){
-        // checar se o tipo de objeto i vai precisar testar colisão com objeto j
-        bool check = false;
-        for(C_ID s : collision_targets[RigidBody_e]){
-            if(objectArray[j]->GetComponent(s))
-                check = true;
-        }
-        if(!check) continue;
-
-        Collider* colliderB = (Collider*) objectArray[j]->GetComponent(C_ID::Collider);
-        if(colliderB == nullptr)
-            continue;
-        float angleOfB = objectArray[j]->angleDeg * (PI / 180.0);
-        
-        auto [flag, sep] = Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB);
-        
-        if(flag){    
-            player->NotifyCollisionBehavior(*objectArray[j],sep);
-            objectArray[j]->NotifyCollisionBehavior(*player,sep);
-        }
-    }
-    std::cout << 'c';
     Camera::Update(dt);
     
 
-    for(unsigned i = 0; i < objectArray.size(); i++){
-        if(objectArray[i]->IsDead()){
-            objectArray.erase(objectArray.begin() + i);
-            i--;
+    KillDeads();
+}
+
+void TestState::CollideVectors(std::vector<std::shared_ptr<GameObject>>& alpha, std::vector<std::shared_ptr<GameObject>>& beta)
+{
+    int i = 0;
+    for(auto& alphaObj : alpha)
+    {
+        Collider* colliderA = (Collider*) alphaObj->GetComponent(C_ID::Collider);
+        // if(!colliderA)
+            // std::cout << "JASOTJASO`TJSAÒTJSAO";
+        // std::cout << "ue";
+        float angleOfA = alphaObj->angleDeg * (PI / 180.0);
+        for(auto& betaObj : beta)
+        {
+            
+            Collider* colliderB = (Collider*) betaObj->GetComponent(C_ID::Collider);
+            if(colliderB == nullptr)
+                continue;
+            
+            float angleOfB = betaObj->angleDeg * (PI / 180.0);
+            
+            auto [flag, sep] = Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB);
+            // std::cout << "\nCOLLISION TESTED";
+            if(flag){    
+                std::cout << "COL MSG\n";
+                alphaObj->NotifyCollisionBehavior(*betaObj,sep);
+                std::cout << "B INFORMED\n";
+                betaObj->NotifyCollisionBehavior(*alphaObj,sep);
+
+            }
+            // std::cout << '\n' << i;
+            i++;
         }
     }
     std::cout << "end\n";;

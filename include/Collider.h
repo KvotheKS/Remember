@@ -11,7 +11,7 @@ class Collider : public GameObject {
         Vec2 scale;
         Vec2 offset;
     public:
-        C_ID local_type;
+        // C_ID local_type;
         static bool debugMode;
         Rect box;
         Collider(GameObject& associated, Vec2 scale = {1, 1}, Vec2 offset = {0, 0});

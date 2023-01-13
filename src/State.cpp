@@ -10,45 +10,82 @@ State::~State(){
     objectArray.clear();
 }
 
-void State::StartArray(){
-    for(unsigned i = 0; i < objectArray.size(); i++)
-        objectArray[i]->Start();
+void State::StartArray()
+{
+    StartVector(objectArray);
+    StartVector(rigidArray);
+    StartVector(terrainArray);
+    StartVector(bulletArray);
+    StartVector(cameraFollowerObjectArray);
+}
+
+void State::StartVector(std::vector<std::shared_ptr<GameObject>>& ObjectArr){
+    for(unsigned i = 0; i < ObjectArr.size(); i++)
+        ObjectArr[i]->Start();
     started = true;
 }
 
 
-void State::UpdateArray(float dt){
-    
-    for(unsigned i = 0; i < objectArray.size(); i++)
+void State::UpdateArray(float dt)
+{
+    UpdateVector(objectArray, dt);
+    UpdateVector(rigidArray, dt);
+    UpdateVector(terrainArray, dt);
+    UpdateVector(bulletArray, dt);
+    UpdateVector(cameraFollowerObjectArray, dt);
+}
+
+void State::UpdateVector( std::vector<std::shared_ptr<GameObject>>& ObjectArr, float dt)
+{
+    for(unsigned i = 0; i < ObjectArr.size(); i++)
     {
-        objectArray[i]->Update(dt);
-        objectArray[i]->UpdateNodes(dt);
+        ObjectArr[i]->Update(dt);
+        ObjectArr[i]->UpdateNodes(dt);
     }
 }
 
-void State::RenderArray(){
-    for(unsigned i = 0; i < objectArray.size(); i++)
+void State::RenderVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
+{
+    for(unsigned i = 0; i < ObjectArray.size(); i++)
     {
-        objectArray[i]->Render();
-        objectArray[i]->RenderNodes();
+        ObjectArray[i]->Render();
+        ObjectArray[i]->RenderNodes();
     }
-    for(unsigned i = 0; i < cameraFollowerObjectArray.size(); i++){
-        cameraFollowerObjectArray[i]->Render();
-        cameraFollowerObjectArray[i]->RenderNodes();
+}
+
+void State::RenderArray()
+{
+    // std::cout << "1";
+    RenderVector(objectArray);
+    // std::cout << "2";
+    RenderVector(rigidArray);
+    // std::cout << "3";
+    RenderVector(terrainArray);
+    // std::cout << "4";
+    RenderVector(bulletArray);
+    // std::cout << "5";
+    RenderVector(cameraFollowerObjectArray);
+}
+
+void State::KillVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
+{
+    for(unsigned i = 0; i < ObjectArray.size(); i++)
+    {
+        if(ObjectArray[i]->IsDead())
+        {
+            ObjectArray.erase(ObjectArray.begin() + i);
+            i--;
+        }
     }
-        
 }
 
 void State::KillDeads()
 {
-    for(unsigned i = 0; i < objectArray.size(); i++)
-    {
-        if(objectArray[i]->IsDead())
-        {
-            objectArray.erase(objectArray.begin() + i);
-            i--;
-        }
-    }
+    KillVector(objectArray);
+    KillVector(rigidArray);
+    KillVector(terrainArray);
+    KillVector(bulletArray);
+    KillVector(cameraFollowerObjectArray);
 }
 
 std::weak_ptr<GameObject> State::AddObject(GameObject* object){

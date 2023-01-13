@@ -80,7 +80,9 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
     auto GoRight = [&](float d){
         associated.box.x += d;
     };
+
     if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::Collider)){
+
         Collider * terrain_collider = (Collider*)other.GetComponent(C_ID::Collider);
         /* pegar ponto central de cada aresta */
         Vec2 top = (Vec2(0,-1).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.h/2) + terrain_collider->box.GetCenter();

@@ -86,7 +86,7 @@ void AnimNode::Update(float dt){
 }
 
 void AnimNode::Render()
-{ rendered = true; }
+{rendered = true;}
 
 void AnimNode::Reset()
 {
@@ -182,9 +182,12 @@ void StateMachine::Update(float dt)
 
 void StateMachine::Render()
 {
+    // std::cout << "SUSUSYSY";
     states[__curr]->Render();
+    // std::cout << "RENDENRING STATE\n";
     float x = associated.box.x - Camera::pos.x;
     float y = associated.box.y - Camera::pos.y;
+    // std::cout << "STATEMACHIEN";
     Scheduler::Push(this, associated.depth + depth, x, y);
 }
 
