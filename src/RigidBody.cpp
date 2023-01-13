@@ -2,6 +2,7 @@
 #include "TerrainBody.h"
 #include "ActionMachine.h"
 #include "StateMac.h"
+#include "Player.h"
 #include "SpriteSheetNode.h"
 #include <iostream>
 #include "Game.h"
@@ -79,7 +80,9 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
     auto GoRight = [&](float d){
         associated.box.x += d;
     };
-    if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::TerrainBody)){
+
+    if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::Collider)){
+
         Collider * terrain_collider = (Collider*)other.GetComponent(C_ID::Collider);
         /* pegar ponto central de cada aresta */
         Vec2 top = (Vec2(0,-1).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.h/2) + terrain_collider->box.GetCenter();
@@ -130,6 +133,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
                 associated.box.y -= b;
                 if(speed.y >= 0){
                     isGrounded = true; 
+                    ((Player*)associated.GetComponent(C_ID::Player))->JustGrounded();
                     speed.y =0;
                 }    
 

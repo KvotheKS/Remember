@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "InputManager.h"
+#include "StateMac.h"
 #include "Camera.h"
 #include "Sprite.h"
 #include "Sound.h"
@@ -16,7 +17,7 @@
 
 enum RBSTATE
 {
-    LEFT, RIGHT, STILL, IDLE, RUN, FALL, JUMP, DASH
+    LEFT, RIGHT, STILL, CROUCH, IDLE, WALK, RUN, JUMP, FALL, DASH , MELEE, SHOT, SKID
 };
 
 class Player : public GameObject{
@@ -40,7 +41,7 @@ public:
 
 
     void Jump(float dt);
-
+    void JustGrounded();
     Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float dt);
     Vec2 Bcurve(std::vector<Vec2> vec,float dt);
     int GetState();
@@ -51,12 +52,20 @@ public:
     bool* isGrounded;
     bool hasDoubleJump;
     bool inputDone;
+    bool isDashing;
+    bool crouchHeld;
+    bool jumpStored;
+    bool isDreamDashing;
+    Timer JumpStoredTimer;
     Timer jumpTimer;
+    Timer dashTimer;
 
     float surface_inclination;
 
-    float JUMP_TIMER;
+    float JUMP_ACCE_TIMELIMIT;
+    float DASH_TIMELIMIT;
 
+    StateMachine * state_machine;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE
     float MAX_GLOBAL_SPEED;// = 1200;
     float MAX_MOVE_SPEED;// = 400;
@@ -67,7 +76,7 @@ public:
 
     float LATERAL_FRICTION;
     float LATERAL_SPEED_THRESHOLD;
-
+    float DASH_FORCE;
     float JUMP_FORCE;
 
 };

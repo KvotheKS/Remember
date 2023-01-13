@@ -73,7 +73,7 @@ void TestState::LoadAssets(){
 
     backgroundMusic.Play();
 
-    Camera::Follow(player);
+    // Camera::Follow(player);
 
     /*STAGE TERRAIN*/
    
@@ -209,6 +209,7 @@ void TestState::Update(float dt){
 
     CollideVectors(rigidArray, terrainArray);
     // std::cout << "colidiu";
+
     Camera::Update(dt);
     
 
@@ -247,6 +248,7 @@ void TestState::CollideVectors(std::vector<std::shared_ptr<GameObject>>& alpha, 
             i++;
         }
     }
+    std::cout << "end\n";;
 }
 
 void TestState::Render(){
