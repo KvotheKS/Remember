@@ -203,9 +203,9 @@ void TestState::Update(float dt){
 
     /* ordem de update necessaria
     */
-    
+    std::cout << 'a';
     UpdateArray(dt);
-
+    std::cout<<'b';
     Collider* colliderA = (Collider*) player->GetComponent(C_ID::Collider);
     if(!colliderA)
         return;
@@ -233,7 +233,7 @@ void TestState::Update(float dt){
             objectArray[j]->NotifyCollisionBehavior(*player,sep);
         }
     }
-    
+    std::cout << 'c';
     Camera::Update(dt);
     
 
@@ -243,6 +243,7 @@ void TestState::Update(float dt){
             i--;
         }
     }
+    std::cout << "end\n";;
 }
 
 void TestState::Render(){

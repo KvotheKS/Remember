@@ -232,13 +232,16 @@ std::unordered_map<int, std::unique_ptr<AnimNode>>& StateMachine::GetStates()
 void StateMachine::ChangeState(int newSt)
 {
     auto it = states.find(__curr);
-    if(it != states.end()) 
+    bool flip = false;
+    if(it != states.end())
+    {
         it->second->Reset();
-   
+        flip = it->second->fliped;
+    }
     __curr = newSt;
-    
     it = states.find(__curr);
     it->second->rendered = false;
+    it->second->fliped = flip;
     CenterBox(associated.box);
 }
 
