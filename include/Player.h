@@ -41,7 +41,7 @@ public:
 
 
     void Jump(float dt);
-
+    void JustGrounded();
     Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float dt);
     Vec2 Bcurve(std::vector<Vec2> vec,float dt);
     int GetState();
@@ -52,13 +52,18 @@ public:
     bool* isGrounded;
     bool hasDoubleJump;
     bool inputDone;
-   
+    bool isDashing;
     bool crouchHeld;
+    bool jumpStored;
+    bool isDreamDashing;
+    Timer JumpStoredTimer;
     Timer jumpTimer;
+    Timer dashTimer;
 
     float surface_inclination;
 
-    float JUMP_TIMER;
+    float JUMP_ACCE_TIMELIMIT;
+    float DASH_TIMELIMIT;
 
     StateMachine * state_machine;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE
@@ -71,7 +76,7 @@ public:
 
     float LATERAL_FRICTION;
     float LATERAL_SPEED_THRESHOLD;
-
+    float DASH_FORCE;
     float JUMP_FORCE;
 
 };

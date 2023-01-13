@@ -25,18 +25,21 @@ Player::Player(GameObject& associated):GameObject(associated){
     hasDoubleJump = true;
     inputDone = false;
     crouchHeld =false;
+    isDashing = false;
+    jumpStored = false;
+    
     surface_inclination = 0;
 
-    JUMP_TIMER = 0.2;
-    
+    JUMP_ACCE_TIMELIMIT = 0.1;
+    DASH_TIMELIMIT = 0.25;
 
     MAX_GLOBAL_SPEED = 3000;
-
+    DASH_FORCE = 1200;
     JUMP_FORCE = 1200;
     MAX_FALL_SPEED = 800;
     FALL_ACCELERATION = 100;
 
-    MAX_MOVE_SPEED = 600;
+    MAX_MOVE_SPEED = 300;
     MOVE_ACCELERATION = 100;
     LATERAL_FRICTION = 80;
     LATERAL_SPEED_THRESHOLD = 100;
@@ -133,55 +136,60 @@ bool Player::Is(C_ID type){
 
 
 void Player::Controls(float dt){
-    // p(jumpTimer.Get())cout << endl;
-    p(hasDoubleJump)cout << endl;
+    
     auto [state_idx, cr_state] = state_machine->GetCurrent();
     jumpTimer.Update(dt);
     InputManager& inManager = InputManager::GetInstance();
     // UP COMMAND
+    bool space_pressed = false;
+
+    
+    if(inManager.IsKeyDown(SDLK_SPACE)){
+        space_pressed = true;
+    }
     if(inManager.IsKeyDown(W_KEY)){  
         if(inManager.KeyPress(W_KEY)){
-            if (hasDoubleJump){
-            jumpTimer.Restart();
-            hasDoubleJump = false;
-            speed.y = -JUMP_FORCE*dt;
-         }
+            if (hasDoubleJump ){
+                if(isDashing){
+                    jumpStored = true;
+                }else{
+                    hasDoubleJump = false;
+                    speed.y = -JUMP_FORCE*dt;
+                    
+                }
+            }
         }
+      
         if (*isGrounded ){
             hasDoubleJump = true;
             jumpTimer.Restart();
             *isGrounded = false;
             speed.y = -JUMP_FORCE*dt;
-        }
-        else if (jumpTimer.Get()<JUMP_TIMER){
             
+            if(isDashing){
+                isDreamDashing = true;
+            }
+            isDashing = false;  
+        }
+        else if (jumpTimer.Get()<JUMP_ACCE_TIMELIMIT){     
             speed.y = -JUMP_FORCE*dt;
         }
     }else{
-        jumpTimer.Update(JUMP_TIMER);
+        jumpTimer.Update(JUMP_ACCE_TIMELIMIT);
     }
-
+  
     // DOWN COMMAND
     if(inManager.IsKeyDown(S_KEY) ){
         if(inManager.KeyPress(S_KEY)){
-            if(*isGrounded ){
-            
-                
-                
-            }
+
         }
-        if(*isGrounded ){
-            
-            crouchHeld = true;
-                
-        }
-       
-        
-        
+        if(*isGrounded ){   
+            crouchHeld = true;              
+        }      
     }
     
     // LEFT COMMAND
-    if(inManager.IsKeyDown(A_KEY) && !crouchHeld){ 
+    if(inManager.IsKeyDown(A_KEY) && !crouchHeld && !isDashing){ 
         if(inManager.KeyPress(A_KEY)){
             
         }  
@@ -201,7 +209,7 @@ void Player::Controls(float dt){
     }
     
     // RIGHT COMMAND
-    if(inManager.IsKeyDown(D_KEY) && !crouchHeld){
+    if(inManager.IsKeyDown(D_KEY) && !crouchHeld && !isDashing){
         if(inManager.KeyPress(D_KEY)){
             
         }
@@ -220,9 +228,14 @@ void Player::Controls(float dt){
     }
     
     if(inManager.MousePress(LEFT_MOUSE_BUTTON) ){
-        associated.box.x = inManager.GetMouseX() + Camera::pos.x;
-        associated.box.y = inManager.GetMouseY() + Camera::pos.y;
-        speed = Vec2(0,0);
+        // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
+        // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
+        // speed = Vec2(0,0);
+
+        speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
+                     (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * DASH_FORCE*dt;
+        isDashing = true;
+        dashTimer.Restart();
     }
 
     if(inManager.MousePress(RIGHT_MOUSE_BUTTON) ){
@@ -234,13 +247,24 @@ void Player::Controls(float dt){
 }
 
 void Player::Physics(float dt){
-      
+    dashTimer.Update(dt);
+    if(dashTimer.Get() > DASH_TIMELIMIT){
+        
+        isDashing = false;
+    }
     // Queda 
-    speed.y += FALL_ACCELERATION*dt; 
-   
+    if(!isDashing){
+        speed.y += FALL_ACCELERATION*dt; 
+    }
+    
+    if(jumpStored && !isDashing){
+        hasDoubleJump = false;
+        speed.y = -JUMP_FORCE*dt;
+        jumpStored = false;
+    }
 
     // desacelerar
-    if(!inputDone){   
+    if(!inputDone && !isDashing){   
         if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
             speed.x = 0;
         else if(speed.x > 0){
@@ -254,16 +278,32 @@ void Player::Physics(float dt){
     if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
         speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
     }
-
-    //limitar velocidade lateral
-    if(abs(speed.x) > MAX_MOVE_SPEED*dt){ 
-        speed = Vec2((speed.x/abs(speed.x))*MAX_MOVE_SPEED*dt, speed.y );          
+    float local_max = 800;
+    if(isDreamDashing){
+        local_max = 800;
+    }else{
+        local_max = MAX_MOVE_SPEED;
     }
-
-    //limitar velocidade de queda
-    if(speed.y > MAX_FALL_SPEED*dt){         
-        speed.y =  MAX_FALL_SPEED*dt;          
-    }
+    if(isDashing ){
+        if(speed.Magnitude() > MAX_MOVE_SPEED*dt){ 
+            float overspeed = speed.Magnitude() - MAX_MOVE_SPEED*dt;
+            speed = speed - overspeed * speed.Normalize() * 0.05;          
+        }
+    }else{
+        // limitar velocidade lateral
+        if(abs(speed.x) > local_max*dt){ 
+            float overspeed = abs(speed.x) - local_max*dt;
+            float norm = speed.x/abs(speed.x);
+            speed = Vec2( (speed.x - overspeed * norm * 0.5) , speed.y );          
+        }
+        //limitar velocidade de queda
+        if(speed.y > MAX_FALL_SPEED*dt){         
+            speed.y =  MAX_FALL_SPEED*dt;  
+            float overspeed = abs(speed.y) - MAX_FALL_SPEED*dt;
+            float norm = speed.y/abs(speed.y);
+            speed = Vec2( speed.x , (speed.y - overspeed * norm * 0.5));         
+        }
+    }  
 
      
     // mova-se de acordo com a velocidade 
@@ -310,6 +350,24 @@ void Player::Animation(float dt){
             ass_collider->SetOffset(Vec2(0,8));
         }
     }
+
+    if(isDashing){
+        state_machine->ChangeState(RBSTATE::DASH);
+        ass_collider->SetScale(Vec2(0.65,0.5)); 
+        ass_collider->SetOffset(Vec2(0,8));
+
+        
+        associated.angleDeg = (speed.AngleLine(Vec2(1,0)) * 180 / 3.141592);
+     
+        if(abs(associated.angleDeg) > 90 ){
+            associated.angleDeg -= 180;
+        }
+       
+
+        (speed.x < 0)?cr_state->SetFliped(true):cr_state->SetFliped(false); 
+    }else{
+        associated.angleDeg = 0;
+    }
     
     
         
@@ -327,7 +385,9 @@ void Player::Animation(float dt){
 void Player::Jump (float dt){
     speed.y = -JUMP_FORCE*dt;
 }
-
+void Player::JustGrounded(){
+    isDreamDashing = false;
+}
 
 int Player::GetState()
 {

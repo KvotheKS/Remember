@@ -73,7 +73,7 @@ void TestState::LoadAssets(){
 
     backgroundMusic.Play();
 
-    Camera::Follow(player);
+    // Camera::Follow(player);
 
     /*STAGE TERRAIN*/
    

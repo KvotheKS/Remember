@@ -2,6 +2,7 @@
 #include "TerrainBody.h"
 #include "ActionMachine.h"
 #include "StateMac.h"
+#include "Player.h"
 #include "SpriteSheetNode.h"
 #include <iostream>
 #include "Game.h"
@@ -130,6 +131,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
                 associated.box.y -= b;
                 if(speed.y >= 0){
                     isGrounded = true; 
+                    ((Player*)associated.GetComponent(C_ID::Player))->JustGrounded();
                     speed.y =0;
                 }    
 
