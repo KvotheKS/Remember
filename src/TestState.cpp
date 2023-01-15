@@ -5,6 +5,7 @@
 #include "SpriteSheetNode.h"
 #include "ActionMachine.h"
 #include "Player.h"
+#include "Enemy.h"
 
 //test stage pra mecher em collision
 
@@ -70,6 +71,12 @@ void TestState::LoadAssets(){
         player_GO->box.SetCenter(0, 0);
       
     rigidArray.emplace_back(player_GO);
+
+    GameObject* enemy_GO = new GameObject();
+        enemy_GO->depth = 999;
+        enemy_GO->AddComponent(new Enemy(*enemy_GO));
+
+    objectArray.emplace_back(enemy_GO);
 
     backgroundMusic.Play();
 

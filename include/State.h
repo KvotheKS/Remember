@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include <vector>
 #include <memory>
+#include <functional>
 
 class State {
     protected:
@@ -34,8 +35,11 @@ class State {
         virtual void Pause() = 0;
         virtual void Resume() = 0;
         virtual void Collision() = 0;
-        virtual std::weak_ptr<GameObject> AddObject(GameObject* object);
+        virtual std::vector<std::vector<std::shared_ptr<GameObject>>*> GetArrays();
+        virtual std::weak_ptr<GameObject> AddObject(GameObject* object, int idx = 0);
         virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* object);
+        virtual std::weak_ptr<GameObject> GetObject(std::function<bool(GameObject&)>);
+        virtual std::weak_ptr<GameObject> GetObject(C_ID);
         bool PopRequested();
         bool QuitRequested();
       
