@@ -50,7 +50,8 @@ public:
     Vec2 speed;
     Vec2 oldbox;
     bool* isGrounded;
-    bool hasDoubleJump;
+    int hasDoubleJump;
+    int hasDash;
     bool inputDone;
     bool isDashing;
     bool crouchHeld;
@@ -62,6 +63,8 @@ public:
 
     float surface_inclination;
 
+    int MAX_DASH_QT;
+    int MAX_DOUBLE_JUMP_QT;
     float JUMP_ACCE_TIMELIMIT;
     float DASH_TIMELIMIT;
 

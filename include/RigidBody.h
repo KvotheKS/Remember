@@ -15,7 +15,10 @@
 #include <algorithm>
 
 
-
+enum GROUNDED_S
+{
+    NOTGROUNDED,GROUNDED,JUSTGROUNDED
+};
 class RigidBody : public GameObject{
 private:
     void Controls(float dt);
@@ -41,11 +44,14 @@ public:
     Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float dt);
     Vec2 Bcurve(std::vector<Vec2> vec,float dt);
     int GetState();
+    int GetGroundedState();
+    
 
     int modo;
 
     Vec2 speed;
     Vec2 oldbox;
+    bool justGrounded;
     bool isGrounded;
     bool hasDoubleJump;
     bool inputDone;

@@ -20,6 +20,7 @@ RigidBody::RigidBody(GameObject& associated):GameObject(associated){
     speed =  Vec2(0,0);
     oldbox = Vec2(0,0);
     isGrounded = false;
+    justGrounded = false;
     hasDoubleJump = true;
     inputDone = false;
     surface_inclination = 0;
@@ -133,7 +134,8 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
                 associated.box.y -= b;
                 if(speed.y >= 0){
                     isGrounded = true; 
-                    ((Player*)associated.GetComponent(C_ID::Player))->JustGrounded();
+                    if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
+                    
                     speed.y =0;
                 }    
 

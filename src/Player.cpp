@@ -22,13 +22,18 @@ Player::Player(GameObject& associated):GameObject(associated){
     speed =  Vec2(0,0);
     oldbox = Vec2(0,0);
     isGrounded = &((RigidBody*)associated.GetComponent(C_ID::RigidBody))->isGrounded;
-    hasDoubleJump = true;
+    hasDash = 2;
+    hasDoubleJump = 0;
     inputDone = false;
     crouchHeld =false;
     isDashing = false;
+    
     jumpStored = false;
     
     surface_inclination = 0;
+
+    MAX_DASH_QT = 2;
+    MAX_DOUBLE_JUMP_QT = 2;
 
     JUMP_ACCE_TIMELIMIT = 0.1;
     DASH_TIMELIMIT = 0.25;
@@ -110,7 +115,7 @@ void Player::Start(){
 /// @brief Player Update
 void Player::Update(float dt){
     
-    
+  
     Controls(dt);
     Physics(dt);//!!check weird hitbox when this is off -m
     Animation(dt);
@@ -148,11 +153,13 @@ void Player::Controls(float dt){
     }
     if(inManager.IsKeyDown(W_KEY)){  
         if(inManager.KeyPress(W_KEY)){
-            if (hasDoubleJump ){
+            if (hasDoubleJump > 0){
                 if(isDashing){
                     jumpStored = true;
                 }else{
-                    hasDoubleJump = false;
+                    jumpTimer.Restart();
+                    hasDoubleJump --;
+                    speed.y  = 0;
                     speed.y = -JUMP_FORCE*dt;
                     
                 }
@@ -160,7 +167,7 @@ void Player::Controls(float dt){
         }
       
         if (*isGrounded ){
-            hasDoubleJump = true;
+            hasDoubleJump = MAX_DOUBLE_JUMP_QT;
             jumpTimer.Restart();
             *isGrounded = false;
             speed.y = -JUMP_FORCE*dt;
@@ -226,15 +233,22 @@ void Player::Controls(float dt){
         
     }
     
-    if(inManager.MousePress(LEFT_MOUSE_BUTTON) ){
+    if(inManager.MousePress(LEFT_MOUSE_BUTTON)){
         // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
         // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
         // speed = Vec2(0,0);
+       
+        
+        if(hasDash > 0 && !isDashing){
+             hasDash--;
+        
 
-        speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
-                     (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * DASH_FORCE*dt;
-        isDashing = true;
-        dashTimer.Restart();
+            speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
+                        (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * DASH_FORCE*dt;
+            isDashing = true;
+            dashTimer.Restart();
+        }
+       
     }
 
     if(inManager.MousePress(RIGHT_MOUSE_BUTTON) ){
@@ -358,10 +372,12 @@ void Player::Animation(float dt){
         
         associated.angleDeg = (speed.AngleLine(Vec2(1,0)) * 180 / 3.141592);
      
-        if(abs(associated.angleDeg) > 90 ){
+       
+        if(abs(associated.angleDeg) > 90){
             associated.angleDeg -= 180;
         }
        
+        
 
         (speed.x < 0)?cr_state->SetFliped(true):cr_state->SetFliped(false); 
     }else{
@@ -385,7 +401,11 @@ void Player::Jump (float dt){
     speed.y = -JUMP_FORCE*dt;
 }
 void Player::JustGrounded(){
+   
     isDreamDashing = false;
+    hasDash = MAX_DASH_QT;
+    
+    
 }
 
 int Player::GetState()

@@ -50,30 +50,30 @@ void TestState::LoadAssets(){
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
-    GameObject* player = new GameObject();
-        player->depth = 999;
+    GameObject* player_GO = new GameObject();
+        player_GO->depth = 999;
         //morte ao primbus
 
 
         
 
-        StateMachine* st = new StateMachine(*player);
-        player->AddComponent(st);
-        Collider* collider = new Collider(*player);
-        player->AddComponent(collider);
-        RigidBody* box = new RigidBody(*player);
-        player->AddComponent(box);
-        Player* pl = new Player(*player);
-        player->AddComponent(pl);
+        StateMachine* st = new StateMachine(*player_GO);
+        player_GO->AddComponent(st);
+        Collider* collider = new Collider(*player_GO);
+        player_GO->AddComponent(collider);
+        RigidBody* box = new RigidBody(*player_GO);
+        player_GO->AddComponent(box);
+        Player* pl = new Player(*player_GO);
+        player_GO->AddComponent(pl);
         
         
-        player->box.SetCenter(0, 0);
+        player_GO->box.SetCenter(0, 0);
       
-    rigidArray.emplace_back(player);
+    rigidArray.emplace_back(player_GO);
 
     backgroundMusic.Play();
 
-    // Camera::Follow(player);
+    Camera::Follow(player_GO);
 
     /*STAGE TERRAIN*/
    
@@ -238,9 +238,9 @@ void TestState::CollideVectors(std::vector<std::shared_ptr<GameObject>>& alpha, 
             auto [flag, sep] = Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB);
             // std::cout << "\nCOLLISION TESTED";
             if(flag){    
-                std::cout << "COL MSG\n";
+                // std::cout << "COL MSG\n";
                 alphaObj->NotifyCollisionBehavior(*betaObj,sep);
-                std::cout << "B INFORMED\n";
+                // std::cout << "B INFORMED\n";
                 betaObj->NotifyCollisionBehavior(*alphaObj,sep);
 
             }
@@ -248,7 +248,7 @@ void TestState::CollideVectors(std::vector<std::shared_ptr<GameObject>>& alpha, 
             i++;
         }
     }
-    std::cout << "end\n";;
+    // std::cout << "end\n";;
 }
 
 void TestState::Render(){
