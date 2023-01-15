@@ -320,7 +320,7 @@ void Player::Physics(float dt){
 
      
     // mova-se de acordo com a velocidade 
-    if(*isGrounded) speed.y = 0;
+    if(*isGrounded &&speed.y >0) speed.y = 0;
 
     Vec2 center = Vec2(associated.box.GetCenter() + speed);
     associated.box.SetCenter(center.x,center.y);

@@ -127,12 +127,13 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
         if((((int)other.angleDeg+45)%90)==0) idx = 4;
 
-        switch(idx){//up
+        switch(idx){
             
-            case 0:
+            case 0://up
                 // cout << "up:";
                 associated.box.y -= b;
                 if(speed.y >= 0){
+                    
                     isGrounded = true; 
                     if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
                     
