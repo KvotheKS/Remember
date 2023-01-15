@@ -7,13 +7,13 @@
 Enemy::Enemy(GameObject& associated)
     : GameObject(associated)
 {
-    IA* brainz = new IA(associated, GetTarget(), 1.0f);
+    IA* brainz = new IA(associated, GetTarget(), 1.5f);
     
     brainz->AddAction(
         {
-            {Vec2(30,0), 1, 3}, // CLOSE
-            {Vec2(100,0), 1, 2}, // MEDIUM
-            {Vec2(200,0), 2, 3} // FAR
+            {Vec2(-200,0), 1, -0.1f}, // CLOSE
+            {Vec2(100,0), 1, -0.1f}, // MEDIUM
+            {Vec2(400,0), 1, -0.1f} // FAR
         }
     );
     associated.AddComponent(brainz);
@@ -41,7 +41,7 @@ void Enemy::Update(float dt)
     {
         case CLOSE:
             spr = new Sprite(*bullGO, "assets/img/Zidle.png",1,0.0f,10);
-            bullGO->box =associated.box +  Rect(30,0,0,0);
+            bullGO->box = associated.box +  Rect(30,0,0,0);
         break;
         case MEDIUM:
             spr = new Sprite(*bullGO, "assets/img/Zcrouch.png",1,0.0f,10);

@@ -16,7 +16,8 @@ TestState::TestState() : State(){
 
 TestState::~TestState(){
     delete tileSet;
-    objectArray.clear();
+    for(auto it : GetArrays())
+        it->clear();
 }
 
 void TestState::LoadAssets(){
