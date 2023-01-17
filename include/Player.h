@@ -47,6 +47,9 @@ public:
     int GetState();
 
     
+    bool isFiring;
+    bool isSlashing;
+
     Vec2 speed;
     Vec2 oldbox;
     bool* isGrounded;
@@ -56,6 +59,7 @@ public:
     bool isDashing;
     bool crouchHeld;
     bool jumpStored;
+    bool dreamGround;
     bool isDreamDashing;
     Timer JumpStoredTimer;
     Timer jumpTimer;
@@ -67,6 +71,7 @@ public:
     int MAX_DOUBLE_JUMP_QT;
     float JUMP_ACCE_TIMELIMIT;
     float DASH_TIMELIMIT;
+    float JUMP_STORED_TIMELIMIT;
 
     StateMachine * state_machine;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE

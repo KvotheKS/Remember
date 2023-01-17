@@ -16,6 +16,7 @@ class Vec2 {
         float x, y;
         Vec2();
         Vec2(float x, float y);
+        bool operator==(Vec2 vec);
         Vec2 operator+(Vec2 vec);
         Vec2& operator+=(Vec2 vec);
         Vec2 operator-(Vec2 vec);
