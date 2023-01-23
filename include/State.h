@@ -66,7 +66,7 @@ class State {
             um GameObject que nao esta nesse formato simples de GO->Components e sim no formato de Nos,
             vc precisa fazer a lambda pra checar algum no em especifico do GO.
         */
-        virtual std::vector<std::vector<std::shared_ptr<GameObject>>*> GetArrays();
+        constexpr virtual std::vector<std::vector<std::shared_ptr<GameObject>>*> GetArrays();
         virtual std::weak_ptr<GameObject> AddObject(GameObject* object, int idx = 0);
         virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* object);
         virtual std::weak_ptr<GameObject> GetObject(std::function<bool(GameObject&)>);

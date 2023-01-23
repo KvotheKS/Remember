@@ -122,12 +122,24 @@ dep/StateMac.d bin/StateMac.o: src/StateMac.cpp include/StateMac.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_pair.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/move.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/type_traits \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/compare \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/concepts \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_iterator_base_types.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/iterator_concepts.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ptr_traits.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_cmp.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_iterator_base_funcs.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/concept_check.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/debug/assertions.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_iterator.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ptr_traits.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/new \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/exception \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/exception.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/exception_ptr.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cxxabi_init_exception.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/typeinfo \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hash_bytes.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/nested_exception.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/debug/debug.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/predefined_ops.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/limits \
@@ -154,14 +166,6 @@ dep/StateMac.d bin/StateMac.o: src/StateMac.cpp include/StateMac.h \
  C:/TDM-GCC-32/include/wchar.h C:/TDM-GCC-32/include/stdio.h \
  C:/TDM-GCC-32/include/sys/types.h C:/TDM-GCC-32/include/stdlib.h \
  C:/TDM-GCC-32/include/time.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/exception \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/exception.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/exception_ptr.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cxxabi_init_exception.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/typeinfo \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hash_bytes.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/new \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/nested_exception.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/char_traits.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstdint \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/localefwd.h \
@@ -188,15 +192,17 @@ dep/StateMac.d bin/StateMac.o: src/StateMac.cpp include/StateMac.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cxxabi_forced.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_function.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/backward/binders.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_access.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/initializer_list \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/iterator_concepts.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/concepts \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_cmp.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tempbuf.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_construct.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_access.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_string.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/alloc_traits.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/alloc_traits.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_construct.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string_view \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/functional_hash.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/string_view.tcc \
@@ -230,34 +236,38 @@ dep/StateMac.d bin/StateMac.o: src/StateMac.cpp include/StateMac.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_bvector.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/vector.tcc \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/memory \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tempbuf.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_raw_storage_iter.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ranges_uninitialized.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/concurrence.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uses_allocator.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unique_ptr.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ranges_algobase.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/iterator \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stream_iterator.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ranges \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/refwrap.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/invoke.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/utility \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_relops.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tuple \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/array \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/invoke.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uses_allocator.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/concurrence.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unique_ptr.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/shared_ptr.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/shared_ptr_base.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/allocated_ptr.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/refwrap.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/aligned_buffer.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/shared_ptr_atomic.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_base.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_lockfree_defines.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/backward/auto_ptr.h \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bit \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/glue_memory_defs.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/execution_defs.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/unordered_map \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hashtable.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hashtable_policy.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/node_handle.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/set \
@@ -271,10 +281,6 @@ dep/StateMac.d bin/StateMac.o: src/StateMac.cpp include/StateMac.h \
  C:/TDM-GCC-32/include/string.h include/State.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/functional \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_function.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h \
- C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h \
  include/TitleState.h include/StageState.h include/Sprite.h \
  include/Component.h include/Camera.h include/Timer.h include/Music.h \
  include/TileSet.h include/TileMap.h \
@@ -289,6 +295,7 @@ dep/StateMac.d bin/StateMac.o: src/StateMac.cpp include/StateMac.h \
  include/Bullet.h include/Collider.h include/PenguinBody.h \
  include/PenguinCannon.h include/Sound.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/algorithm \
+ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ranges_algo.h \
  C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/glue_algorithm_defs.h \
  include/Collision.h include/GameData.h include/EndState.h include/Text.h \
  include/PingusState.h \
@@ -457,12 +464,24 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/numeric_traits.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_pair.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/move.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/type_traits:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/compare:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/concepts:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_iterator_base_types.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/iterator_concepts.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ptr_traits.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_cmp.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_iterator_base_funcs.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/concept_check.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/debug/assertions.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_iterator.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ptr_traits.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/new:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/exception:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/exception.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/exception_ptr.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cxxabi_init_exception.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/typeinfo:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hash_bytes.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/nested_exception.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/debug/debug.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/predefined_ops.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/limits:
@@ -491,14 +510,6 @@ C:/TDM-GCC-32/include/stdio.h:
 C:/TDM-GCC-32/include/sys/types.h:
 C:/TDM-GCC-32/include/stdlib.h:
 C:/TDM-GCC-32/include/time.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/exception:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/exception.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/exception_ptr.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cxxabi_init_exception.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/typeinfo:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hash_bytes.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/new:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/nested_exception.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/char_traits.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/cstdint:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/localefwd.h:
@@ -528,15 +539,17 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ostream_insert.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/cxxabi_forced.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_function.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/backward/binders.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_access.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/initializer_list:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/iterator_concepts.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/concepts:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_cmp.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tempbuf.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_construct.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/range_access.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/basic_string.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/alloc_traits.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/alloc_traits.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_construct.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/string_view:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/functional_hash.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/string_view.tcc:
@@ -570,34 +583,38 @@ C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_vector.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_bvector.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/vector.tcc:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/memory:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_tempbuf.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_raw_storage_iter.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ranges_uninitialized.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/concurrence.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uses_allocator.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unique_ptr.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ranges_algobase.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/iterator:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stream_iterator.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ranges:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/refwrap.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/invoke.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/utility:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_relops.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/tuple:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/array:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/invoke.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uses_allocator.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/concurrence.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unique_ptr.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/shared_ptr.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/shared_ptr_base.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/allocated_ptr.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/refwrap.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/ext/aligned_buffer.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/shared_ptr_atomic.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_base.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/atomic_lockfree_defines.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/backward/auto_ptr.h:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bit:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/glue_memory_defs.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/execution_defs.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/unordered_map:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hashtable.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/hashtable_policy.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/node_handle.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/optional:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/enable_special_members.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/unordered_map.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/erase_if.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/set:
@@ -616,10 +633,6 @@ C:/TDM-GCC-32/include/string.h:
 include/State.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/functional:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/std_function.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_algo.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/algorithmfwd.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/stl_heap.h:
-C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/uniform_int_dist.h:
 include/TitleState.h:
 include/StageState.h:
 include/Sprite.h:
@@ -645,6 +658,7 @@ include/PenguinBody.h:
 include/PenguinCannon.h:
 include/Sound.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/algorithm:
+C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/bits/ranges_algo.h:
 C:/TDM-GCC-32/lib/gcc/mingw32/10.3.0/include/c++/pstl/glue_algorithm_defs.h:
 include/Collision.h:
 include/GameData.h:
