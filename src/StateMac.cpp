@@ -182,6 +182,7 @@ void StateMachine::Update(float dt)
 
 void StateMachine::Render()
 {
+    if(states.empty()) return;
     // std::cout << "SUSUSYSY";
     states[__curr]->Render();
     // std::cout << "RENDENRING STATE\n";
@@ -209,6 +210,11 @@ void StateMachine::AddNode(int id, AnimNode* anm)
 {
     states.insert({id, std::unique_ptr<AnimNode>(anm)});
     transitions.insert({id,id});
+}
+
+int StateMachine::GetCurr()
+{
+    return __curr;
 }
 
 std::pair<const int, AnimNode*> StateMachine::GetCurrent()

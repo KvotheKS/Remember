@@ -79,6 +79,7 @@ public:
     void AddTransition(int,int);
     void AddNode(int,AnimNode*);
     std::pair<const int, AnimNode*> GetCurrent();
+    int GetCurr();
     bool IsDone();
     void ChangeState(int);
     void CenterBox(Rect&);

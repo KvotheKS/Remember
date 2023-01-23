@@ -23,7 +23,7 @@ GameObject* Enemy::GetTarget()
 {
     return Game::GetInstance()
     .GetCurrentState()
-    .GetObject(C_ID::Player)
+    .GetObject(C_ID::Player) 
     .lock()
     .get();
 }

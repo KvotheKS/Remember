@@ -19,5 +19,6 @@ enum class C_ID
     Text,
     TileMap,
     IA,
-    Enemy
+    Enemy,
+    Lion
 };

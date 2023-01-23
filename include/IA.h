@@ -45,7 +45,7 @@ public:
     int selectedAction;
     bool rendered;
 public:
-    IA(GameObject&, GameObject*, float);
+    IA(GameObject&, GameObject* = nullptr, float = 1.0f);
     void Update(float);
     void Render();
     void SetActionTimer(int);

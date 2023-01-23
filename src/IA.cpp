@@ -6,6 +6,7 @@ IA::IA(GameObject& associated, GameObject* target, float positionWeight)
     : GameObject(associated), target(target), positionWeight(positionWeight)
 { rendered = false; }
 
+
 void IA::Update(float dt)
 {
     if(!rendered || !tm.Update(dt) || !target)
