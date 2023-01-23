@@ -38,42 +38,34 @@ void TileMap::Load(std::string file){
 
     State& state = Game::GetInstance().GetCurrentState();
     //terreno na posicao dos tiles com ID 16
-    // for(int i = 0; i < mapHeight; i++){
+    for(int i = 0; i < mapHeight; i++){
         
-    //     for(int j = 0; j < mapWidth; j++){
+        for(int j = 0; j < mapWidth; j++){
            
-    //         //if (At(j, i, 0) == 16){     //?? At() n funciona aqui...por
-    //         if (tileMatrix[j+i*mapWidth]== 16){
-    //             int tileX = j * tileSet->GetTileWidth() ;
-    //             int tileY = i * tileSet->GetTileHeight() ;
+            
+            if (tileMatrix[j+i*mapWidth]== 19){
+                int tileX = j * tileSet->GetTileWidth() ;
+                int tileY = i * tileSet->GetTileHeight() ;
                 
             
-    //             GameObject* terrainbox = new GameObject();
-    //                 terrainbox->depth =999;
-    //                 TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //                 terrainbox->AddComponent(box2);
-    //                 terrainbox->box.SetCenter(tileX,tileY);
-    //                 terrainbox->angleDeg = 0;
-    //             state.AddObject(terrainbox);
-    //         }
-            
-           
-    //     }
-  
-        
-    // }
+                GameObject* terrainbox = new GameObject();
+                    terrainbox->depth =999;
 
-    // !!para testar limites da colisão, delete me
-    // for(int i = 0; i < 20;i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth =999;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         terrainbox->box.SetCenter(i*10,0);
-    //         terrainbox->angleDeg = 0;
-    //     state.AddObject(terrainbox);
-    // }
-   
+                    Collider* collider = new Collider(*terrainbox);
+                    terrainbox->AddComponent(collider);
+
+                    terrainbox->box.x = tileX;
+                    terrainbox->box.y = tileY;
+                    terrainbox->box.h = tileSet->GetTileHeight()*2;
+                    terrainbox->box.w = tileSet->GetTileWidth();
+                  
+                    terrainbox->angleDeg = 0;
+                state.terrainArray.emplace_back(terrainbox);
+            }         
+        }
+    }
+
+
 
     inFile.close();
 }

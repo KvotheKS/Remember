@@ -76,10 +76,10 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         associated.box.y += d;
     };
     auto GoLeft = [&](float d){
-        associated.box.x -= d;
+        associated.box.x -= d+1;
     };
     auto GoRight = [&](float d){
-        associated.box.x += d;
+        associated.box.x += d+1;
     };
 
     if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::Collider)){

@@ -172,48 +172,58 @@ void Player::Controls(float dt){
     
     // LEFT COMMAND
     if(inManager.IsKeyDown(LEFT_ARROW_KEY) ){ 
-        movement_direction.x -= 1;
-        cr_state->SetFliped(true); 
+        if(!isDashing){
+            movement_direction.x -= 1;
+            cr_state->SetFliped(true); 
 
-        if(!crouchHeld && !isDashing){
+            if(!crouchHeld){
             
-            if(inManager.KeyPress(LEFT_ARROW_KEY)){
-                
-            }  
-            speed.x -= MOVE_ACCELERATION*dt;
+                if(inManager.KeyPress(LEFT_ARROW_KEY)){
+                    
+                }  
+                speed.x -= MOVE_ACCELERATION*dt;
 
-            
-            // grudar em rampas
-            if(*isGrounded && (surface_inclination != 0)){
                 
-                associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+                // grudar em rampas
+                if(*isGrounded && (surface_inclination != 0)){
+                    
+                    associated.box.y += MAX_MOVE_SPEED * 0.030 ;
 
+                }
+
+                inputDone = true;
             }
-
-            inputDone = true;
         }
+
+
+        
        
     }
     
     // RIGHT COMMAND
     if(inManager.IsKeyDown(RIGHT_ARROW_KEY)){
-        movement_direction.x += 1;
-        cr_state->SetFliped(false);
+        if(!isDashing){
+            movement_direction.x += 1;
+            cr_state->SetFliped(false);
+            
+            if(!crouchHeld){
+                if(inManager.KeyPress(RIGHT_ARROW_KEY)){
+                
+                }
+            
+                speed.x += MOVE_ACCELERATION*dt;
 
-        if(!crouchHeld && !isDashing){
-            if(inManager.KeyPress(RIGHT_ARROW_KEY)){
-            
+                if(*isGrounded  && (surface_inclination != 0)){
+                    associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+                        
+                }
+                
+             inputDone = true;
             }
-            
-            speed.x += MOVE_ACCELERATION*dt;
-
-            if(*isGrounded  && (surface_inclination != 0)){
-                associated.box.y += MAX_MOVE_SPEED * 0.030 ;
-                    
-            }
-            
-            inputDone = true;
         }
+        
+
+        
         
         
     }

@@ -79,7 +79,7 @@ void TestState::LoadAssets(){
    
     // first platform
 
-    for(int i = 0; i<100; i++){
+    for(int i = 0; i<10; i++){
         GameObject* terrainbox = new GameObject();
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);
@@ -152,13 +152,13 @@ void TestState::LoadAssets(){
     //     terrainArray.emplace_back(terrainbox);
     // }
 
-    // GameObject* goTileMap = new GameObject();
-    //     goTileMap->depth = 1;
-    //     TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
-    //     goTileMap->AddComponent(tileMap);
-    //     goTileMap->box.x = 0;
-    //     goTileMap->box.y = 0;
-    // objectArray.emplace_back(goTileMap);
+    GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 1;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
     
 
     
