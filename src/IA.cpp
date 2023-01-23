@@ -4,7 +4,8 @@
 
 IA::IA(GameObject& associated, GameObject* target, float positionWeight)
     : GameObject(associated), target(target), positionWeight(positionWeight)
-{ rendered = false;}
+{ rendered = false; }
+
 
 void IA::Update(float dt)
 {

@@ -4,6 +4,7 @@ enum class C_ID
 {
     GameObject,
     Bullet,
+    Projectile,
     CameraFollower,
     Collider,
     FpsPrinter,
