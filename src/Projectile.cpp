@@ -1,0 +1,116 @@
+#include "Projectile.h"
+
+/*
+    Função recebe 14 argumentos:
+        rotSprt -> Se o sprite do projetil será rotacionado a medida que ele viaja
+        angle -> ângulo em graus da direção do projetil
+        initialSpeed -> Velocidade inicial do projetil
+        homingRadius -> Raio de atração
+        homingAccMax -> Aceleração máxima que do homing
+        prftHmg -> Se vai ser um homing perfeito
+        accHmg -> Se o projetil vai acelerando ao medida que se aproxima do centro
+        acceleration -> aceleração extra
+*/
+Projectile::Projectile(GameObject& associated, int damage, float lifeTime, bool targetsPlayer, bool rotSprt,
+                float angle, float initialSpeed, float maxSpeed, float gravity, float homingRadius,
+                float homingAccMax, bool prftHmg, bool accHmg, Vec2 acceleration) : GameObject(associated){
+    Collider* collider = new Collider(associated);
+    associated.AddComponent(collider);
+
+    this->targetsPlayer = targetsPlayer;
+    this->damage = damage;
+    this->rotSprt = rotSprt;
+
+    // Gravidade sempre para "baixo"
+    this->gravity = Vec2(0, 1) * gravity;
+
+    this->lifeTime = lifeTime;
+    lifeTimeCount.Restart();
+
+    float radAngle = angle * PI / 180.0;
+    this->maxSpeed = maxSpeed;
+    // Rotaciona a velocidade para direção correta
+    this->velocity = Vec2(1, 0).Rotate(radAngle) * initialSpeed;
+    this->acceleration = acceleration;
+
+    this->homingRadius = homingRadius;
+    this->homingAccMax = homingAccMax;
+
+    this->prftHmg = prftHmg;
+    this->accHmg  = accHmg;
+}
+
+void Projectile::Update(float dt){
+    lifeTimeCount.Update(dt);
+    if(lifeTimeCount.Get() > lifeTime)
+        associated.RequestDelete();
+    else{
+        Vec2 target = Vec2(500, 1000); // Placeholder para o target real
+        Vec2 oldVelocity = velocity;
+        Vec2 position = associated.box.GetCenter();
+
+        if(homingRadius > 0.0){
+            float dist = position.Distance(target);
+            if(homingRadius > dist){ //Dentro da área do homing
+                float magni;
+                // Aceleração que altera -> (Raio - Distância) / Raio = Valor entre 0 e 1
+                if(accHmg) magni = ((homingRadius - dist) / homingRadius) * homingAccMax;
+                // Perfeito -> Velocidade Constante
+                else if(prftHmg) magni = velocity.Magnitude();
+                // Aceleração Constante
+                else magni = homingAccMax;
+
+                // Aceleração para o centro da área do homing
+                Vec2 homingForce = (target - position).Normalize() * magni * dt;
+                // Se perfeito, a velocidade é recalculada
+                if(prftHmg) velocity = homingForce;
+                // Se não for, soma-se a aceleração na velocidade
+                else velocity += homingForce;
+            }
+        }
+
+        velocity += (gravity + acceleration) * dt;
+        // Limita a velocidade
+        if(velocity.Magnitude() > maxSpeed)
+            velocity = velocity.Normalize() * maxSpeed;
+
+        position += velocity * dt;
+        associated.box.SetCenter(position.x, position.y);
+
+        // Rotaciona o Sprite pela direção da velocidade
+        if(rotSprt){
+            float product = velocity.Dot(oldVelocity);
+            float a = velocity.Magnitude();
+            float b = oldVelocity.Magnitude();
+            // Angulo entre dois vetores: A.B / (mag(A) * mag(B))
+            if(a > 0.0 && b > 0.0){
+                float degAngle = std::acos(product / (a * b)) * 180.0 / PI;
+                // Se o cross product for negativo o vetor foi no sentido horário no circulo trigonometrico,
+                // positivo é anti-horário
+                // Se estiver trocado, só trocar += por -= e vice-versa
+                if(oldVelocity.Cross(velocity) > 0)
+                    associated.angleDeg -= degAngle;
+                else
+                    associated.angleDeg += degAngle;
+            }
+        }
+    }
+}
+
+void Projectile::Render(){
+}
+
+bool Projectile::Is(C_ID type)
+{ return type == C_ID::Projectile; }
+
+bool Projectile::Is(std::string type){
+    return type == "ProjectileF";
+}
+
+int Projectile::GetDamage(){
+    return damage;
+}
+
+void Projectile::SetMaxSpeed(float maxSpeed){
+    this->maxSpeed = maxSpeed;
+}

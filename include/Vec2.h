@@ -29,5 +29,6 @@ class Vec2 {
         float AngleLine(Vec2 vec);
         Vec2 Rotate(float angle);
         float Dot(Vec2 vec);
+        float Cross(Vec2 vec);
         friend ostream& operator<<(ostream& out,Vec2 const& v);
 };
