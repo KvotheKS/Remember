@@ -58,11 +58,11 @@ void Text::RemakeTexture(){
 }
 
 void Text::Update(float dt){
-    timer.Update(dt);
-    if(timer.Get() > cooldown){
-        showText = !showText;
-        timer.Restart();
-    }
+    // timer.Update(dt);
+    // if(timer.Get() > cooldown){
+    //     showText = !showText;
+    //     timer.Restart();
+    // }
 }
 
 void Text::Render(){

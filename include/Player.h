@@ -61,18 +61,20 @@ public:
     bool jumpStored;
     bool dreamGround;
     bool isDreamDashing;
+    bool canDash;
     Timer JumpStoredTimer;
     Timer jumpTimer;
     Timer dashTimer;
+    Timer dashCooldown;
 
-    float surface_inclination;
+    float* surface_inclination;
 
     int MAX_DASH_QT;
     int MAX_DOUBLE_JUMP_QT;
     float JUMP_ACCE_TIMELIMIT;
     float DASH_TIMELIMIT;
     float JUMP_STORED_TIMELIMIT;
-
+    float DASH_COOLDOWN;
     StateMachine * state_machine;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE
     float MAX_GLOBAL_SPEED;// = 1200;

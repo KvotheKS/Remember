@@ -10,7 +10,8 @@
 using namespace std;
 #define p(x) cout << #x << ": " << x <<" ";
 
-
+#define nysize 0.5
+#define nxsize 0.3
 
 Player::Player(GameObject& associated):GameObject(associated){
     // Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
@@ -31,7 +32,7 @@ Player::Player(GameObject& associated):GameObject(associated){
     dreamGround = false;
     jumpStored = false;
     
-    surface_inclination = 0;
+    surface_inclination = &((RigidBody*)associated.GetComponent(C_ID::RigidBody))->surface_inclination;
 
     MAX_DASH_QT = 2;
     MAX_DOUBLE_JUMP_QT = 2;
@@ -39,6 +40,8 @@ Player::Player(GameObject& associated):GameObject(associated){
     JUMP_ACCE_TIMELIMIT = 0.1;
     DASH_TIMELIMIT = 0.25;
     JUMP_STORED_TIMELIMIT = 0.15;
+    DASH_COOLDOWN = 0.15;
+
 
     MAX_GLOBAL_SPEED = 3000;
     DASH_FORCE = 1200;
@@ -107,7 +110,7 @@ void Player::Start(){
     Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
     if(ass_collider == nullptr) cout << "erro pegando collider em player start\n";
     
-    ass_collider->SetScale(Vec2(0.65,0.5)); 
+    ass_collider->SetScale(Vec2(nxsize,nysize)); 
     ass_collider->SetOffset(Vec2(0,8));
 
     state_machine->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
@@ -165,7 +168,8 @@ void Player::Controls(float dt){
         if(inManager.KeyPress(DOWN_ARROW_KEY)){
 
         }
-        if(*isGrounded ){   
+        
+        if(*isGrounded){   
             crouchHeld = true;              
         }      
     }
@@ -185,13 +189,14 @@ void Player::Controls(float dt){
 
                 
                 // grudar em rampas
-                if(*isGrounded && (surface_inclination != 0)){
-                    
-                    associated.box.y += MAX_MOVE_SPEED * 0.030 ;
-
-                }
+                
 
                 inputDone = true;
+            }
+            if(*isGrounded && (*surface_inclination != 0)){//!!deveria fazer uma função em rigidbody que devolve esses valores em vez de usar ponteiros
+                   
+                associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+                
             }
         }
 
@@ -206,19 +211,20 @@ void Player::Controls(float dt){
             movement_direction.x += 1;
             cr_state->SetFliped(false);
             
-            if(!crouchHeld){
+            if(!crouchHeld ){
                 if(inManager.KeyPress(RIGHT_ARROW_KEY)){
                 
                 }
             
                 speed.x += MOVE_ACCELERATION*dt;
 
-                if(*isGrounded  && (surface_inclination != 0)){
-                    associated.box.y += MAX_MOVE_SPEED * 0.030 ;
-                        
-                }
                 
-             inputDone = true;
+                
+                inputDone = true;
+            }
+            if(*isGrounded  && (*surface_inclination != 0)){
+                associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+                    
             }
         }
         
@@ -273,19 +279,28 @@ void Player::Controls(float dt){
         
        
         
-        if(hasDash > 0 && !isDashing && !isDreamDashing){
+        if(hasDash > 0 &&  canDash && !isDashing && !isDreamDashing){
+            
             if(*isGrounded)dreamGround = true;
             hasDash--;
+            if(movement_direction.y >0 && *isGrounded){
+                movement_direction.y = 0;
+            }
             /* Dash Based on Movement Direction*/
+            
             if(movement_direction == Vec2(0,0)){ // if no directed, dash toward facing direction
                 (cr_state->GetFliped())?movement_direction.x = -1:movement_direction.x = 1;
             }
+            
             speed = movement_direction.Normalize() * DASH_FORCE * dt;
             /* Dash Based on Mouse Position    */
             // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
             //             (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * DASH_FORCE*dt;
             isDashing = true;
             dashTimer.Restart();
+
+            canDash = false;
+            dashCooldown.Restart();
         }
        
     }
@@ -307,11 +322,19 @@ void Player::Controls(float dt){
 }
 
 void Player::Physics(float dt){
+    //!! TIMERS separar em sua propria funcao
+    if(!canDash)dashCooldown.Update(dt);
+    if(dashCooldown.Get() > DASH_TIMELIMIT+DASH_COOLDOWN){
+        
+        canDash = true;
+    }
+
     if(isDashing)dashTimer.Update(dt);
     if(dashTimer.Get() > DASH_TIMELIMIT){
         
         isDashing = false;
     }
+
     if(jumpStored)JumpStoredTimer.Update(dt);
     if(JumpStoredTimer.Get() > JUMP_STORED_TIMELIMIT){
         jumpStored = false;
@@ -392,37 +415,37 @@ void Player::Animation(float dt){
   
     if(speed.y < 0 && !*isGrounded){
         state_machine->ChangeState(RBSTATE::JUMP);
-        ass_collider->SetScale(Vec2(0.65,0.5)); 
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(0,8));
     }
     if(speed.y > 2 && !*isGrounded){
         state_machine->ChangeState(RBSTATE::FALL);
-        ass_collider->SetScale(Vec2(0.65,0.5)); 
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(0,8));
     }
     
-    if(crouchHeld){
+    if(crouchHeld && *isGrounded){
         state_machine->ChangeState(RBSTATE::CROUCH);
-        ass_collider->SetScale(Vec2(0.65,0.5)); //!!vai ter que mudar
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(0,8));
     }else{
         if(speed.x != 0 && *isGrounded && state_idx != RBSTATE::RUN && state_idx != RBSTATE::WALK){    
         state_machine->ChangeState(RBSTATE::WALK);
-        ass_collider->SetScale(Vec2(0.65,0.5)); 
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(0,8));
         }
         
 
         if(speed.x == 0 && *isGrounded && state_idx != RBSTATE::IDLE){
             state_machine->ChangeState(RBSTATE::IDLE);
-            ass_collider->SetScale(Vec2(0.65,0.5)); 
+            ass_collider->SetScale(Vec2(nxsize,nysize)); 
             ass_collider->SetOffset(Vec2(0,8));
         }
     }
 
     if(isDashing){
         state_machine->ChangeState(RBSTATE::DASH);
-        ass_collider->SetScale(Vec2(0.65,0.25)); 
+        ass_collider->SetScale(Vec2(nxsize,nysize/2)); 
         ass_collider->SetOffset(Vec2(0,8));
 
         

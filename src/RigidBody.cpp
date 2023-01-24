@@ -123,11 +123,10 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         
 
 
-        surface_inclination = other.angleDeg;
+        
 
-        if((((int)other.angleDeg+45)%90)==0) idx = 4;
-
-        switch(idx){
+        if((((int)other.angleDeg+45)%90)!=0) {
+            switch(idx){
             
             case 0://up
                 // cout << "up:";
@@ -166,28 +165,32 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
               
 
             break;
-            // case 4://45° degree
-            //     if(idx == 0 || idx == 1){//up
+            }
+        }else{//45° degree
+            if(idx == 0 || idx == 1){//up
                     
-            //         GoUp(b);
+            GoUp(b);
+        
+            if(speed.y >= 0){//down
+                isGrounded = true; 
+                if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
+                speed.y =0;
+            }    
+            }else{
+                GoDown(b);
+                if(speed.y<0){
+                    
+                    // jumpTimer.Set(JUMP_TIMER);
+                    // speed.y =0;
+                }
                 
-            //         if(speed.y >= 0){//down
-            //             isGrounded = true; 
-            //             speed.y =0;
-            //         }    
-            //     }else{
-            //         GoDown(b);
-            //         if(speed.y<0){
-                        
-            //             // jumpTimer.Set(JUMP_TIMER);
-            //             // speed.y =0;
-            //         }
-                    
-                  
-            //     }
-
-            // break;
+                
+            }
         }
+
+       
+           
+        
 
         
         surface_inclination =  other.angleDeg;
