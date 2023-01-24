@@ -17,7 +17,7 @@
 
 enum RBSTATE
 {
-    LEFT, RIGHT, STILL, CROUCH, IDLE, WALK, RUN, JUMP, FALL, DASH , MELEE, SHOT, SKID
+    LEFT, RIGHT, STILL, CROUCH, IDLE, WALK, RUN, JUMP, FALL, DASH , MELEE, SHOT, SKID, STUN
 };
 
 class Player : public GameObject{
@@ -46,13 +46,14 @@ public:
     Vec2 Bcurve(std::vector<Vec2> vec,float dt);
     int GetState();
 
-    
+    int hp;
     bool isFiring;
     bool isSlashing;
 
     Vec2 speed;
     Vec2 oldbox;
     bool* isGrounded;
+    float* surface_inclination;
     int hasDoubleJump;
     int hasDash;
     bool inputDone;
@@ -61,13 +62,20 @@ public:
     bool jumpStored;
     bool dreamGround;
     bool isDreamDashing;
+    bool isStunned;
     bool canDash;
+
     Timer JumpStoredTimer;
     Timer jumpTimer;
     Timer dashTimer;
     Timer dashCooldown;
+    Timer stunTimer;
 
-    float* surface_inclination;
+    
+
+
+    int MAX_HP;
+
 
     int MAX_DASH_QT;
     int MAX_DOUBLE_JUMP_QT;
@@ -75,6 +83,8 @@ public:
     float DASH_TIMELIMIT;
     float JUMP_STORED_TIMELIMIT;
     float DASH_COOLDOWN;
+    float STUN_TIMELIMIT;
+
     StateMachine * state_machine;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE
     float MAX_GLOBAL_SPEED;// = 1200;

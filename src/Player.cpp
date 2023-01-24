@@ -18,6 +18,7 @@ Player::Player(GameObject& associated):GameObject(associated){
     // associated.AddComponent(pbody);
     // pbody->SetScaleX(2,2);
    
+   
     isFiring = false;
     isSlashing = false;
 
@@ -31,17 +32,20 @@ Player::Player(GameObject& associated):GameObject(associated){
     isDashing = false;
     dreamGround = false;
     jumpStored = false;
-    
+    isStunned = false;
+
     surface_inclination = &((RigidBody*)associated.GetComponent(C_ID::RigidBody))->surface_inclination;
 
-    MAX_DASH_QT = 2;
-    MAX_DOUBLE_JUMP_QT = 2;
+    MAX_DASH_QT = 1;
+    MAX_DOUBLE_JUMP_QT = 1;
 
     JUMP_ACCE_TIMELIMIT = 0.1;
     DASH_TIMELIMIT = 0.25;
     JUMP_STORED_TIMELIMIT = 0.15;
     DASH_COOLDOWN = 0.15;
+    STUN_TIMELIMIT = 0.3;
 
+    MAX_HP = 100;
 
     MAX_GLOBAL_SPEED = 3000;
     DASH_FORCE = 1200;
@@ -62,7 +66,7 @@ Player::~Player(){
 }
 
 void Player::Start(){
-    
+    hp = MAX_HP;
     // ------------------ STATE MACHINE SETUP --------------------
     
     state_machine = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
@@ -100,6 +104,9 @@ void Player::Start(){
 
     sprite_sheet_node = new SSNode("assets/img/Zskid.png",  {0, 0, 60, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::SKID, sprite_sheet_node); 
+
+    sprite_sheet_node = new SSNode("assets/img/Zstun.png",  {0, 0, 60, 80}, 1, 1,scale);
+    state_machine->AddNode(RBSTATE::STUN, sprite_sheet_node); 
 
 
 
@@ -145,7 +152,9 @@ bool Player::Is(C_ID type){
 
 
 void Player::Controls(float dt){
-    
+    // p(isStunned)cout<<endl;
+    if(isStunned)return;
+
     auto [state_idx, cr_state] = state_machine->GetCurrent();
     jumpTimer.Update(dt);
     InputManager& inManager = InputManager::GetInstance();
@@ -306,8 +315,19 @@ void Player::Controls(float dt){
     }
     // LEFT CLICK COMAND
     if(inManager.MousePress(LEFT_MOUSE_BUTTON) ){
-        
-        /* teleport to mouse click position*/
+        /* Dash Based on Mouse Position    */
+        speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
+        (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
+        if(speed.x >0){
+            cr_state->SetFliped(true);
+        }else{
+            cr_state->SetFliped(false);
+        }
+        isStunned = true;
+        isDashing = false;
+        isDreamDashing = false;
+        stunTimer.Restart();
+        /* teleport to mouse click position*/ 
         // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
         // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
         // speed = Vec2(0,0);
@@ -323,6 +343,10 @@ void Player::Controls(float dt){
 
 void Player::Physics(float dt){
     //!! TIMERS separar em sua propria funcao
+    if(isStunned)stunTimer.Update(dt);
+    if(stunTimer.Get()> STUN_TIMELIMIT){
+        isStunned = false;
+    }
     if(!canDash)dashCooldown.Update(dt);
     if(dashCooldown.Get() > DASH_TIMELIMIT+DASH_COOLDOWN){
         
@@ -351,7 +375,7 @@ void Player::Physics(float dt){
     }
 
     // desacelerar
-    if(!inputDone && !isDashing){   
+    if(!inputDone && !isDashing ){   
         if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
             speed.x = 0;
         else if(speed.x > 0){
@@ -381,6 +405,7 @@ void Player::Physics(float dt){
             float overspeed = speed.Magnitude() - MAX_MOVE_SPEED*dt;
             speed = speed - overspeed * speed.Normalize() * 0.05;          
         }
+    }else if (isStunned){
     }else{
         // limitar velocidade lateral
         if(abs(speed.x) > local_max*dt){ 
@@ -396,11 +421,10 @@ void Player::Physics(float dt){
             speed = Vec2( speed.x , (speed.y - overspeed * norm * 0.5));         
         }
     }  
-
-     
-    // mova-se de acordo com a velocidade 
+    
+    // grounded
     if(*isGrounded && speed.y > 0) speed.y = 0;
-
+    // mova-se de acordo com a velocidade 
     Vec2 center = Vec2(associated.box.GetCenter() + speed);
     associated.box.SetCenter(center.x,center.y);
 
@@ -457,23 +481,19 @@ void Player::Animation(float dt){
         }
         
 
-        
-
+   
+    
         // (speed.x <= 0)?cr_state->SetFliped(false):cr_state->SetFliped(true); 
     }else{
         associated.angleDeg = 0;
     }
-    
-    
+    if(isStunned){
         
+        state_machine->ChangeState(RBSTATE::STUN);
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(0,8));
+    }
 
-
-    // if(speed.x < 0) cr_state->SetFliped(true);
-
-    // if (speed.x > 0){
-    //     cr_state->SetFliped(false);
-    // }
-        
     
 }
 
