@@ -21,7 +21,7 @@ Player::Player(GameObject& associated):GameObject(associated){
    
     isFiring = false;
     isSlashing = false;
-
+    isAttacking = false;
     speed =  Vec2(0,0);
     oldbox = Vec2(0,0);
     isGrounded = &((RigidBody*)associated.GetComponent(C_ID::RigidBody))->isGrounded;
@@ -53,6 +53,7 @@ Player::Player(GameObject& associated):GameObject(associated){
     MAX_FALL_SPEED = 800;
     FALL_ACCELERATION = 100;
 
+    MAX_DASH_SPEED = 800;
     MAX_MOVE_SPEED = 300;
     MOVE_ACCELERATION = 100;
     LATERAL_FRICTION = 80;
@@ -126,18 +127,16 @@ void Player::Start(){
 
 /// @brief Player Update
 void Player::Update(float dt){
-    
   
     Controls(dt);
-    Physics(dt);//!!check weird hitbox when this is off -m
+    RunTimers(dt);
+    Physics(dt);
     Animation(dt);
 
 
     *isGrounded = false;
     inputDone = false;
     crouchHeld = false;
-    
-   
 }
 void Player::Render(){
 }
@@ -149,10 +148,8 @@ bool Player::Is(C_ID type){
     return type == C_ID::Player;
 }
 
-
-
 void Player::Controls(float dt){
-    // p(isStunned)cout<<endl;
+
     if(isStunned)return;
 
     auto [state_idx, cr_state] = state_machine->GetCurrent();
@@ -174,9 +171,7 @@ void Player::Controls(float dt){
     // DOWN COMMAND
     if(inManager.IsKeyDown(DOWN_ARROW_KEY) ){
         movement_direction.y += 1;
-        if(inManager.KeyPress(DOWN_ARROW_KEY)){
-
-        }
+       
         
         if(*isGrounded){   
             crouchHeld = true;              
@@ -185,62 +180,44 @@ void Player::Controls(float dt){
     
     // LEFT COMMAND
     if(inManager.IsKeyDown(LEFT_ARROW_KEY) ){ 
-        if(!isDashing){
+        if(!isDashing && !(*isGrounded && isAttacking)){
             movement_direction.x -= 1;
             cr_state->SetFliped(true); 
 
-            if(!crouchHeld){
+            if(!crouchHeld ){
             
-                if(inManager.KeyPress(LEFT_ARROW_KEY)){
-                    
-                }  
+               
                 speed.x -= MOVE_ACCELERATION*dt;
-
-                
-                // grudar em rampas
-                
-
                 inputDone = true;
             }
-            if(*isGrounded && (*surface_inclination != 0)){//!!deveria fazer uma função em rigidbody que devolve esses valores em vez de usar ponteiros
+            // grudar em rampas
+            // if(*isGrounded && (*surface_inclination != 0)){//!!deveria fazer uma função em rigidbody que devolve esses valores em vez de usar ponteiros
                    
-                associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+            //     associated.box.y += MAX_MOVE_SPEED * 0.030 ;
                 
-            }
+            // }
         }
-
-
         
-       
     }
     
     // RIGHT COMMAND
     if(inManager.IsKeyDown(RIGHT_ARROW_KEY)){
-        if(!isDashing){
+        if(!isDashing && !(*isGrounded && isAttacking)){
             movement_direction.x += 1;
             cr_state->SetFliped(false);
             
             if(!crouchHeld ){
-                if(inManager.KeyPress(RIGHT_ARROW_KEY)){
-                
-                }
-            
+         
                 speed.x += MOVE_ACCELERATION*dt;
 
-                
-                
                 inputDone = true;
             }
-            if(*isGrounded  && (*surface_inclination != 0)){
-                associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+            // if(*isGrounded  && (*surface_inclination != 0)){
+            //     associated.box.y += MAX_MOVE_SPEED * 0.030 ;
                     
-            }
+            // }
         }
-        
-
-        
-        
-        
+  
     }
 
     // JUMP COMMAND
@@ -277,20 +254,15 @@ void Player::Controls(float dt){
         else if (jumpTimer.Get()<JUMP_ACCE_TIMELIMIT){     
             if(!isDashing)speed.y = -JUMP_FORCE*dt;
         }
-    }else{
-        
+    }else{      
         jumpTimer.Update(JUMP_ACCE_TIMELIMIT);
-        
     }
     
     // DASH COMMAND
-    if(inManager.IsKeyDown(A_KEY)){
-        
-       
-        
+    if(inManager.IsKeyDown(A_KEY)){ 
         if(hasDash > 0 &&  canDash && !isDashing && !isDreamDashing){
             
-            if(*isGrounded)dreamGround = true;
+            if(*isGrounded )dreamGround = true;
             hasDash--;
             if(movement_direction.y >0 && *isGrounded){
                 movement_direction.y = 0;
@@ -315,18 +287,15 @@ void Player::Controls(float dt){
     }
     // LEFT CLICK COMAND
     if(inManager.MousePress(LEFT_MOUSE_BUTTON) ){
-        /* Dash Based on Mouse Position    */
-        speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
-        (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
-        if(speed.x >0){
-            cr_state->SetFliped(true);
-        }else{
-            cr_state->SetFliped(false);
-        }
-        isStunned = true;
-        isDashing = false;
-        isDreamDashing = false;
-        stunTimer.Restart();
+        
+        isAttacking = true;
+        atackTimer.Restart();
+        // mouse direction code
+        // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
+        // (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
+
+        //GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y),dt);
+        
         /* teleport to mouse click position*/ 
         // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
         // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
@@ -341,28 +310,36 @@ void Player::Controls(float dt){
     
 }
 
+void Player::RunTimers(float dt){
+    if(isAttacking){
+        atackTimer.Update(dt);
+        if(atackTimer.Get()>1)isAttacking =false;
+    }
+
+    if(isStunned){
+        stunTimer.Update(dt);
+        if(stunTimer.Get()> STUN_TIMELIMIT) isStunned = false;
+    }
+    
+
+    if(!canDash){
+        dashCooldown.Update(dt);
+        if(dashCooldown.Get() > DASH_TIMELIMIT+DASH_COOLDOWN) canDash = true;      
+    }
+
+    if(isDashing){
+        dashTimer.Update(dt);
+        if(dashTimer.Get() > DASH_TIMELIMIT)isDashing = false;
+    }
+
+    if(jumpStored){
+        JumpStoredTimer.Update(dt);
+        if(JumpStoredTimer.Get() > JUMP_STORED_TIMELIMIT)jumpStored = false;
+    }
+}
+
 void Player::Physics(float dt){
-    //!! TIMERS separar em sua propria funcao
-    if(isStunned)stunTimer.Update(dt);
-    if(stunTimer.Get()> STUN_TIMELIMIT){
-        isStunned = false;
-    }
-    if(!canDash)dashCooldown.Update(dt);
-    if(dashCooldown.Get() > DASH_TIMELIMIT+DASH_COOLDOWN){
-        
-        canDash = true;
-    }
-
-    if(isDashing)dashTimer.Update(dt);
-    if(dashTimer.Get() > DASH_TIMELIMIT){
-        
-        isDashing = false;
-    }
-
-    if(jumpStored)JumpStoredTimer.Update(dt);
-    if(JumpStoredTimer.Get() > JUMP_STORED_TIMELIMIT){
-        jumpStored = false;
-    }
+   
     // Queda 
     if(!isDashing){
         speed.y += FALL_ACCELERATION*dt; 
@@ -380,30 +357,24 @@ void Player::Physics(float dt){
             speed.x = 0;
         else if(speed.x > 0){
             speed.x = speed.x - LATERAL_FRICTION*dt; 
+            
         }else{
             speed.x = speed.x + LATERAL_FRICTION*dt; 
         }
     }
 
-    // limitar velocidade global
-    if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
-        speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
-    }
-    float local_max = 800;
-
-    if(isDreamDashing){
-        local_max = 800;
-    }else{
-        local_max = MAX_MOVE_SPEED;
-    }
-
-    if(isDashing ){
+    
+    float local_max;
+    (isDreamDashing)?local_max = MAX_DASH_SPEED:local_max = MAX_MOVE_SPEED;
+    
+    
+    if(isDashing){
         if(speed.y > 0 && *isGrounded){
             isDashing = false;
         }
-        if(speed.Magnitude() > MAX_MOVE_SPEED*dt){ 
-            float overspeed = speed.Magnitude() - MAX_MOVE_SPEED*dt;
-            speed = speed - overspeed * speed.Normalize() * 0.05;          
+        if(speed.Magnitude() > MAX_DASH_SPEED*dt){ 
+            float overspeed = speed.Magnitude() - MAX_DASH_SPEED*dt;
+            speed = speed - overspeed * speed.Normalize() * 0.5;          
         }
     }else if (isStunned){
     }else{
@@ -413,7 +384,7 @@ void Player::Physics(float dt){
             float norm = speed.x/abs(speed.x);
             speed = Vec2( (speed.x - overspeed * norm * 0.5) , speed.y );          
         }
-        //limitar velocidade de queda
+        // limitar velocidade de queda
         if(speed.y > MAX_FALL_SPEED*dt){         
             speed.y =  MAX_FALL_SPEED*dt;  
             float overspeed = abs(speed.y) - MAX_FALL_SPEED*dt;
@@ -422,8 +393,24 @@ void Player::Physics(float dt){
         }
     }  
     
+    // limitar velocidade global
+    if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
+        speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
+    }
+
     // grounded
-    if(*isGrounded && speed.y > 0) speed.y = 0;
+    if(*isGrounded){
+        if(speed.y>0) speed.y = 0;
+        if(speed.x > 0){
+            if(*surface_inclination <45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+        }
+        if(speed.x < 0){
+            if(*surface_inclination >=45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+        }
+    }
+    if(isAttacking){
+        if(*isGrounded)speed.x = 0;
+    }
     // mova-se de acordo com a velocidade 
     Vec2 center = Vec2(associated.box.GetCenter() + speed);
     associated.box.SetCenter(center.x,center.y);
@@ -450,8 +437,8 @@ void Player::Animation(float dt){
     
     if(crouchHeld && *isGrounded){
         state_machine->ChangeState(RBSTATE::CROUCH);
-        ass_collider->SetScale(Vec2(nxsize,nysize)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
+        ass_collider->SetOffset(Vec2(0,24));
     }else{
         if(speed.x != 0 && *isGrounded && state_idx != RBSTATE::RUN && state_idx != RBSTATE::WALK){    
         state_machine->ChangeState(RBSTATE::WALK);
@@ -469,8 +456,8 @@ void Player::Animation(float dt){
 
     if(isDashing){
         state_machine->ChangeState(RBSTATE::DASH);
-        ass_collider->SetScale(Vec2(nxsize,nysize/2)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
+        ass_collider->SetOffset(Vec2(0,24));
 
         
         associated.angleDeg = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592);
@@ -500,12 +487,27 @@ void Player::Animation(float dt){
 void Player::Jump (float dt){
     speed.y = -JUMP_FORCE*dt;
 }
-void Player::JustGrounded(){
-   
+void Player::JustGrounded(){//!!doesn work
+    // isAttacking = false;
     isDreamDashing = false;
     hasDash = MAX_DASH_QT;
     
+}
+
+void Player::GetStunned(Vec2 dir, float dt){
+    auto [state_idx, cr_state] = state_machine->GetCurrent();
+    InputManager& inManager = InputManager::GetInstance();
+    speed = dir.Normalize()*1000*dt;
     
+    if(speed.x >0){
+        cr_state->SetFliped(true);
+    }else{
+        cr_state->SetFliped(false);
+    }
+    isStunned = true;
+    isDashing = false;
+    isDreamDashing = false;
+    stunTimer.Restart();
 }
 
 int Player::GetState()

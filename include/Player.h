@@ -23,9 +23,10 @@ enum RBSTATE
 class Player : public GameObject{
 private:
     void Controls(float dt);
+    void RunTimers(float dt);
     void Physics(float dt);
     void Animation(float dt);
-    void MoveonTopof(GameObject& target);
+    
     
 public:
     
@@ -36,15 +37,21 @@ public:
     void Start();
     void Update(float dt);
     void Render();
+    
     bool Is(std::string type);
     bool Is(C_ID);
 
 
     void Jump(float dt);
+    void Shoot(float dt);
+    void GetStunned(Vec2 dir,float dt);
     void JustGrounded();
     Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float dt);
     Vec2 Bcurve(std::vector<Vec2> vec,float dt);
     int GetState();
+    /// @brief stuns and push player 
+    /// @param dir direction of push
+    
 
     int hp;
     bool isFiring;
@@ -58,6 +65,7 @@ public:
     int hasDash;
     bool inputDone;
     bool isDashing;
+    bool isAttacking;
     bool crouchHeld;
     bool jumpStored;
     bool dreamGround;
@@ -70,7 +78,7 @@ public:
     Timer dashTimer;
     Timer dashCooldown;
     Timer stunTimer;
-
+    Timer atackTimer;
     
 
 
@@ -88,6 +96,8 @@ public:
     StateMachine * state_machine;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE
     float MAX_GLOBAL_SPEED;// = 1200;
+
+    float MAX_DASH_SPEED;
     float MAX_MOVE_SPEED;// = 400;
     float MAX_FALL_SPEED;// = 700;
 

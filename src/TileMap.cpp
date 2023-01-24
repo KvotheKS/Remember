@@ -126,7 +126,7 @@ void TileMap::Load(std::string file){
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
                   
-                    terrainbox->angleDeg = +45;
+                    terrainbox->angleDeg = -45;
                 state.terrainArray.emplace_back(terrainbox);
             } 
             if (tileMatrix[j+i*mapWidth] == 26 ){//22.5° pra direita primeira metada

@@ -48,6 +48,8 @@ public:
     
 
     int modo;
+    int updateCounter;
+    int isGroundedUpdate;
 
     Vec2 speed;
     Vec2 oldbox;

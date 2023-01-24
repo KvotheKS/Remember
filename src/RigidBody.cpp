@@ -25,6 +25,8 @@ RigidBody::RigidBody(GameObject& associated):GameObject(associated){
     inputDone = false;
     surface_inclination = 0;
 
+    updateCounter = 0;
+
     JUMP_TIMER = 0.2;
     
     MAX_GLOBAL_SPEED = 3000;
@@ -51,7 +53,7 @@ void RigidBody::Start(){
 
 /// @brief RigidBody Update
 void RigidBody::Update(float dt){
-
+    // isGrounded = false;
    
 }
 void RigidBody::Render(){
@@ -132,9 +134,11 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
                 // cout << "up:";
                 associated.box.y -= b;
                 if(speed.y >= 0){
-                    
+                    if(isGrounded == false){
+                        if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
+                    }
                     isGrounded = true; 
-                    if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
+                    
                     
                     speed.y =0;
                 }    
@@ -173,6 +177,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         
             if(speed.y >= 0){//down
                 isGrounded = true; 
+                
                 if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
                 speed.y =0;
             }    
