@@ -11,21 +11,20 @@
         accHmg -> Se o projetil vai acelerando ao medida que se aproxima do centro
         acceleration -> aceleração extra
 */
-Projectile::Projectile(GameObject& associated, int damage, float lifeTime, bool targetsPlayer, bool rotSprt,
+Projectile::Projectile(GameObject& associated, int damage, float lifeTime, GameObject* target, bool rotSprt,
                 float angle, float initialSpeed, float maxSpeed, float gravity, float homingRadius,
                 float homingAccMax, bool prftHmg, bool accHmg, Vec2 acceleration) : GameObject(associated){
     Collider* collider = new Collider(associated);
     associated.AddComponent(collider);
-
-    this->targetsPlayer = targetsPlayer;
+    // associated.angleDeg = angle;
+    this->target = target;
     this->damage = damage;
     this->rotSprt = rotSprt;
 
     // Gravidade sempre para "baixo"
     this->gravity = Vec2(0, 1) * gravity;
 
-    this->lifeTime = lifeTime;
-    lifeTimeCount.Restart();
+    lifeTimeCount.Restart(); lifeTimeCount.SetFinish(lifeTime);
 
     float radAngle = angle * PI / 180.0;
     this->maxSpeed = maxSpeed;
@@ -41,15 +40,17 @@ Projectile::Projectile(GameObject& associated, int damage, float lifeTime, bool 
 }
 
 void Projectile::Update(float dt){
-    lifeTimeCount.Update(dt);
-    if(lifeTimeCount.Get() > lifeTime)
+    if(lifeTimeCount.Update(dt))
+    {
+        std::cout << "wtf? " << lifeTimeCount.Get();
         associated.RequestDelete();
+    }
     else{
-        Vec2 target = Vec2(500, 1000); // Placeholder para o target real
         Vec2 oldVelocity = velocity;
         Vec2 position = associated.box.GetCenter();
 
         if(homingRadius > 0.0){
+            Vec2 target = this->target->box.GetCenter(); // Placeholder para o target real
             float dist = position.Distance(target);
             if(homingRadius > dist){ //Dentro da área do homing
                 float magni;
@@ -63,7 +64,7 @@ void Projectile::Update(float dt){
                 // Aceleração para o centro da área do homing
                 Vec2 homingForce = (target - position).Normalize() * magni * dt;
                 // Se perfeito, a velocidade é recalculada
-                if(prftHmg) velocity = homingForce;
+                if(prftHmg){ velocity = homingForce; std::cout << velocity.Magnitude() << ' ' << velocity.AngleX() << '\n';}
                 // Se não for, soma-se a aceleração na velocidade
                 else velocity += homingForce;
             }

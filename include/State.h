@@ -9,11 +9,6 @@ class State {
         bool popRequested;
         bool quitRequested;
         bool started;
-        std::vector<std::shared_ptr<GameObject>> objectArray; // objetos variados (normalmente sem colisao)
-        std::vector<std::shared_ptr<GameObject>> terrainArray; // terreno 
-        std::vector<std::shared_ptr<GameObject>> rigidArray; // player/boss (para todas as colisoes)
-        std::vector<std::shared_ptr<GameObject>> bulletArray; // bullets (para colisoes de player/terreno)
-        
         
         virtual void StartArray();
         void StartVector(std::vector<std::shared_ptr<GameObject>>&);
@@ -23,7 +18,13 @@ class State {
         void RenderVector(std::vector<std::shared_ptr<GameObject>>&);
         virtual void KillDeads();
         void KillVector(std::vector<std::shared_ptr<GameObject>>&);
-    
+    public:
+        std::vector<std::vector<std::shared_ptr<GameObject>>*> arrays;
+        std::vector<std::shared_ptr<GameObject>> objectArray; // objetos variados (normalmente sem colisao)
+        std::vector<std::shared_ptr<GameObject>> terrainArray; // terreno 
+        std::vector<std::shared_ptr<GameObject>> rigidArray; // player/boss (para todas as colisoes)
+        std::vector<std::shared_ptr<GameObject>> bulletArray; // bullets (para colisoes de player/terreno)
+        
     public:
         State();
         virtual ~State();
@@ -66,7 +67,7 @@ class State {
             um GameObject que nao esta nesse formato simples de GO->Components e sim no formato de Nos,
             vc precisa fazer a lambda pra checar algum no em especifico do GO.
         */
-        constexpr virtual std::vector<std::vector<std::shared_ptr<GameObject>>*> GetArrays();
+        virtual std::vector<std::vector<std::shared_ptr<GameObject>>*> GetArrays();
         virtual std::weak_ptr<GameObject> AddObject(GameObject* object, int idx = 0);
         virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* object);
         virtual std::weak_ptr<GameObject> GetObject(std::function<bool(GameObject&)>);

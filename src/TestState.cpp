@@ -73,11 +73,11 @@ void TestState::LoadAssets(){
       
     rigidArray.emplace_back(player_GO);
 
-    GameObject* enemy_GO = new GameObject();
-        enemy_GO->depth = 999;
-        enemy_GO->AddComponent(new Enemy(*enemy_GO));
+    // GameObject* enemy_GO = new GameObject();
+    //     enemy_GO->depth = 999;
+    //     enemy_GO->AddComponent(new Enemy(*enemy_GO));
 
-    objectArray.emplace_back(enemy_GO);
+    // objectArray.emplace_back(enemy_GO);
 
     backgroundMusic.Play();
 

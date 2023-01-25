@@ -4,6 +4,7 @@ State::State(){
     popRequested = false;
     quitRequested = false;
     started = false;
+    arrays = GetArrays();
 }
 
 State::~State(){
@@ -12,8 +13,7 @@ State::~State(){
 
 void State::StartArray()
 {
-    auto vecs = GetArrays();
-    for(auto it : vecs)
+    for(auto it : arrays)
         StartVector(*it);
 }
 
@@ -26,8 +26,7 @@ void State::StartVector(std::vector<std::shared_ptr<GameObject>>& ObjectArr){
 
 void State::UpdateArray(float dt)
 {
-    auto vecs = GetArrays();
-    for(auto it : vecs)
+    for(auto it : arrays)
         UpdateVector(*it, dt);
 }
 
@@ -56,8 +55,7 @@ std::vector<std::vector<std::shared_ptr<GameObject>>*> State::GetArrays()
 
 void State::RenderArray()
 {
-    auto vecs = GetArrays();
-    for(auto it : vecs)
+    for(auto it : arrays)
         RenderVector(*it);
 }
 
@@ -75,13 +73,12 @@ void State::KillVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
 
 void State::KillDeads()
 {
-    auto vecs = GetArrays();
-    for(auto it : vecs)
+    for(auto it : arrays)
         KillVector(*it);
 }
 
 std::weak_ptr<GameObject> State::AddObject(GameObject* object, int idx){
-    auto objArr = GetArrays()[idx];
+    auto objArr = arrays[idx];
     std::shared_ptr<GameObject> shrd_obj(object);
     objArr->push_back(shrd_obj);
     if(started)
@@ -101,8 +98,7 @@ std::weak_ptr<GameObject> State::GetObjectPtr(GameObject* object){
 
 std::weak_ptr<GameObject> State::GetObject(std::function<bool(GameObject&)> fnc)
 {
-    auto vecs = GetArrays();
-    for(auto it : vecs)
+    for(auto it : arrays)
         for(auto& jt : *it)
             if(fnc(*jt.get()))
                 return std::weak_ptr<GameObject>(jt);
@@ -111,8 +107,7 @@ std::weak_ptr<GameObject> State::GetObject(std::function<bool(GameObject&)> fnc)
 
 std::weak_ptr<GameObject> State::GetObject(C_ID type)
 {
-    auto vecs = GetArrays();
-    for(auto it : vecs)
+    for(auto it : arrays)
         for(auto& jt : *it)
             if(jt->GetComponent(type))
                 return std::weak_ptr<GameObject>(jt);

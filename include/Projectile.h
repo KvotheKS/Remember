@@ -11,11 +11,10 @@ class Projectile : public GameObject {
         float homingAccMax, homingRadius, maxSpeed;
         int damage;
         Timer lifeTimeCount;
-        float lifeTime;
         bool prftHmg, accHmg, rotSprt;
     public:
-        bool targetsPlayer;
-        Projectile(GameObject& associated, int damage, float lifeTime, bool targetsPlayer, bool rotSprt,
+        GameObject* target;
+        Projectile(GameObject& associated, int damage, float lifeTime, GameObject* target, bool rotSprt,
                     float angle, float initialSpeed, float maxSpeed, float gravity, float homingRadius,
                     float homingAccMax, bool prftHmg, bool accHmg, Vec2 acceleration = {0,0});
         void Update(float dt);

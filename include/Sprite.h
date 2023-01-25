@@ -48,7 +48,7 @@ class Sprite : public GameObject {
         int GetHeight();
         
         bool IsOpen();
-
+        void SetSize(float sizeW, float sizeH);
         void SetScaleX(float scaleX, float scaleY);
         Vec2 GetScale();
 

@@ -115,6 +115,11 @@ bool Sprite::IsOpen(){
     return texture != nullptr;
 }
 
+void Sprite::SetSize(float sizeW, float sizeH)
+{
+    SetScaleX(sizeW/width, sizeH/height);
+}
+
 void Sprite::SetScaleX(float scaleX, float scaleY){
     scale.x = !scaleX ? scale.x : scaleX;
     scale.y = !scaleY ? scale.y : scaleY;
