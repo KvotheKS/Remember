@@ -64,7 +64,25 @@ void Sprite::Update(float dt){
 }
 
 void Sprite::Render(){
-    Render(associated.box.x - Camera::pos.x, associated.box.y - Camera::pos.y);
+    float paralax_mul;
+    switch((int)associated.depth){
+        case -1:
+            paralax_mul = 0.95;
+            break;
+        case -2:
+            paralax_mul = 0.9;
+            break;
+        case -3:
+            paralax_mul = 0.8;
+            break;
+        case -4:
+            paralax_mul = 0.7;
+            break;
+        default:
+            paralax_mul = 1;
+            break;
+    }
+    Render(associated.box.x - Camera::pos.x*paralax_mul, associated.box.y - Camera::pos.y);
 }
 
 void Sprite::Render(float x, float y){
