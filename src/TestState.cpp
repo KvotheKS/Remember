@@ -245,9 +245,10 @@ void TestState::Update(float dt){
 
     CollideVectors(rigidArray, terrainArray);
     // std::cout << "colidiu";
-
-    Camera::Update(dt);
     
+    Camera::Update(dt);
+    if(Camera::pos.x <0)Camera::pos.x = 0;
+    Camera::pos.y = 0;
 
     KillDeads();
 }
