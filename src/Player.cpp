@@ -49,7 +49,7 @@ Player::Player(GameObject& associated):GameObject(associated){
 
     MAX_GLOBAL_SPEED = 3000;
     DASH_FORCE = 1200;
-    JUMP_FORCE = 1200;
+    JUMP_FORCE = 27;
     MAX_FALL_SPEED = 800;
     FALL_ACCELERATION = 100;
 
@@ -132,7 +132,7 @@ void Player::Update(float dt){
     RunTimers(dt);
     Physics(dt);
     Animation(dt);
-
+    p(speed.y)cout << "\n";
 
     *isGrounded = false;
     inputDone = false;
@@ -232,8 +232,8 @@ void Player::Controls(float dt){
                     jumpTimer.Restart();
                     hasDoubleJump --;
                     speed.y  = 0;
-                    speed.y = -JUMP_FORCE*dt;
-                    
+                    speed.y =  -JUMP_FORCE;;
+                  
                 }
             }
         }
@@ -243,7 +243,8 @@ void Player::Controls(float dt){
             hasDoubleJump = MAX_DOUBLE_JUMP_QT;
             jumpTimer.Restart();
             *isGrounded = false;
-            speed.y = -JUMP_FORCE*dt;
+        
+            speed.y = -JUMP_FORCE;
             
             if(isDashing){
                 isDreamDashing = true;
@@ -251,9 +252,11 @@ void Player::Controls(float dt){
             isDashing = false;  
             dreamGround = false;
         }
-        else if (jumpTimer.Get()<JUMP_ACCE_TIMELIMIT){     
-            if(!isDashing)speed.y = -JUMP_FORCE*dt;
+        if (jumpTimer.Get()<JUMP_ACCE_TIMELIMIT){     
+            if(!isDashing)speed.y = -JUMP_FORCE;
+           
         }
+        
     }else{      
         jumpTimer.Update(JUMP_ACCE_TIMELIMIT);
     }

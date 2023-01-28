@@ -46,7 +46,7 @@ void TileMap::Load(std::string file){
             int tileX = j * tileSet->GetTileWidth() ;
             int tileY = i * tileSet->GetTileHeight() ;
             
-            // para printar numero das tiles
+            // para printar numero das tiles na tela
             
             // GameObject* goText = new GameObject();
             //     goText->depth =1000;
@@ -59,152 +59,174 @@ void TileMap::Load(std::string file){
             //     }
             //     Text* text = new Text(*goText, file, 35, Text::TextStyle::BLENDED, msg, {0, 100, 255, 255}, 1);
             //     goText->AddComponent(text);
-
-               
-                
             //     goText->box.SetCenter(tileX+30, tileY+30);
             // state.objectArray.emplace_back(goText);
 
-            
+            GameObject* terrainbox = new GameObject();
+            terrainbox->depth = 1;
+            Collider* collider = new Collider(*terrainbox);
             
 
-
-            if (tileMatrix[j+i*mapWidth] == 19){//!!idealmente temos que organizar essas alternativas
+            switch(tileMatrix[j+i*mapWidth]){
+                case(16):case(20):case(18):case(50):case(48):case(46):case(78)://block platform
+                    terrainbox->box.x = tileX;
+                    terrainbox->box.y = tileY;
+                    terrainbox->box.h = tileSet->GetTileHeight();
+                    terrainbox->box.w = tileSet->GetTileWidth();
                 
+                    terrainbox->angleDeg = 0;
+                break;
+                case(33)://deep wall
+                    terrainbox->box.x = tileX;
+                    terrainbox->box.y = tileY;
+                    terrainbox->box.h = tileSet->GetTileHeight();
+                    terrainbox->box.w = tileSet->GetTileWidth()*2;
                 
-            
-                GameObject* terrainbox = new GameObject();
-                    terrainbox->depth =999;
-
-                    Collider* collider = new Collider(*terrainbox);
-                    terrainbox->AddComponent(collider);
+                    terrainbox->angleDeg = 0;
+                break;
+                case(35)://deep wall
+                    terrainbox->box.x = tileX-tileSet->GetTileWidth();
+                    terrainbox->box.y = tileY;
+                    terrainbox->box.h = tileSet->GetTileHeight();
+                    terrainbox->box.w = tileSet->GetTileWidth()*2;
+                
+                    terrainbox->angleDeg = 0;
+                break;
+                case(49)://deep floor
+                    terrainbox->box.x = tileX;
+                    terrainbox->box.y = tileY-tileSet->GetTileHeight();
+                    terrainbox->box.h = tileSet->GetTileHeight()*2;
+                    terrainbox->box.w = tileSet->GetTileWidth();
+                
+                    terrainbox->angleDeg = 0;
+                break;
+                
+                case(19): // deep platforms
+                    
 
                     terrainbox->box.x = tileX;
                     terrainbox->box.y = tileY;
                     terrainbox->box.h = tileSet->GetTileHeight()*2;
                     terrainbox->box.w = tileSet->GetTileWidth();
-                  
-                    terrainbox->angleDeg = 0;
-                state.terrainArray.emplace_back(terrainbox);
-            }  
-            if (tileMatrix[j+i*mapWidth] == 81 ){//45° pra esquerda
                 
-
-                GameObject* terrainbox = new GameObject();
-                    terrainbox->depth =999;
-
-                    Collider* collider = new Collider(*terrainbox);
-                    terrainbox->AddComponent(collider);
-
-                    // terrainbox->box.x = tileX+13;
-                    // terrainbox->box.y = tileY+30;
-                    // terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
-                    // terrainbox->box.w = tileSet->GetTileWidth()*2;
-
+                    terrainbox->angleDeg = 0;
+                    
+                break;
+                case(82)://45° pra esquerda
                     terrainbox->box.x = tileX+18;
                     terrainbox->box.y = tileY+18;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
                   
-                    terrainbox->angleDeg = 45;
-                    
-                state.terrainArray.emplace_back(terrainbox);
-            } 
-            if (tileMatrix[j+i*mapWidth] == 83 ){//45° pra direita
-                
-
-                GameObject* terrainbox = new GameObject();
-                    terrainbox->depth =999;
-
-                    Collider* collider = new Collider(*terrainbox);
-                    terrainbox->AddComponent(collider);
-
-            
-
+                    terrainbox->angleDeg = 45;               
+                break;
+                case(112)://45° pra esquerda teto
+                    terrainbox->box.x = tileX+18;
+                    terrainbox->box.y = tileY-44;
+                    terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
+                    terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
+                  
+                    terrainbox->angleDeg = 45;               
+                break;
+                case(84)://45° pra direita
+                 
                     terrainbox->box.x = tileX-42;
                     terrainbox->box.y = tileY+18;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
                   
                     terrainbox->angleDeg = -45;
-                state.terrainArray.emplace_back(terrainbox);
-            } 
-            if (tileMatrix[j+i*mapWidth] == 26 ){//22.5° pra direita primeira metada
-                
+                        
+                break;
+                case(114)://45° pra direita teto
+                 
+                    terrainbox->box.x = tileX-42;
+                    terrainbox->box.y = tileY-44;
+                    terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
+                    terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
+                  
+                    terrainbox->angleDeg = -45;
+                        
+                break;
 
-                GameObject* terrainbox = new GameObject();
-                    terrainbox->depth =999;
-
-                    Collider* collider = new Collider(*terrainbox);
-                    terrainbox->AddComponent(collider);
-
-            
-
-                    terrainbox->box.x = tileX+13;
+                case(26)://22.5° pra direita primeira metada
+                    terrainbox->box.x = tileX+12;
                     terrainbox->box.y = tileY+41;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   
                     terrainbox->angleDeg = 45+19;
-                state.terrainArray.emplace_back(terrainbox);
-            }  
-            if (tileMatrix[j+i*mapWidth] == 27 ){//22.5° pra direita segunda metade
-                
+                break;
 
-                GameObject* terrainbox = new GameObject();
-                    terrainbox->depth =999;
+                case(116)://22.5° pra direita primeira metada teto
+                    terrainbox->box.x = tileX+12;
+                    terrainbox->box.y = tileY-48;
+                    terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
+                    terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
+                  
+                    terrainbox->angleDeg = 45-19;
+                break;
 
-                    Collider* collider = new Collider(*terrainbox);
-                    terrainbox->AddComponent(collider);
-
-            
-
+                case(27)://22.5° pra direita segunda metade
                     terrainbox->box.x = tileX+13;
                     terrainbox->box.y = tileY+11;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   
                     terrainbox->angleDeg = 45+19;
-                state.terrainArray.emplace_back(terrainbox);
-            }  
-            if (tileMatrix[j+i*mapWidth] == 87 ){//22.5° pra esquerda segunda metade
-                
+                break;
+                case(117)://22.5° pra direita segunda metade teto
+                    terrainbox->box.x = tileX+13;
+                    terrainbox->box.y = tileY-18;
+                    terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
+                    terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
+                  
+                    terrainbox->angleDeg = 45-19;
+                break;
 
-                GameObject* terrainbox = new GameObject();
-                    terrainbox->depth =999;
-
-                    Collider* collider = new Collider(*terrainbox);
-                    terrainbox->AddComponent(collider);
-
-            
-
+                case(87)://22.5° pra esquerda primeira metade
                     terrainbox->box.x = tileX-17;
                     terrainbox->box.y = tileY+11;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   
                     terrainbox->angleDeg = 45-19;
-                state.terrainArray.emplace_back(terrainbox);
-            }  
-             if (tileMatrix[j+i*mapWidth] == 88 ){//22.5° pra esquerda segunda metade
-                
+                break;
 
-                GameObject* terrainbox = new GameObject();
-                    terrainbox->depth =999;
+                case(57)://22.5° pra esquerda primeira metade teto
+                    terrainbox->box.x = tileX-17;
+                    terrainbox->box.y = tileY-18;
+                    terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
+                    terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
+                  
+                    terrainbox->angleDeg = 45+19;
+                  
+                 
+                break;
 
-                    Collider* collider = new Collider(*terrainbox);
-                    terrainbox->AddComponent(collider);
-
-            
-
+                case(88)://22.5° pra esquerda segunda metade
                     terrainbox->box.x = tileX-17;
                     terrainbox->box.y = tileY+41;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   
                     terrainbox->angleDeg = 45-19;
-                state.terrainArray.emplace_back(terrainbox);
-            }                                      
+                break;
+
+                case(58)://22.5° pra esquerda segunda metade teto
+                    terrainbox->box.x = tileX-17;
+                    terrainbox->box.y = tileY-49;
+                    terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
+                    terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
+                  
+                    terrainbox->angleDeg = 45+19;
+                break;
+            }
+
+            terrainbox->AddComponent(collider);
+            state.terrainArray.emplace_back(terrainbox);
+         
+                                      
         }
     }
 

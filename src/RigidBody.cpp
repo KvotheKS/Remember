@@ -155,7 +155,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
                 GoDown(b);
                 
                 if(speed.y<0){
-                    
+                    // if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->bonkHead(); 
                     jumpTimer.Set(JUMP_TIMER);
                     speed.y =0;
                 }

@@ -44,13 +44,14 @@ public:
 
     void Jump(float dt);
     void Shoot(float dt);
-    void GetStunned(Vec2 dir,float dt);
-    void JustGrounded();
-    Vec2 Bcurve(Vec2 a ,Vec2 b, Vec2 c, Vec2 d,float dt);
-    Vec2 Bcurve(std::vector<Vec2> vec,float dt);
-    int GetState();
+    void bonkHead();
     /// @brief stuns and push player 
     /// @param dir direction of push
+    void GetStunned(Vec2 dir,float dt);
+    void JustGrounded();
+
+    int GetState();
+    
     
 
     int hp;
@@ -92,6 +93,8 @@ public:
     float JUMP_STORED_TIMELIMIT;
     float DASH_COOLDOWN;
     float STUN_TIMELIMIT;
+    float JUMP_TIMER;
+
 
     StateMachine * state_machine;
     //na verção final esses provavelmente serão constantes por isso os nomes UPPER CASE

@@ -73,10 +73,10 @@ void Sprite::Render(){
             paralax_mul = 0.9;
             break;
         case -3:
-            paralax_mul = 0.8;
+            paralax_mul = 0.85;
             break;
         case -4:
-            paralax_mul = 0.7;
+            paralax_mul = 0.8;
             break;
         default:
             paralax_mul = 1;
