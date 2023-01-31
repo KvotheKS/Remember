@@ -1,4 +1,5 @@
 #include "Rand.h"
+#include <limits>
 
 uint32_t Rand::state = time(NULL);
 
@@ -9,4 +10,9 @@ uint32_t Rand::Get()
 
 	x = (x & 0x7fffffff) + (x >> 31);
 	return state = x;
+}
+
+float Rand::Get_r()
+{
+	return ((double)Rand::Get()) / ((double)std::numeric_limits<int>::max());;
 }

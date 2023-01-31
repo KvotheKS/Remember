@@ -65,7 +65,9 @@ void State::KillVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
     {
         if(ObjectArray[i]->IsDead())
         {
+            // std::cout << ObjectArray.size() << ' ';
             ObjectArray.erase(ObjectArray.begin() + i);
+            // std::cout << ObjectArray.size() << '\n';
             i--;
         }
     }
@@ -111,6 +113,14 @@ std::weak_ptr<GameObject> State::GetObject(C_ID type)
         for(auto& jt : *it)
             if(jt->GetComponent(type))
                 return std::weak_ptr<GameObject>(jt);
+    return std::weak_ptr<GameObject>();
+}
+
+std::weak_ptr<GameObject> State::GetObject(C_ID type, std::vector<std::shared_ptr<GameObject>>* ObjArr)
+{
+    for(auto& jt : *ObjArr)
+        if(jt->GetComponent(type))
+            return std::weak_ptr<GameObject>(jt);
     return std::weak_ptr<GameObject>();
 }
 

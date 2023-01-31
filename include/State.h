@@ -71,6 +71,7 @@ class State {
         virtual std::weak_ptr<GameObject> AddObject(GameObject* object, int idx = 0);
         virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* object);
         virtual std::weak_ptr<GameObject> GetObject(std::function<bool(GameObject&)>);
+        virtual std::weak_ptr<GameObject> GetObject(C_ID, std::vector<std::shared_ptr<GameObject>>*);
         virtual std::weak_ptr<GameObject> GetObject(C_ID);
         bool PopRequested();
         bool QuitRequested();

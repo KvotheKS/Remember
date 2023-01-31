@@ -43,7 +43,7 @@ public:
     virtual void Reset();
     virtual void Open(std::string);
     bool IsOpen();
-
+    void SetSize(float, float);
     void SetScaleX(float scaleX, float scaleY);
     Vec2 GetScale();
 
@@ -82,6 +82,7 @@ public:
     int GetCurr();
     bool IsDone();
     void ChangeState(int);
+    bool ChangeState_s(int);
     void CenterBox(Rect&);
     std::unordered_map<int, std::unique_ptr<AnimNode>>& GetStates();
 };

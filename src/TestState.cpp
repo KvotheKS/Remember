@@ -6,6 +6,7 @@
 #include "ActionMachine.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "LionBoss.h"
 
 //test stage pra mecher em collision
 
@@ -73,11 +74,12 @@ void TestState::LoadAssets(){
       
     rigidArray.emplace_back(player_GO);
 
-    // GameObject* enemy_GO = new GameObject();
-    //     enemy_GO->depth = 999;
-    //     enemy_GO->AddComponent(new Enemy(*enemy_GO));
+    GameObject* enemy_GO = new GameObject();
+        enemy_GO->box = Rect(135.28, 222, 120, 160);
+        enemy_GO->depth = 3;
+        enemy_GO->AddComponent(new LionBoss(*enemy_GO));
 
-    // objectArray.emplace_back(enemy_GO);
+    rigidArray.emplace_back(enemy_GO);
 
     backgroundMusic.Play();
 
@@ -230,15 +232,14 @@ void TestState::CollideVectors(std::vector<std::shared_ptr<GameObject>>& alpha, 
     for(auto& alphaObj : alpha)
     {
         Collider* colliderA = (Collider*) alphaObj->GetComponent(C_ID::Collider);
-        // if(!colliderA)
-            // std::cout << "JASOTJASO`TJSAÒTJSAO";
-        // std::cout << "ue";
+        if(!colliderA)
+            continue;
         float angleOfA = alphaObj->angleDeg * (PI / 180.0);
         for(auto& betaObj : beta)
         {
             
             Collider* colliderB = (Collider*) betaObj->GetComponent(C_ID::Collider);
-            if(colliderB == nullptr)
+            if(!colliderB)
                 continue;
             
             float angleOfB = betaObj->angleDeg * (PI / 180.0);

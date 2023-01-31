@@ -121,7 +121,7 @@ void Player::Update(float dt){
     Controls(dt);
     Physics(dt);//!!check weird hitbox when this is off -m
     Animation(dt);
-
+    // std::cout << box.x << ' ' << box.y << ' ' << box.w << ' ' << box.h << '\n';
 
     *isGrounded = false;
     inputDone = false;
@@ -149,16 +149,6 @@ void Player::Controls(float dt){
     // UP COMMAND
     bool space_pressed = false;
 
-    if(inManager.KeyPress(Q_KEY))
-    {
-        auto& state = Game::GetInstance().GetCurrentState();
-        GameObject* proj_go = new GameObject; proj_go->box = associated.box + Vec2(-100,-100);
-            Sprite* spr = new Sprite(*proj_go, "assets/img/alien.png", 1, 0, -1);
-            spr->SetSize(75,100);
-            Projectile* proj = new Projectile(*proj_go, 0, 30.0f, this, true, 0.0f, 20.0f, 20.0f, 0.0f, std::numeric_limits<float>::infinity(), 100.0f, true, false, Vec2(50.0f,0));
-            proj_go->AddComponents({spr, proj});
-        state.bulletArray.emplace_back(proj_go);
-    }
     if(inManager.IsKeyDown(SDLK_SPACE)){
         space_pressed = true;
     }

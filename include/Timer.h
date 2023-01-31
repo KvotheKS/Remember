@@ -5,7 +5,7 @@ class Timer {
         float time;
         float finish;
     public:
-        Timer(float finish = 0.0f);
+        Timer(float finish = -1.0f);
         bool Update(float dt);
         void Restart();
         float Get();

@@ -11,14 +11,13 @@
         accHmg -> Se o projetil vai acelerando ao medida que se aproxima do centro
         acceleration -> aceleração extra
 */
-Projectile::Projectile(GameObject& associated, int damage, float lifeTime, GameObject* target, bool rotSprt,
+Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* target, bool rotSprt,
                 float angle, float initialSpeed, float maxSpeed, float gravity, float homingRadius,
-                float homingAccMax, bool prftHmg, bool accHmg, Vec2 acceleration) : GameObject(associated){
+                float homingAccMax, bool prftHmg, bool accHmg, float pace) : GameObject(associated){
     Collider* collider = new Collider(associated);
     associated.AddComponent(collider);
     // associated.angleDeg = angle;
     this->target = target;
-    this->damage = damage;
     this->rotSprt = rotSprt;
 
     // Gravidade sempre para "baixo"
@@ -30,7 +29,7 @@ Projectile::Projectile(GameObject& associated, int damage, float lifeTime, GameO
     this->maxSpeed = maxSpeed;
     // Rotaciona a velocidade para direção correta
     this->velocity = Vec2(1, 0).Rotate(radAngle) * initialSpeed;
-    this->acceleration = acceleration;
+    this->pace = pace;
 
     this->homingRadius = homingRadius;
     this->homingAccMax = homingAccMax;
@@ -39,10 +38,20 @@ Projectile::Projectile(GameObject& associated, int damage, float lifeTime, GameO
     this->accHmg  = accHmg;
 }
 
+Projectile::Projectile(GameObject& associated, float lifeTime, float angle, float initialSpeed,
+                float maxSpeed , float gravity, float pace)
+    : Projectile(associated, lifeTime, nullptr, true, angle, initialSpeed, maxSpeed, gravity, 0.0f, 0.0f, false, false, pace)
+{}
+        
+Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* target, float angle, float initialSpeed, 
+        float maxSpeed , float homingRadius,
+            float homingAccMax, bool accelerated, float gravity, float pace)
+    : Projectile(associated, lifeTime, target, true, angle, initialSpeed, maxSpeed, gravity, homingRadius, homingAccMax, false, accelerated, pace)
+{}
+
 void Projectile::Update(float dt){
     if(lifeTimeCount.Update(dt))
     {
-        std::cout << "wtf? " << lifeTimeCount.Get();
         associated.RequestDelete();
     }
     else{
@@ -57,20 +66,20 @@ void Projectile::Update(float dt){
                 // Aceleração que altera -> (Raio - Distância) / Raio = Valor entre 0 e 1
                 if(accHmg) magni = ((homingRadius - dist) / homingRadius) * homingAccMax;
                 // Perfeito -> Velocidade Constante
-                else if(prftHmg) magni = velocity.Magnitude();
+                // else if(prftHmg) magni = velocity.Magnitude();
                 // Aceleração Constante
                 else magni = homingAccMax;
 
                 // Aceleração para o centro da área do homing
                 Vec2 homingForce = (target - position).Normalize() * magni * dt;
                 // Se perfeito, a velocidade é recalculada
-                if(prftHmg){ velocity = homingForce; std::cout << velocity.Magnitude() << ' ' << velocity.AngleX() << '\n';}
+                // if(prftHmg){ velocity = homingForce; std::cout << velocity.Magnitude() << ' ' << velocity.AngleX() << '\n';}
                 // Se não for, soma-se a aceleração na velocidade
-                else velocity += homingForce;
+                velocity += homingForce;
             }
         }
-
-        velocity += (gravity + acceleration) * dt;
+        velocity = velocity.Normalize() * velocity.Magnitude() * pace;
+        velocity += gravity * dt;
         // Limita a velocidade
         if(velocity.Magnitude() > maxSpeed)
             velocity = velocity.Normalize() * maxSpeed;

@@ -9,10 +9,41 @@
 
 class LionBoss : public GameObject
 {   
-    const float CLOSEX = 50.0f;
-    const float MIDDLEX = 150.0f;
-    const float FARX = 300.f;
+    enum {LASER, BALLS, TOWER, SHOCKWAVE};
+    enum {IDLE, LASERING, BALLING, TOWERING, SHOCKWAVING};
+
+    float CLOSEX;
+    float MIDDLEX;
+    float FARX;
     
+    float LASERDURATION;
+    float TOWERDURATION;
+    float BALLSDURATION;
+    float SHOCKWAVEDURATION;
+    
+    Vec2 LASERSIZE;
+    int LASERDAMAGE;
+    Vec2 LASERKNOCK;
+
+    int BALLSDAMAGE;
+    Vec2 BALLSKNOCK;
+    float BALLSSPEED, BALLSYSPEED;
+    Vec2 BALLSIZE;
+
+    int TOWERDAMAGE;
+    Vec2 TOWERKNOCK;
+
+    float SHOCKWAVESPEED; 
+    Vec2 WAVESIZE;
+    int SHOCKWAVEDAMAGE;
+    Vec2 SHOCKWAVEKNOCK;
+
+private:
+    void Laser();
+    void FlameBalls();
+    void FlameTower();
+    void ShockWave();
+
 public:
     LionBoss(GameObject&); // Devemos settar sua posicao manualmente por seu associated.
     void Update(float);

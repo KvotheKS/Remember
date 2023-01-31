@@ -2,11 +2,12 @@
 
 Timer::Timer(float finish){
     time = 0.0;
-    finish = 0.0f;
+    this->finish = finish;
 }
 
 bool Timer::Update(float dt){
-    return (time += dt) > finish;
+    bool rs = (time += dt) > finish;
+    return finish > 0.0f && rs;
 }
 
 void Timer::Restart(){

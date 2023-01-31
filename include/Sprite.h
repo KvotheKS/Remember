@@ -25,7 +25,6 @@ class Sprite : public GameObject {
         float timeElapsed;
         float frameTime;
         Timer selfDestructCount;
-        float secondsToSelfDestruct;
         bool fliped;
     public:
         Uint8 r=255, g=255, b=255;

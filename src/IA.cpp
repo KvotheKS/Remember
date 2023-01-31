@@ -3,7 +3,7 @@
 #include <limits>
 
 IA::IA(GameObject& associated, GameObject* target, float positionWeight)
-    : GameObject(associated), target(target), positionWeight(positionWeight)
+    : GameObject(associated), target(target), positionWeight(positionWeight), tm(0.1f)
 { rendered = false; }
 
 
@@ -30,6 +30,7 @@ void IA::Update(float dt)
         buildingWeight += actions[i].weight / overallWeight;
         if(pct <= buildingWeight)
         {
+            // std::cout << (associated.box.GetCenter() - target->box.GetCenter()).Magnitude() << '\n';
             selectedAction = i;
             SetActionTimer((int)i);
             return;
@@ -39,7 +40,8 @@ void IA::Update(float dt)
 
 void IA::Heuristic(ActionInfo& it)
 {
-    float dst = (box.GetCenter() + it.range - target->box.GetCenter()).Magnitude();
+    auto tgcntr = target->box.GetCenter();
+    float dst = (box.GetCenter() + it.range.Rotate((tgcntr - box.GetCenter()).AngleX()) - tgcntr).Magnitude();
     dst = std::pow(max(dst, 1.0f),positionWeight);
     it.weight = ((1/dst) / it.rarity);
 }

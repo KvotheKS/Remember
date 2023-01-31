@@ -20,5 +20,8 @@ enum class C_ID
     TileMap,
     IA,
     Enemy,
-    Lion
+    Lion,
+    Attack,
+    Hitbox,
+    Hurtbox
 };
