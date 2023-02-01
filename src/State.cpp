@@ -32,6 +32,7 @@ void State::UpdateArray(float dt)
 
 void State::UpdateVector( std::vector<std::shared_ptr<GameObject>>& ObjectArr, float dt)
 {
+    
     for(unsigned i = 0; i < ObjectArr.size(); i++)
     {
         ObjectArr[i]->Update(dt);

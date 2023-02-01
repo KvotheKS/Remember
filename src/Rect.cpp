@@ -55,6 +55,11 @@ Rect& Rect::operator-=(Rect rct){
     return *this;
 }
 
+ostream& operator<<(ostream& out,Rect const& v){
+    out << "Rect: "<< v.x << " , "<< v.y << " , " << v.w << " , " << v.h << "\n";
+    return out ;
+}
+
 Vec2 Rect::GetCenter(){
     return Vec2(this->x + (this->w / 2), this->y + (this-> h / 2));
 }
@@ -76,4 +81,10 @@ bool Rect::IsInside(Vec2 vec){
     else if(vec.y < this->y || vec.y > this->y + this->h)
         return false;
     return true;
+}
+
+bool Rect::Contains(Rect b)
+{
+    return !(b.x > (this->x + this->w)) && !(this->x > (b.x + b.w)) &&
+           !(b.y > (this->y + this->h)) && !(this->y > (b.y + b.h));
 }

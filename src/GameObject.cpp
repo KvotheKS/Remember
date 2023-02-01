@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Collider.h"
 #include "TerrainBody.h"
+#include <limits>
 
 GameObject::GameObject(GameObject& associated) : associated(associated) 
 {

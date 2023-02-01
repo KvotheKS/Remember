@@ -12,6 +12,8 @@ class LionBoss : public GameObject
     enum {LASER, BALLS, TOWER, SHOCKWAVE};
     enum {IDLE, LASERING, BALLING, TOWERING, SHOCKWAVING};
 
+    Vec2 LIONSIZE;
+
     float CLOSEX;
     float MIDDLEX;
     float FARX;
@@ -37,7 +39,9 @@ class LionBoss : public GameObject
     Vec2 WAVESIZE;
     int SHOCKWAVEDAMAGE;
     Vec2 SHOCKWAVEKNOCK;
-
+    
+    bool activated;
+    
 private:
     void Laser();
     void FlameBalls();
@@ -47,4 +51,5 @@ private:
 public:
     LionBoss(GameObject&); // Devemos settar sua posicao manualmente por seu associated.
     void Update(float);
+    bool Is(C_ID);
 };

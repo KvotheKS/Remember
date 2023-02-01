@@ -111,15 +111,20 @@ void TestState::LoadAssets(){
     rigidArray.emplace_back(player_GO);
 
     GameObject* enemy_GO = new GameObject();
-        enemy_GO->box = Rect(135.28, 222, 120, 160);
         enemy_GO->depth = 3;
         enemy_GO->AddComponent(new LionBoss(*enemy_GO));
-
+        enemy_GO->box.x = 7151.86 + 48 - enemy_GO->box.w;
+        enemy_GO->box.y = 488 + 112 - enemy_GO->box.h;
     rigidArray.emplace_back(enemy_GO);
 
     backgroundMusic.Play();
 
     Camera::Follow(player_GO);
+
+    Camera::SetCameraFunction(&Camera::FollowTarget);
+    Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
+    Camera::Bounds = Rect(0,0, 5968 + Camera::width, 0);
+
 
     /*STAGE TERRAIN*/
    
@@ -205,9 +210,6 @@ void TestState::LoadAssets(){
         goTileMap->box.x = 0;
         goTileMap->box.y = 0;
     objectArray.emplace_back(goTileMap);
-    
-
-    
 }
 
 void TestState::Start(){
@@ -245,7 +247,7 @@ void TestState::Update(float dt){
     if(inManager.KeyPress(F3_KEY)){
         Collider::debugMode = !Collider::debugMode;
     }
-        
+    
 
     /* ordem de update necessaria
     */

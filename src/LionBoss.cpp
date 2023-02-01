@@ -14,6 +14,8 @@
 LionBoss::LionBoss(GameObject& associated)
     : GameObject(associated)
 {
+    LIONSIZE = Vec2(200, 250);
+
     CLOSEX = 50.0f;
     MIDDLEX = 150.0f;
     FARX = 300.0f;
@@ -45,10 +47,18 @@ LionBoss::LionBoss(GameObject& associated)
     auto stmac = new StateMachine(associated);
     associated.AddComponents({lionbrainz, stmac});
 
-    auto anm = new AnimNode("assets/img/LionBoss.jpeg", 1,1,Vec2(1,1), false, false);
-    anm->SetSize(100, 150);
+    auto anm = new AnimNode("assets/img/Lion/closed_mouth.png", 1,1,Vec2(1,1), false, false);
+    anm->SetSize(LIONSIZE.x, LIONSIZE.y);
     stmac->AddNode(IDLE, anm);
-    stmac->ChangeState_s(IDLE);
+    stmac->ChangeState(IDLE);
+
+    anm = new AnimNode("assets/img/Lion/open_mouth.png", 1, LASERDURATION,Vec2(1,1), false, false);
+    anm->SetSize(LIONSIZE.x, LIONSIZE.y);
+    stmac->AddNode(LASERING, anm);
+    
+    anm = new AnimNode("assets/img/Lion/low_tail.png", 1,BALLSDURATION/2,Vec2(1,1), false, false);
+    anm->SetSize(LIONSIZE.x, LIONSIZE.y);
+    stmac->AddNode(BALLING, anm);
     
     auto& currstate = Game::GetInstance().GetCurrentState();
     
@@ -67,20 +77,34 @@ LionBoss::LionBoss(GameObject& associated)
             {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
         }
     );
+    activated = false;
 }
 
 void LionBoss::Update(float dt)
 {
+    // static int timing = 0;
+    // std::cout << timing++ << associated.box;
+    if(!activated)
+    {
+        auto& currstate = Game::GetInstance().GetCurrentState();
+        auto target = currstate.GetObject(C_ID::Player, &currstate.rigidArray);
+        std::cout << target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) << '\n';
+        if(target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) < 500)
+            activated = true;
+        return;
+    }
+
     auto lionbrainz = (IA*)associated.GetComponent(C_ID::IA);
     auto stmac = (StateMachine*)associated.GetComponent(C_ID::StateMachine);
     int choice = lionbrainz->selectedAction;
-    
+    if(choice != -1)
+        std::cout << choice << '\n';
     switch(choice)
     {
-        case LASER: Laser(); break;
-        case BALLS: FlameBalls(); break;
-        case TOWER: FlameTower(); break;
-        case SHOCKWAVE: ShockWave(); break;
+        case LASER: Laser(); stmac->ChangeState(LASERING); break;
+        case BALLS: FlameBalls(); stmac->ChangeState_s(BALLING); break;
+        case TOWER: FlameTower(); stmac->ChangeState(LASERING); break;
+        case SHOCKWAVE: ShockWave(); stmac->ChangeState_s(SHOCKWAVING); break;
         default:
         break;
     }
@@ -91,7 +115,7 @@ void LionBoss::ShockWave()
     auto& st = Game::GetInstance().GetCurrentState();
     
     GameObject* wave_go = new GameObject;
-        Sprite* spr = new Sprite(*wave_go, "assets/img/laser.png", 1, 0, -1);
+        Sprite* spr = new Sprite(*wave_go, "assets/img/lion/wave.png", 1, 0, -1);
         spr->SetSize(WAVESIZE.x, WAVESIZE.y);
         wave_go->box.x = associated.box.x - spr->GetWidth();
         wave_go->box.y = associated.box.y; //+ associated.box.h - spr->GetHeight();
@@ -159,3 +183,6 @@ void LionBoss::FlameTower()
         tower_go->AddComponents({spr, tower_co, atk, new TimeBomb(*tower_go, TOWERDURATION)});
     st.bulletArray.emplace_back(tower_go);
 }
+
+bool LionBoss::Is(C_ID type)
+{ return type == C_ID::Lion; }

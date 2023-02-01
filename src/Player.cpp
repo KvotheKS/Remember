@@ -166,6 +166,7 @@ void Player::Controls(float dt){
     
     bool space_pressed = false;
     
+    
     // UP COMMAND
     if(inManager.IsKeyDown(UP_ARROW_KEY)){  
         movement_direction.y -= 1;

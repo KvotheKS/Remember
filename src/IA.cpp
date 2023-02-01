@@ -3,7 +3,7 @@
 #include <limits>
 
 IA::IA(GameObject& associated, GameObject* target, float positionWeight)
-    : GameObject(associated), target(target), positionWeight(positionWeight), tm(0.1f)
+    : GameObject(associated), target(target), positionWeight(positionWeight), tm(0.0f)
 { rendered = false; }
 
 

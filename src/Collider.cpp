@@ -16,6 +16,7 @@ Collider::Collider(GameObject& associated, Vec2 scale, Vec2 offset, C_ID type) :
 void Collider::Start(){
 }
 void Collider::Update(float dt){
+    auto& inManager = InputManager::GetInstance();
     box = associated.box;
     box.w *= scale.x;
     box.h *= scale.y;
@@ -23,6 +24,8 @@ void Collider::Update(float dt){
     Vec2 offsetR = offset.Rotate(angle);
     Vec2 center = associated.box.GetCenter();
     box.SetCenter(center.x + offsetR.x, center.y + offsetR.y);
+    // if(associated.GetComponent(C_ID::Player) && inManager.IsKeyDown(Q_KEY))
+    //     std::cout << this->box;
 }
 
 void Collider::Render()
