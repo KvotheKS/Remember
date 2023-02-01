@@ -12,7 +12,12 @@
 using namespace std;
 #define p(x) cout << #x << ": " << x <<" ";
 
+#define nysize 0.7
+#define nxsize 0.3
 
+#define nyoffset 18
+#define nycrouchoffset 41
+#define nxoffset 0
 
 Player::Player(GameObject& associated):GameObject(associated){
     // Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
@@ -20,7 +25,9 @@ Player::Player(GameObject& associated):GameObject(associated){
     // pbody->SetScaleX(2,2);
    
    
-
+    isFiring = false;
+    isSlashing = false;
+    isAttacking = false;
     speed =  Vec2(0,0);
     oldbox = Vec2(0,0);
     isGrounded = &((RigidBody*)associated.GetComponent(C_ID::RigidBody))->isGrounded;
@@ -29,23 +36,30 @@ Player::Player(GameObject& associated):GameObject(associated){
     inputDone = false;
     crouchHeld =false;
     isDashing = false;
-    
+    dreamGround = false;
     jumpStored = false;
-    
-    surface_inclination = 0;
+    isStunned = false;
 
-    MAX_DASH_QT = 2;
-    MAX_DOUBLE_JUMP_QT = 2;
+    surface_inclination = &((RigidBody*)associated.GetComponent(C_ID::RigidBody))->surface_inclination;
+
+    MAX_DASH_QT = 1;
+    MAX_DOUBLE_JUMP_QT = 1;
 
     JUMP_ACCE_TIMELIMIT = 0.1;
     DASH_TIMELIMIT = 0.25;
+    JUMP_STORED_TIMELIMIT = 0.15;
+    DASH_COOLDOWN = 0.15;
+    STUN_TIMELIMIT = 0.3;
+
+    MAX_HP = 100;
 
     MAX_GLOBAL_SPEED = 3000;
     DASH_FORCE = 1200;
-    JUMP_FORCE = 1200;
+    JUMP_FORCE = 27 ;
     MAX_FALL_SPEED = 800;
     FALL_ACCELERATION = 100;
 
+    MAX_DASH_SPEED = 800;
     MAX_MOVE_SPEED = 300;
     MOVE_ACCELERATION = 100;
     LATERAL_FRICTION = 80;
@@ -59,7 +73,7 @@ Player::~Player(){
 }
 
 void Player::Start(){
-    
+    hp = MAX_HP;
     // ------------------ STATE MACHINE SETUP --------------------
     
     state_machine = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
@@ -68,35 +82,38 @@ void Player::Start(){
     
     // state creation
     Vec2 scale = Vec2(2,2);
-    SSNode* sprite_sheet_node = new SSNode("assets/img/Zcrouch.png",  {0, 0, 60, 80}, 1, 1,scale);
+    SSNode* sprite_sheet_node = new SSNode("assets/img/Ype/Ycrouch.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::CROUCH, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zidle.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::IDLE, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zwalk.png", {0, 0, 60, 80}, 1, 0.2,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ywalk.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::WALK, sprite_sheet_node);
 
-    sprite_sheet_node = new SSNode("assets/img/Zrun.png", {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yrun.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::RUN, sprite_sheet_node); 
         
-    sprite_sheet_node = new SSNode("assets/img/Zjump.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yjump.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::JUMP, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zfall.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yfall.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::FALL, sprite_sheet_node); 
     
-    sprite_sheet_node = new SSNode("assets/img/Zdash.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ydash.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::DASH, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zmelee.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::MELEE, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zshot.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::SHOT, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zskid.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::SKID, sprite_sheet_node); 
+
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
+    state_machine->AddNode(RBSTATE::STUN, sprite_sheet_node); 
 
 
 
@@ -107,8 +124,8 @@ void Player::Start(){
     Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
     if(ass_collider == nullptr) cout << "erro pegando collider em player start\n";
     
-    ass_collider->SetScale(Vec2(0.65,0.5)); 
-    ass_collider->SetOffset(Vec2(0,8));
+    ass_collider->SetScale(Vec2(nxsize,nysize)); 
+    ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
 
     state_machine->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
     
@@ -116,18 +133,15 @@ void Player::Start(){
 
 /// @brief Player Update
 void Player::Update(float dt){
-    
   
     Controls(dt);
-    Physics(dt);//!!check weird hitbox when this is off -m
+    RunTimers(dt);
+    Physics(dt);
     Animation(dt);
-    // std::cout << box.x << ' ' << box.y << ' ' << box.w << ' ' << box.h << '\n';
 
     *isGrounded = false;
     inputDone = false;
     crouchHeld = false;
-    
-   
 }
 void Player::Render(){
 }
@@ -139,133 +153,200 @@ bool Player::Is(C_ID type){
     return type == C_ID::Player;
 }
 
-
-
 void Player::Controls(float dt){
-    
+
+    if(isStunned)return;
+
     auto [state_idx, cr_state] = state_machine->GetCurrent();
     jumpTimer.Update(dt);
     InputManager& inManager = InputManager::GetInstance();
-    // UP COMMAND
-    bool space_pressed = false;
+    Vec2 movement_direction = Vec2(0,0);
 
-    if(inManager.IsKeyDown(SDLK_SPACE)){
-        space_pressed = true;
-    }
-    if(inManager.IsKeyDown(W_KEY)){  
-        if(inManager.KeyPress(W_KEY)){
-            if (hasDoubleJump > 0){
-                if(isDashing){
-                    jumpStored = true;
-                }else{
-                    jumpTimer.Restart();
-                    hasDoubleJump --;
-                    speed.y  = 0;
-                    speed.y = -JUMP_FORCE*dt;
-                    
-                }
-            }
-        }
-      
-        if (*isGrounded ){
-            hasDoubleJump = MAX_DOUBLE_JUMP_QT;
-            jumpTimer.Restart();
-            *isGrounded = false;
-            speed.y = -JUMP_FORCE*dt;
-            
-            if(isDashing){
-                isDreamDashing = true;
-            }
-            isDashing = false;  
-        }
-        else if (jumpTimer.Get()<JUMP_ACCE_TIMELIMIT){     
-            speed.y = -JUMP_FORCE*dt;
-        }
-    }else{
-        jumpTimer.Update(JUMP_ACCE_TIMELIMIT);
+
+    
+    bool space_pressed = false;
+    
+    // UP COMMAND
+    if(inManager.IsKeyDown(UP_ARROW_KEY)){  
+        movement_direction.y -= 1;
+
     }
   
     // DOWN COMMAND
-    if(inManager.IsKeyDown(S_KEY) ){
-        if(inManager.KeyPress(S_KEY)){
-
-        }
-        if(*isGrounded ){   
+    if(inManager.IsKeyDown(DOWN_ARROW_KEY) ){
+        movement_direction.y += 1;
+       
+        
+        if(*isGrounded){   
             crouchHeld = true;              
         }      
     }
     
     // LEFT COMMAND
-    if(inManager.IsKeyDown(A_KEY) && !crouchHeld && !isDashing){ 
-        if(inManager.KeyPress(A_KEY)){
-            
-        }  
-        cr_state->SetFliped(true); 
-        
-        speed.x -= MOVE_ACCELERATION*dt;
+    if(inManager.IsKeyDown(LEFT_ARROW_KEY) ){ 
+        if(!isDashing && !(*isGrounded && isAttacking)){
+            movement_direction.x -= 1;
+            cr_state->SetFliped(true); 
 
-         
-        // grudar em rampas
-        if(*isGrounded&& (surface_inclination != 0)){
+            if(!crouchHeld ){
             
-            associated.box.y += MAX_MOVE_SPEED * 0.030 ;
-
+               
+                speed.x -= MOVE_ACCELERATION*dt;
+                inputDone = true;
+            }
+            // grudar em rampas
+            // if(*isGrounded && (*surface_inclination != 0)){//!!deveria fazer uma função em rigidbody que devolve esses valores em vez de usar ponteiros
+                   
+            //     associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+                
+            // }
         }
-
-        inputDone = true;
+        
     }
     
     // RIGHT COMMAND
-    if(inManager.IsKeyDown(D_KEY) && !crouchHeld && !isDashing){
-        if(inManager.KeyPress(D_KEY)){
+    if(inManager.IsKeyDown(RIGHT_ARROW_KEY)){
+        if(!isDashing && !(*isGrounded && isAttacking)){
+            movement_direction.x += 1;
+            cr_state->SetFliped(false);
             
-        }
-        cr_state->SetFliped(false);
-        speed.x += MOVE_ACCELERATION*dt;
-        
+            if(!crouchHeld ){
+         
+                speed.x += MOVE_ACCELERATION*dt;
 
-        if(*isGrounded ){
-            
-            associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+                inputDone = true;
+            }
+            // if(*isGrounded  && (*surface_inclination != 0)){
+            //     associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+                    
+            // }
+        }
+  
+    }
+
+    // JUMP COMMAND
+    if(inManager.IsKeyDown(S_KEY)){
+       
+        if(inManager.KeyPress(S_KEY)){
+            if (hasDoubleJump > 0){
+                if(isDashing){
+                    JumpStoredTimer.Restart();
+                    jumpStored = true;
+                }else{
+                    jumpTimer.Restart();
+                    hasDoubleJump --;
+                    speed.y  = 0;
+                    speed.y =  -JUMP_FORCE;;
                   
+                }
+            }
+        }
+      
+        if (*isGrounded || dreamGround){
+            
+            hasDoubleJump = MAX_DOUBLE_JUMP_QT;
+            jumpTimer.Restart();
+            *isGrounded = false;
+        
+            speed.y = -JUMP_FORCE;
+            
+            if(isDashing){
+                isDreamDashing = true;
+            }
+            isDashing = false;  
+            dreamGround = false;
+        }
+        if (jumpTimer.Get()<JUMP_ACCE_TIMELIMIT){     
+            if(!isDashing)speed.y = -JUMP_FORCE;
+           
         }
         
-        inputDone = true;
-        
+    }else{      
+        jumpTimer.Update(JUMP_ACCE_TIMELIMIT);
     }
     
-    if(inManager.MousePress(LEFT_MOUSE_BUTTON)){
+    // DASH COMMAND
+    if(inManager.IsKeyDown(A_KEY)){ 
+        if(hasDash > 0 &&  canDash && !isDashing && !isDreamDashing){
+            
+            if(*isGrounded )dreamGround = true;
+            hasDash--;
+            if(movement_direction.y >0 && *isGrounded){
+                movement_direction.y = 0;
+            }
+            /* Dash Based on Movement Direction*/
+            
+            if(movement_direction == Vec2(0,0)){ // if no directed, dash toward facing direction
+                (cr_state->GetFliped())?movement_direction.x = -1:movement_direction.x = 1;
+            }
+            
+            speed = movement_direction.Normalize() * DASH_FORCE * dt;
+            /* Dash Based on Mouse Position    */
+            // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
+            //             (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * DASH_FORCE*dt;
+            isDashing = true;
+            dashTimer.Restart();
+
+            canDash = false;
+            dashCooldown.Restart();
+        }
+       
+    }
+    // LEFT CLICK COMAND
+    if(inManager.MousePress(LEFT_MOUSE_BUTTON) ){
+        
+        isAttacking = true;
+        atackTimer.Restart();
+        // mouse direction code
+        // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
+        // (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
+
+        //GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y),dt);
+        
+        /* teleport to mouse click position*/ 
         // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
         // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
         // speed = Vec2(0,0);
-       
-        
-        if(hasDash > 0 && !isDashing){
-             hasDash--;
-        
-
-            speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
-                        (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * DASH_FORCE*dt;
-            isDashing = true;
-            dashTimer.Restart();
-        }
-       
     }
-
+    // RIGHT CLICK COMAND
     if(inManager.MousePress(RIGHT_MOUSE_BUTTON) ){
         associated.box.x = 0;
         associated.box.y = 0;
-       
-        
+    }
+
+    
+}
+
+void Player::RunTimers(float dt){
+    if(isAttacking){
+        atackTimer.Update(dt);
+        if(atackTimer.Get()>1)isAttacking =false;
+    }
+
+    if(isStunned){
+        stunTimer.Update(dt);
+        if(stunTimer.Get()> STUN_TIMELIMIT) isStunned = false;
+    }
+    
+
+    if(!canDash){
+        dashCooldown.Update(dt);
+        if(dashCooldown.Get() > DASH_TIMELIMIT+DASH_COOLDOWN) canDash = true;      
+    }
+
+    if(isDashing){
+        dashTimer.Update(dt);
+        if(dashTimer.Get() > DASH_TIMELIMIT)isDashing = false;
+    }
+
+    if(jumpStored){
+        JumpStoredTimer.Update(dt);
+        if(JumpStoredTimer.Get() > JUMP_STORED_TIMELIMIT)jumpStored = false;
     }
 }
 
 void Player::Physics(float dt){
-    dashTimer.Update(dt);
-    if(dashTimer.Get() > DASH_TIMELIMIT){
-        
-        isDashing = false;
-    }
+   
     // Queda 
     if(!isDashing){
         speed.y += FALL_ACCELERATION*dt; 
@@ -278,31 +359,31 @@ void Player::Physics(float dt){
     }
 
     // desacelerar
-    if(!inputDone && !isDashing){   
+    if(!inputDone && !isDashing ){   
         if(abs(speed.x) < LATERAL_SPEED_THRESHOLD*dt)
             speed.x = 0;
         else if(speed.x > 0){
             speed.x = speed.x - LATERAL_FRICTION*dt; 
+            
         }else{
             speed.x = speed.x + LATERAL_FRICTION*dt; 
         }
     }
 
-    // limitar velocidade global
-    if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
-        speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
-    }
-    float local_max = 800;
-    if(isDreamDashing){
-        local_max = 800;
-    }else{
-        local_max = MAX_MOVE_SPEED;
-    }
-    if(isDashing ){
-        if(speed.Magnitude() > MAX_MOVE_SPEED*dt){ 
-            float overspeed = speed.Magnitude() - MAX_MOVE_SPEED*dt;
-            speed = speed - overspeed * speed.Normalize() * 0.05;          
+    
+    float local_max;
+    (isDreamDashing)?local_max = MAX_DASH_SPEED:local_max = MAX_MOVE_SPEED;
+    
+    
+    if(isDashing){
+        if(speed.y > 0 && *isGrounded){
+            isDashing = false;
         }
+        if(speed.Magnitude() > MAX_DASH_SPEED*dt){ 
+            float overspeed = speed.Magnitude() - MAX_DASH_SPEED*dt;
+            speed = speed - overspeed * speed.Normalize() * 0.5;          
+        }
+    }else if (isStunned){
     }else{
         // limitar velocidade lateral
         if(abs(speed.x) > local_max*dt){ 
@@ -310,7 +391,7 @@ void Player::Physics(float dt){
             float norm = speed.x/abs(speed.x);
             speed = Vec2( (speed.x - overspeed * norm * 0.5) , speed.y );          
         }
-        //limitar velocidade de queda
+        // limitar velocidade de queda
         if(speed.y > MAX_FALL_SPEED*dt){         
             speed.y =  MAX_FALL_SPEED*dt;  
             float overspeed = abs(speed.y) - MAX_FALL_SPEED*dt;
@@ -318,11 +399,26 @@ void Player::Physics(float dt){
             speed = Vec2( speed.x , (speed.y - overspeed * norm * 0.5));         
         }
     }  
+    
+    // limitar velocidade global
+    if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
+        speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
+    }
 
-     
+    // grounded
+    if(*isGrounded){
+        if(speed.y>0) speed.y = 0;
+        if(speed.x > 0){
+            if(*surface_inclination <45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+        }
+        if(speed.x < 0){
+            if(*surface_inclination >=45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+        }
+    }
+    if(isAttacking){
+        if(*isGrounded)speed.x = 0;
+    }
     // mova-se de acordo com a velocidade 
-    if(*isGrounded &&speed.y >0) speed.y = 0;
-
     Vec2 center = Vec2(associated.box.GetCenter() + speed);
     associated.box.SetCenter(center.x,center.y);
 
@@ -337,76 +433,88 @@ void Player::Animation(float dt){
   
     if(speed.y < 0 && !*isGrounded){
         state_machine->ChangeState(RBSTATE::JUMP);
-        ass_collider->SetScale(Vec2(0.65,0.5)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
     }
     if(speed.y > 2 && !*isGrounded){
         state_machine->ChangeState(RBSTATE::FALL);
-        ass_collider->SetScale(Vec2(0.65,0.5)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
     }
     
-    if(crouchHeld){
+    if(crouchHeld && *isGrounded){
         state_machine->ChangeState(RBSTATE::CROUCH);
-        ass_collider->SetScale(Vec2(0.65,0.5)); //!!vai ter que mudar
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
     }else{
         if(speed.x != 0 && *isGrounded && state_idx != RBSTATE::RUN && state_idx != RBSTATE::WALK){    
         state_machine->ChangeState(RBSTATE::WALK);
-        ass_collider->SetScale(Vec2(0.65,0.5)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
         }
         
 
         if(speed.x == 0 && *isGrounded && state_idx != RBSTATE::IDLE){
             state_machine->ChangeState(RBSTATE::IDLE);
-            ass_collider->SetScale(Vec2(0.65,0.5)); 
-            ass_collider->SetOffset(Vec2(0,8));
+            ass_collider->SetScale(Vec2(nxsize,nysize)); 
+            ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
         }
     }
 
     if(isDashing){
         state_machine->ChangeState(RBSTATE::DASH);
-        ass_collider->SetScale(Vec2(0.65,0.5)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
 
         
-        associated.angleDeg = (speed.AngleLine(Vec2(1,0)) * 180 / 3.141592);
+        associated.angleDeg = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592);
      
-       
-        if(abs(associated.angleDeg) > 90){
+
+        if(cr_state->GetFliped()){
             associated.angleDeg -= 180;
         }
-       
         
 
-        (speed.x < 0)?cr_state->SetFliped(true):cr_state->SetFliped(false); 
+   
+    
+        // (speed.x <= 0)?cr_state->SetFliped(false):cr_state->SetFliped(true); 
     }else{
         associated.angleDeg = 0;
     }
-    
-    
+    if(isStunned){
         
+        state_machine->ChangeState(RBSTATE::STUN);
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(0,8));
+    }
 
-
-    // if(speed.x < 0) cr_state->SetFliped(true);
-
-    // if (speed.x > 0){
-    //     cr_state->SetFliped(false);
-    // }
-        
     
 }
 
 void Player::Jump (float dt){
     speed.y = -JUMP_FORCE*dt;
 }
-void Player::JustGrounded(){
-   
+void Player::JustGrounded(){//!!doesn work
+    // isAttacking = false;
     isDreamDashing = false;
     hasDash = MAX_DASH_QT;
     
+}
+
+void Player::GetStunned(Vec2 dir, float dt){
+    auto [state_idx, cr_state] = state_machine->GetCurrent();
+    InputManager& inManager = InputManager::GetInstance();
+    speed = dir.Normalize()*1000*dt;
     
+    if(speed.x >0){
+        cr_state->SetFliped(true);
+    }else{
+        cr_state->SetFliped(false);
+    }
+    isStunned = true;
+    isDashing = false;
+    isDreamDashing = false;
+    stunTimer.Restart();
 }
 
 int Player::GetState()

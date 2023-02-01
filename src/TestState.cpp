@@ -32,15 +32,51 @@ void TestState::LoadAssets(){
 
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
-        Sprite* bg = new Sprite(*goBackground, "assets/img/space.jpg");
+        Sprite* bg = new Sprite(*goBackground, "assets/img/stage1/stg01bgl01.png");
         goBackground->AddComponent(bg);
-
-        CameraFollower* cf = new CameraFollower(*goBackground);
-        goBackground->AddComponent(cf);
 
         goBackground->box.x = 0;
         goBackground->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground);
+    GameObject* goBackground2 = new GameObject();
+        goBackground2->depth = -2;
+        bg = new Sprite(*goBackground2, "assets/img/stage1/stg01bgl02.png");
+        goBackground2->AddComponent(bg);
+
+
+        goBackground2->box.x = 0;
+        goBackground2->box.y = 0;
+    cameraFollowerObjectArray.emplace_back(goBackground2);
+    GameObject* goBackground3 = new GameObject();
+        goBackground3->depth = -3;
+        bg = new Sprite(*goBackground3, "assets/img/stage1/stg01bgl03.png");
+        goBackground3->AddComponent(bg);
+
+
+        goBackground3->box.x = 0;
+        goBackground3->box.y = 0;
+    cameraFollowerObjectArray.emplace_back(goBackground3);
+
+    GameObject* goBackground4 = new GameObject();
+        goBackground4->depth = -4;
+        bg = new Sprite(*goBackground4, "assets/img/stage1/stg01bgl04.png");
+        goBackground4->AddComponent(bg);
+
+
+        goBackground4->box.x = 0;
+        goBackground4->box.y = 0;
+    cameraFollowerObjectArray.emplace_back(goBackground4);
+
+    GameObject* goBackground5 = new GameObject();
+        goBackground5->depth = -5;
+        bg = new Sprite(*goBackground5, "assets/img/stage1/stg01bgl05.png");
+        goBackground4->AddComponent(bg);
+
+
+        goBackground5->box.x = 0;
+        goBackground5->box.y = 0;
+    cameraFollowerObjectArray.emplace_back(goBackground5);
+
 
 
 
@@ -89,7 +125,7 @@ void TestState::LoadAssets(){
    
     // first platform
 
-    for(int i = 0; i<100; i++){
+    for(int i = 0; i<10; i++){
         GameObject* terrainbox = new GameObject();
             terrainbox->depth = 999;
             TerrainBody* box2 = new TerrainBody(*terrainbox);
@@ -162,13 +198,13 @@ void TestState::LoadAssets(){
     //     terrainArray.emplace_back(terrainbox);
     // }
 
-    // GameObject* goTileMap = new GameObject();
-    //     goTileMap->depth = 1;
-    //     TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
-    //     goTileMap->AddComponent(tileMap);
-    //     goTileMap->box.x = 0;
-    //     goTileMap->box.y = 0;
-    // objectArray.emplace_back(goTileMap);
+    GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 1;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
     
 
     
@@ -219,9 +255,10 @@ void TestState::Update(float dt){
 
     CollideVectors(rigidArray, terrainArray);
     // std::cout << "colidiu";
-
-    Camera::Update(dt);
     
+    Camera::Update(dt);
+    if(Camera::pos.x <0)Camera::pos.x = 0;
+    Camera::pos.y = 0;
 
     KillDeads();
 }

@@ -25,6 +25,8 @@ RigidBody::RigidBody(GameObject& associated):GameObject(associated){
     inputDone = false;
     surface_inclination = 0;
 
+    updateCounter = 0;
+
     JUMP_TIMER = 0.2;
     
     MAX_GLOBAL_SPEED = 3000;
@@ -51,7 +53,7 @@ void RigidBody::Start(){
 
 /// @brief RigidBody Update
 void RigidBody::Update(float dt){
-
+    // isGrounded = false;
    
 }
 void RigidBody::Render(){
@@ -76,10 +78,10 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         associated.box.y += d;
     };
     auto GoLeft = [&](float d){
-        associated.box.x -= d;
+        associated.box.x -= d+1;
     };
     auto GoRight = [&](float d){
-        associated.box.x += d;
+        associated.box.x += d+1;
     };
 
     if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::Collider)){
@@ -123,19 +125,20 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         
 
 
-        surface_inclination = other.angleDeg;
+        
 
-        if((((int)other.angleDeg+45)%90)==0) idx = 4;
-
-        switch(idx){
+        if((((int)other.angleDeg+45)%90)!=0) {
+            switch(idx){
             
             case 0://up
                 // cout << "up:";
                 associated.box.y -= b;
                 if(speed.y >= 0){
-                    
+                    if(isGrounded == false){
+                        if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
+                    }
                     isGrounded = true; 
-                    if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
+                    
                     
                     speed.y =0;
                 }    
@@ -152,7 +155,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
                 GoDown(b);
                 
                 if(speed.y<0){
-                    
+                    // if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->bonkHead(); 
                     jumpTimer.Set(JUMP_TIMER);
                     speed.y =0;
                 }
@@ -166,28 +169,33 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
               
 
             break;
-            // case 4://45° degree
-            //     if(idx == 0 || idx == 1){//up
+            }
+        }else{//45° degree
+            if(idx == 0 || idx == 1){//up
                     
-            //         GoUp(b);
+            GoUp(b);
+        
+            if(speed.y >= 0){//down
+                isGrounded = true; 
                 
-            //         if(speed.y >= 0){//down
-            //             isGrounded = true; 
-            //             speed.y =0;
-            //         }    
-            //     }else{
-            //         GoDown(b);
-            //         if(speed.y<0){
-                        
-            //             // jumpTimer.Set(JUMP_TIMER);
-            //             // speed.y =0;
-            //         }
+                if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
+                speed.y =0;
+            }    
+            }else{
+                GoDown(b);
+                if(speed.y<0){
                     
-                  
-            //     }
-
-            // break;
+                    // jumpTimer.Set(JUMP_TIMER);
+                    // speed.y =0;
+                }
+                
+                
+            }
         }
+
+       
+           
+        
 
         
         surface_inclination =  other.angleDeg;
