@@ -10,8 +10,12 @@
 using namespace std;
 #define p(x) cout << #x << ": " << x <<" ";
 
-#define nysize 0.5
+#define nysize 0.7
 #define nxsize 0.3
+
+#define nyoffset 18
+#define nycrouchoffset 41
+#define nxoffset 0
 
 Player::Player(GameObject& associated):GameObject(associated){
     // Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
@@ -49,7 +53,7 @@ Player::Player(GameObject& associated):GameObject(associated){
 
     MAX_GLOBAL_SPEED = 3000;
     DASH_FORCE = 1200;
-    JUMP_FORCE = 27;
+    JUMP_FORCE = 27 ;
     MAX_FALL_SPEED = 800;
     FALL_ACCELERATION = 100;
 
@@ -76,37 +80,37 @@ void Player::Start(){
     
     // state creation
     Vec2 scale = Vec2(2,2);
-    SSNode* sprite_sheet_node = new SSNode("assets/img/Zcrouch.png",  {0, 0, 60, 80}, 1, 1,scale);
+    SSNode* sprite_sheet_node = new SSNode("assets/img/Ype/Ycrouch.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::CROUCH, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zidle.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::IDLE, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zwalk.png", {0, 0, 60, 80}, 1, 0.2,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ywalk.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::WALK, sprite_sheet_node);
 
-    sprite_sheet_node = new SSNode("assets/img/Zrun.png", {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yrun.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::RUN, sprite_sheet_node); 
         
-    sprite_sheet_node = new SSNode("assets/img/Zjump.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yjump.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::JUMP, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zfall.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yfall.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::FALL, sprite_sheet_node); 
     
-    sprite_sheet_node = new SSNode("assets/img/Zdash.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ydash.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::DASH, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zmelee.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::MELEE, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zshot.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::SHOT, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zskid.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::SKID, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Zstun.png",  {0, 0, 60, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::STUN, sprite_sheet_node); 
 
 
@@ -119,7 +123,7 @@ void Player::Start(){
     if(ass_collider == nullptr) cout << "erro pegando collider em player start\n";
     
     ass_collider->SetScale(Vec2(nxsize,nysize)); 
-    ass_collider->SetOffset(Vec2(0,8));
+    ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
 
     state_machine->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
     
@@ -132,7 +136,7 @@ void Player::Update(float dt){
     RunTimers(dt);
     Physics(dt);
     Animation(dt);
-    p(speed.y)cout << "\n";
+   
 
     *isGrounded = false;
     inputDone = false;
@@ -430,37 +434,37 @@ void Player::Animation(float dt){
     if(speed.y < 0 && !*isGrounded){
         state_machine->ChangeState(RBSTATE::JUMP);
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
     }
     if(speed.y > 2 && !*isGrounded){
         state_machine->ChangeState(RBSTATE::FALL);
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
     }
     
     if(crouchHeld && *isGrounded){
         state_machine->ChangeState(RBSTATE::CROUCH);
         ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
-        ass_collider->SetOffset(Vec2(0,24));
+        ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
     }else{
         if(speed.x != 0 && *isGrounded && state_idx != RBSTATE::RUN && state_idx != RBSTATE::WALK){    
         state_machine->ChangeState(RBSTATE::WALK);
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
         }
         
 
         if(speed.x == 0 && *isGrounded && state_idx != RBSTATE::IDLE){
             state_machine->ChangeState(RBSTATE::IDLE);
             ass_collider->SetScale(Vec2(nxsize,nysize)); 
-            ass_collider->SetOffset(Vec2(0,8));
+            ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
         }
     }
 
     if(isDashing){
         state_machine->ChangeState(RBSTATE::DASH);
         ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
-        ass_collider->SetOffset(Vec2(0,24));
+        ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
 
         
         associated.angleDeg = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592);
