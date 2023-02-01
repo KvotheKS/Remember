@@ -12,10 +12,9 @@ Sprite::Sprite(GameObject& associated, std::string file, int frameCount, float f
     Open(file);
     SetFrameCount(frameCount);
     SetFrameTime(frameTime);
-    this->secondsToSelfDestruct = secondsToSelfDestruct;
-    selfDestructCount.Restart();
+    selfDestructCount.SetFinish(secondsToSelfDestruct);
     fliped = false;
-}
+}   
 
 Sprite::~Sprite(){
 }
@@ -46,11 +45,9 @@ void Sprite::SetClip(int x, int y, int w, int h){
 }
 
 void Sprite::Update(float dt){
-    if(secondsToSelfDestruct > 0){
-        selfDestructCount.Update(dt);
-        if(selfDestructCount.Get() > secondsToSelfDestruct)
-            associated.RequestDelete();
-    }
+    if(selfDestructCount.Update(dt))
+        associated.RequestDelete();
+
 
     timeElapsed += dt;
     if(timeElapsed > frameTime){
@@ -95,12 +92,14 @@ void Sprite::Render(float x, float y){
 void Sprite::Print(float x, float y)
 {
     SDL_Rect dstRect;
-    
-    dstRect.x = x - (clipRect.w * scale.x/2)+clipRect.w/2;
-    dstRect.y = y - (clipRect.h * scale.y/2)+clipRect.h/2;
- 
+
+    // dstRect.x = x - (clipRect.w * scale.x/2)+clipRect.w/2;
+    // dstRect.y = y - (clipRect.h * scale.y/2)+clipRect.h/2;
+    dstRect.x = x; dstRect.y = y;
     dstRect.w = clipRect.w * scale.x;
     dstRect.h = clipRect.h * scale.y;
+    // if(associated.GetComponent(C_ID::Attack))
+    //     std::cout << "SPRITE" << dstRect.x << ' ' << dstRect.y << ' ' << dstRect.w << ' ' << dstRect.h << '\n';
 
     SDL_SetTextureColorMod(texture.get(), r, g, b);
 
@@ -131,6 +130,11 @@ int Sprite::GetHeight(){
 
 bool Sprite::IsOpen(){
     return texture != nullptr;
+}
+
+void Sprite::SetSize(float sizeW, float sizeH)
+{
+    SetScaleX(sizeW/width, sizeH/height);
 }
 
 void Sprite::SetScaleX(float scaleX, float scaleY){

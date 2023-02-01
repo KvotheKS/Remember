@@ -5,7 +5,9 @@
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
 #include <iostream>
+#include "Projectile.h"
 #include "Game.h"
+#include <limits>
 // define pra test -m
 using namespace std;
 #define p(x) cout << #x << ": " << x <<" ";
@@ -136,7 +138,6 @@ void Player::Update(float dt){
     RunTimers(dt);
     Physics(dt);
     Animation(dt);
-   
 
     *isGrounded = false;
     inputDone = false;
@@ -164,7 +165,6 @@ void Player::Controls(float dt){
 
     
     bool space_pressed = false;
-
     
     // UP COMMAND
     if(inManager.IsKeyDown(UP_ARROW_KEY)){  

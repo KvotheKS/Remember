@@ -8,9 +8,10 @@
     bool Collider::debugMode = false;
 #endif
 
-Collider::Collider(GameObject& associated, Vec2 scale, Vec2 offset) : GameObject(associated){
+Collider::Collider(GameObject& associated, Vec2 scale, Vec2 offset, C_ID type) : GameObject(associated){
     this->scale = scale;
     this->offset = offset;
+    this->type = type;
 }
 void Collider::Start(){
 }
@@ -52,7 +53,10 @@ void Collider::Print(float x, float y){
 
         point = (Vec2(box.x, box.y + box.h) - center).Rotate(angle) + center - Camera::pos;
         points[3] = {(int) point.x, (int) point.y};
-
+        // if(associated.GetComponent(C_ID::Attack))
+        //     std::cout << "COL: " << points[0].x << ' ' << points[0].y << ' ' << points[2].x << ' ' << points[2].y << '\n';
+        
+        
         SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderDrawLines(Game::GetInstance().GetRenderer(), points, 5);
             
@@ -64,7 +68,7 @@ bool Collider::Is(std::string type){
 }
 
 bool Collider::Is(C_ID type)
-{ return type == C_ID::Collider; }
+{ return type == C_ID::Collider || type == this->type; }
 
 void Collider::SetScale(Vec2 scale){
     this->scale = scale;

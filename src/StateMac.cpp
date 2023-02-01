@@ -107,12 +107,13 @@ bool AnimNode::IsOpen(){
     return texture != nullptr;
 }
 
-void AnimNode::SetScaleX(float scaleX, float scaleY){
+void AnimNode::SetSize(float sW, float sY)
+{ SetScaleX(sW/width, sY/height); }
+
+void AnimNode::SetScaleX(float scaleX, float scaleY)
+{
     scale.x = !scaleX ? scale.x : scaleX;
     scale.y = !scaleY ? scale.y : scaleY;
-
-    
-    
 }
 
 Vec2 AnimNode::GetScale(){
@@ -182,6 +183,7 @@ void StateMachine::Update(float dt)
 
 void StateMachine::Render()
 {
+    if(states.empty()) return;
     // std::cout << "SUSUSYSY";
     states[__curr]->Render();
     // std::cout << "RENDENRING STATE\n";
@@ -209,6 +211,11 @@ void StateMachine::AddNode(int id, AnimNode* anm)
 {
     states.insert({id, std::unique_ptr<AnimNode>(anm)});
     transitions.insert({id,id});
+}
+
+int StateMachine::GetCurr()
+{
+    return __curr;
 }
 
 std::pair<const int, AnimNode*> StateMachine::GetCurrent()
@@ -246,6 +253,16 @@ void StateMachine::ChangeState(int newSt)
     it->second->rendered = false;
     it->second->fliped = flip;
     CenterBox(associated.box);
+}
+
+bool StateMachine::ChangeState_s(int newSt)
+{
+    if(newSt != __curr)
+    { 
+        ChangeState(newSt);
+        return true;
+    }
+    return false;
 }
 
 bool StateMachine::Is(std::string type)

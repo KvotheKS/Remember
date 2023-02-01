@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <iostream> //por que n ter? -m
+#include <tuple>
 using namespace std;
 
 // define pra test -m
@@ -30,5 +31,11 @@ class Vec2 {
         float AngleLine(Vec2 vec);
         Vec2 Rotate(float angle);
         float Dot(Vec2 vec);
+        float Cross(Vec2 vec);
         friend ostream& operator<<(ostream& out,Vec2 const& v);
 };
+
+// xspeed deve ser a velocidade por segundos
+// Vec2 eh (x,y) que no projectile deve ser traduzido para
+// initialSpeed = Vec2.Magnitude() e angle = Vec2.AngleX()
+// float eh gravity

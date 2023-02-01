@@ -4,6 +4,7 @@ enum class C_ID
 {
     GameObject,
     Bullet,
+    Projectile,
     CameraFollower,
     Collider,
     FpsPrinter,
@@ -17,5 +18,10 @@ enum class C_ID
     TerrainBody,
     Text,
     TileMap,
-
+    IA,
+    Enemy,
+    Lion,
+    Attack,
+    Hitbox,
+    Hurtbox
 };

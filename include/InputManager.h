@@ -12,6 +12,7 @@
 #define A_KEY              SDLK_a
 #define S_KEY              SDLK_s
 #define D_KEY              SDLK_d
+#define Q_KEY              SDLK_q
 #define F3_KEY             SDLK_F3
 #define ESCAPE_KEY         SDLK_ESCAPE
 #define SPACE_KEY          SDLK_SPACE

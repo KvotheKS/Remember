@@ -77,6 +77,10 @@ float Vec2::Dot(Vec2 vec){
     return this->x * vec.x + this->y * vec.y;
 }
 
+float Vec2::Cross(Vec2 vec){
+    return this->x * vec.y - this->y * vec.x;
+}
+
 ostream& operator<<(ostream& out,Vec2 const& v){
     out << "Vec2: "<< v.x << " , "<< v.y << "\n";
     return out ;

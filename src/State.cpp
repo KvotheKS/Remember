@@ -4,6 +4,7 @@ State::State(){
     popRequested = false;
     quitRequested = false;
     started = false;
+    arrays = GetArrays();
 }
 
 State::~State(){
@@ -12,11 +13,8 @@ State::~State(){
 
 void State::StartArray()
 {
-    StartVector(objectArray);
-    StartVector(rigidArray);
-    StartVector(terrainArray);
-    StartVector(bulletArray);
-    StartVector(cameraFollowerObjectArray);
+    for(auto it : arrays)
+        StartVector(*it);
 }
 
 void State::StartVector(std::vector<std::shared_ptr<GameObject>>& ObjectArr){
@@ -28,11 +26,8 @@ void State::StartVector(std::vector<std::shared_ptr<GameObject>>& ObjectArr){
 
 void State::UpdateArray(float dt)
 {
-    UpdateVector(objectArray, dt);
-    UpdateVector(rigidArray, dt);
-    UpdateVector(terrainArray, dt);
-    UpdateVector(bulletArray, dt);
-    UpdateVector(cameraFollowerObjectArray, dt);
+    for(auto it : arrays)
+        UpdateVector(*it, dt);
 }
 
 void State::UpdateVector( std::vector<std::shared_ptr<GameObject>>& ObjectArr, float dt)
@@ -53,18 +48,15 @@ void State::RenderVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
     }
 }
 
+std::vector<std::vector<std::shared_ptr<GameObject>>*> State::GetArrays()
+{
+    return {&objectArray,&rigidArray,&terrainArray,&bulletArray,&cameraFollowerObjectArray};
+}
+
 void State::RenderArray()
 {
-    // std::cout << "1";
-    RenderVector(objectArray);
-    // std::cout << "2";
-    RenderVector(rigidArray);
-    // std::cout << "3";
-    RenderVector(terrainArray);
-    // std::cout << "4";
-    RenderVector(bulletArray);
-    // std::cout << "5";
-    RenderVector(cameraFollowerObjectArray);
+    for(auto it : arrays)
+        RenderVector(*it);
 }
 
 void State::KillVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
@@ -73,7 +65,9 @@ void State::KillVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
     {
         if(ObjectArray[i]->IsDead())
         {
+            // std::cout << ObjectArray.size() << ' ';
             ObjectArray.erase(ObjectArray.begin() + i);
+            // std::cout << ObjectArray.size() << '\n';
             i--;
         }
     }
@@ -81,16 +75,14 @@ void State::KillVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
 
 void State::KillDeads()
 {
-    KillVector(objectArray);
-    KillVector(rigidArray);
-    KillVector(terrainArray);
-    KillVector(bulletArray);
-    KillVector(cameraFollowerObjectArray);
+    for(auto it : arrays)
+        KillVector(*it);
 }
 
-std::weak_ptr<GameObject> State::AddObject(GameObject* object){
+std::weak_ptr<GameObject> State::AddObject(GameObject* object, int idx){
+    auto objArr = arrays[idx];
     std::shared_ptr<GameObject> shrd_obj(object);
-    objectArray.push_back(shrd_obj);
+    objArr->push_back(shrd_obj);
     if(started)
         shrd_obj->Start();
     return std::weak_ptr<GameObject>(shrd_obj);
@@ -103,6 +95,32 @@ std::weak_ptr<GameObject> State::GetObjectPtr(GameObject* object){
     for(unsigned i = 0; i < objectArray.size(); i++)
         if(objectArray[i].get() == object)
             return std::weak_ptr<GameObject>(objectArray[i]);
+    return std::weak_ptr<GameObject>();
+}
+
+std::weak_ptr<GameObject> State::GetObject(std::function<bool(GameObject&)> fnc)
+{
+    for(auto it : arrays)
+        for(auto& jt : *it)
+            if(fnc(*jt.get()))
+                return std::weak_ptr<GameObject>(jt);
+    return std::weak_ptr<GameObject>();
+}
+
+std::weak_ptr<GameObject> State::GetObject(C_ID type)
+{
+    for(auto it : arrays)
+        for(auto& jt : *it)
+            if(jt->GetComponent(type))
+                return std::weak_ptr<GameObject>(jt);
+    return std::weak_ptr<GameObject>();
+}
+
+std::weak_ptr<GameObject> State::GetObject(C_ID type, std::vector<std::shared_ptr<GameObject>>* ObjArr)
+{
+    for(auto& jt : *ObjArr)
+        if(jt->GetComponent(type))
+            return std::weak_ptr<GameObject>(jt);
     return std::weak_ptr<GameObject>();
 }
 
