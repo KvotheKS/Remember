@@ -3,14 +3,15 @@
 #include <limits>
 
 IA::IA(GameObject& associated, GameObject* target, float positionWeight)
-    : GameObject(associated), target(target), positionWeight(positionWeight), tm(0.0f)
+    : GameObject(associated), target(target), positionWeight(positionWeight), tm(0.1f)
 { rendered = false; }
 
 
 void IA::Update(float dt)
 {
     if(!rendered || !tm.Update(dt) || !target)
-    { 
+    {
+        std::cout << rendered << ' ' << !target; 
         selectedAction = -1;
         return;
     }
@@ -23,7 +24,7 @@ void IA::Update(float dt)
         overallWeight += it.weight;
     }
 
-    double pct = ((double)Rand::Get()) / ((double)std::numeric_limits<int>::max());
+    double pct = Rand::Get_r();
     float buildingWeight = 0.0f;
     for(unsigned int i = 0; i < actions.size(); i++)
     {
@@ -36,6 +37,7 @@ void IA::Update(float dt)
             return;
         }
     }
+    std::cout << selectedAction << '\n';
 }
 
 void IA::Heuristic(ActionInfo& it)

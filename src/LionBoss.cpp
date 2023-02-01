@@ -43,9 +43,8 @@ LionBoss::LionBoss(GameObject& associated)
     SHOCKWAVEKNOCK = Vec2(10, 40);
     SHOCKWAVESPEED = 250;
 
-    auto lionbrainz = new IA(associated, nullptr, 1.5f);
     auto stmac = new StateMachine(associated);
-    associated.AddComponents({lionbrainz, stmac});
+    associated.AddComponents({stmac});
 
     auto anm = new AnimNode("assets/img/Lion/closed_mouth.png", 1,1,Vec2(1,1), false, false);
     anm->SetSize(LIONSIZE.x, LIONSIZE.y);
@@ -69,14 +68,7 @@ LionBoss::LionBoss(GameObject& associated)
         exit(0);
     }
 
-    lionbrainz->SetTarget(target.lock().get());
-    lionbrainz->SetActions({
-            {Vec2(MIDDLEX, 0), 1, LASERDURATION},
-            {Vec2(MIDDLEX, 0), 1, BALLSDURATION},
-            {Vec2(CLOSEX, 0), 1, TOWERDURATION},
-            {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
-        }
-    );
+    
     activated = false;
 }
 
@@ -88,9 +80,21 @@ void LionBoss::Update(float dt)
     {
         auto& currstate = Game::GetInstance().GetCurrentState();
         auto target = currstate.GetObject(C_ID::Player, &currstate.rigidArray);
-        std::cout << target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) << '\n';
+        // std::cout << target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) << '\n';
         if(target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) < 500)
+        {
+            auto lionbrainz = new IA(associated, nullptr, 1.5f);
+            lionbrainz->SetTarget(target.lock().get());
+            lionbrainz->SetActions({
+                {Vec2(MIDDLEX, 0), 1, LASERDURATION},
+                {Vec2(MIDDLEX, 0), 1, BALLSDURATION},
+                {Vec2(CLOSEX, 0), 1, TOWERDURATION},
+                {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
+                }
+            );
+            associated.AddComponent(lionbrainz);
             activated = true;
+        }
         return;
     }
 
