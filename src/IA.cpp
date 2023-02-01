@@ -11,7 +11,7 @@ void IA::Update(float dt)
 {
     if(!rendered || !tm.Update(dt) || !target)
     {
-        std::cout << rendered << ' ' << !target; 
+        // std::cout<<'\n'<< tm.Get(); 
         selectedAction = -1;
         return;
     }
@@ -34,10 +34,10 @@ void IA::Update(float dt)
             // std::cout << (associated.box.GetCenter() - target->box.GetCenter()).Magnitude() << '\n';
             selectedAction = i;
             SetActionTimer((int)i);
+            // std::cout << selectedAction << '\n';
             return;
         }
     }
-    std::cout << selectedAction << '\n';
 }
 
 void IA::Heuristic(ActionInfo& it)

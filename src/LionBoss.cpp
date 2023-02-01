@@ -27,7 +27,7 @@ LionBoss::LionBoss(GameObject& associated)
     
     LASERDAMAGE = 25;
     LASERKNOCK = Vec2();
-    LASERSIZE = Vec2(350,200);
+    LASERSIZE = Vec2(550,200);
 
     BALLSDAMAGE = 15;
     BALLSKNOCK = Vec2();
@@ -43,7 +43,25 @@ LionBoss::LionBoss(GameObject& associated)
     SHOCKWAVEKNOCK = Vec2(10, 40);
     SHOCKWAVESPEED = 250;
 
+    auto& currstate = Game::GetInstance().GetCurrentState();
+    
+    auto target = currstate.GetObject(C_ID::Player);
+    if(target.expired())
+    {
+        std::cout << "PLAYER DEVE SER DECLARADO ATES DO LIONBOSS\n";
+        exit(0);
+    }
+
     auto stmac = new StateMachine(associated);
+    auto lionbrainz = new IA(associated, target.lock().get(), 1.5f);
+    lionbrainz->SetActions({
+        {Vec2(MIDDLEX, 0), 1, LASERDURATION},
+        {Vec2(MIDDLEX, 0), 1, BALLSDURATION},
+        {Vec2(CLOSEX, 0), 1, TOWERDURATION},
+        {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
+        }
+    );
+    associated.AddComponent(lionbrainz);
     associated.AddComponents({stmac});
 
     auto anm = new AnimNode("assets/img/Lion/closed_mouth.png", 1,1,Vec2(1,1), false, false);
@@ -58,17 +76,6 @@ LionBoss::LionBoss(GameObject& associated)
     anm = new AnimNode("assets/img/Lion/low_tail.png", 1,BALLSDURATION/2,Vec2(1,1), false, false);
     anm->SetSize(LIONSIZE.x, LIONSIZE.y);
     stmac->AddNode(BALLING, anm);
-    
-    auto& currstate = Game::GetInstance().GetCurrentState();
-    
-    auto target = currstate.GetObject(C_ID::Player);
-    if(target.expired())
-    {
-        std::cout << "PLAYER DEVE SER DECLARADO ATES DO LIONBOSS\n";
-        exit(0);
-    }
-
-    
     activated = false;
 }
 
@@ -83,16 +90,8 @@ void LionBoss::Update(float dt)
         // std::cout << target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) << '\n';
         if(target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) < 500)
         {
-            auto lionbrainz = new IA(associated, nullptr, 1.5f);
-            lionbrainz->SetTarget(target.lock().get());
-            lionbrainz->SetActions({
-                {Vec2(MIDDLEX, 0), 1, LASERDURATION},
-                {Vec2(MIDDLEX, 0), 1, BALLSDURATION},
-                {Vec2(CLOSEX, 0), 1, TOWERDURATION},
-                {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
-                }
-            );
-            associated.AddComponent(lionbrainz);
+            auto lionb = (IA*)associated.GetComponent(C_ID::IA);
+            lionb->SetActionTimer((float)2.0f);
             activated = true;
         }
         return;
