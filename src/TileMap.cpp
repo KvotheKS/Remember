@@ -155,7 +155,7 @@ void TileMap::Load(std::string file){
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   
-                    terrainbox->angleDeg = 45+19;
+                    terrainbox->angleDeg = 45+20;
                 break;
 
                 case(116)://22.5° pra direita primeira metada teto
@@ -173,7 +173,7 @@ void TileMap::Load(std::string file){
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   
-                    terrainbox->angleDeg = 45+19;
+                    terrainbox->angleDeg = 45+20;
                 break;
                 case(117)://22.5° pra direita segunda metade teto
                     terrainbox->box.x = tileX+13;
@@ -190,7 +190,7 @@ void TileMap::Load(std::string file){
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   
-                    terrainbox->angleDeg = 45-19;
+                    terrainbox->angleDeg = 45-18;
                 break;
 
                 case(57)://22.5° pra esquerda primeira metade teto

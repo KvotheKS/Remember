@@ -234,7 +234,8 @@ void Player::Controls(float dt){
                     JumpStoredTimer.Restart();
                     jumpStored = true;
                 }else{
-                    jumpTimer.Restart();
+                    if(!*isGrounded)Jump(0);
+                    
                     hasDoubleJump --;
                     speed.y  = 0;
                     speed.y =  -JUMP_FORCE;;
@@ -246,7 +247,7 @@ void Player::Controls(float dt){
         if (*isGrounded || dreamGround){
             
             hasDoubleJump = MAX_DOUBLE_JUMP_QT;
-            jumpTimer.Restart();
+            Jump(1);
             *isGrounded = false;
         
             speed.y = -JUMP_FORCE;
@@ -270,7 +271,7 @@ void Player::Controls(float dt){
     if(inManager.IsKeyDown(A_KEY)){ 
         if(hasDash > 0 &&  canDash && !isDashing && !isDreamDashing){
             
-            if(*isGrounded )dreamGround = true;
+            
             hasDash--;
             if(movement_direction.y >0 && *isGrounded){
                 movement_direction.y = 0;
@@ -279,6 +280,24 @@ void Player::Controls(float dt){
             
             if(movement_direction == Vec2(0,0)){ // if no directed, dash toward facing direction
                 (cr_state->GetFliped())?movement_direction.x = -1:movement_direction.x = 1;
+            }
+
+            if(*isGrounded ){
+                dreamGround = true;
+                GameObject* GO_jumpdust_effect = new GameObject();
+    
+                    
+                    Effect* effect = new Effect(*GO_jumpdust_effect,0,0,"assets/img/Ype/dashdust.png",4,0.075);
+                    
+                    GO_jumpdust_effect->AddComponent(effect);
+                    auto ass_center = associated.box.GetCenter();
+                    GO_jumpdust_effect->box.SetCenter(ass_center.x,ass_center.y+56);
+                
+                    if(movement_direction.x == -1){//!!fazer isso no effect
+                        ((Sprite*) GO_jumpdust_effect->GetComponent(C_ID::Sprite))->SetFliped(true);
+                    }
+                    State& state = Game::GetInstance().GetCurrentState();
+                state.AddObject(GO_jumpdust_effect);
             }
             
             speed = movement_direction.Normalize() * DASH_FORCE * dt;
@@ -409,12 +428,13 @@ void Player::Physics(float dt){
     // grounded
     if(*isGrounded){
         if(speed.y>0) speed.y = 0;
-        if(speed.x > 0){
-            if(*surface_inclination <45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
-        }
-        if(speed.x < 0){
-            if(*surface_inclination >=45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
-        }
+        // if(speed.x > 0){
+        //     if(*surface_inclination <45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+        // }
+        // if(speed.x < 0){
+        //     if(*surface_inclination >45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
+        // }
+        if(*surface_inclination !=0)associated.box.y += MAX_MOVE_SPEED * 0.030 ;//!! isso esconde o bug dele tremer em plataforma, n sei por uqe
     }
     if(isAttacking){
         if(*isGrounded)speed.x = 0;
@@ -492,8 +512,23 @@ void Player::Animation(float dt){
     
 }
 
-void Player::Jump (float dt){
-    speed.y = -JUMP_FORCE*dt;
+void Player::Jump (bool type){
+    jumpTimer.Restart();
+
+    GameObject* GO_jumpdust_effect = new GameObject();
+        string dust_sprite_name = "";
+        (type == 1)?dust_sprite_name = "assets/img/Ype/jumpdust.png":dust_sprite_name = "assets/img/Ype/airjumpdust.png";
+        Effect* effect = new Effect(*GO_jumpdust_effect,0,0,dust_sprite_name,4,0.075);
+        
+        GO_jumpdust_effect->AddComponent(effect);
+        auto ass_center = associated.box.GetCenter();
+        GO_jumpdust_effect->box.SetCenter(ass_center.x,ass_center.y+64);
+     
+
+        State& state = Game::GetInstance().GetCurrentState();
+    state.AddObject(GO_jumpdust_effect);
+    
+    // speed.y = -JUMP_FORCE*dt;
 }
 void Player::JustGrounded(){//!!doesn work
     // isAttacking = false;

@@ -7,6 +7,7 @@ enum class C_ID
     Projectile,
     CameraFollower,
     Collider,
+    Effect,
     FpsPrinter,
     GameBoxT,
     RigidBody,

@@ -42,7 +42,7 @@ public:
     bool Is(C_ID);
 
 
-    void Jump(float dt);
+    void Jump(bool type);
     void Shoot(float dt);
     void bonkHead();
     /// @brief stuns and push player 

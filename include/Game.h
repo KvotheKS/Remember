@@ -9,6 +9,7 @@
 #include "State.h"
 #include "TitleState.h"
 #include "PingusState.h"
+#include "Effect.h"
 #include <iostream>
 #include <memory>
 #include <string>
