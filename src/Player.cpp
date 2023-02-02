@@ -103,6 +103,9 @@ void Player::Start(){
     sprite_sheet_node = new SSNode("assets/img/Ype/Ydash.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::DASH, sprite_sheet_node); 
 
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ydashup.png",  {0, 0, 80*4, 80},4,0.1,scale);
+    state_machine->AddNode(RBSTATE::DASHUP, sprite_sheet_node);
+
     sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::MELEE, sprite_sheet_node); 
 
@@ -483,7 +486,8 @@ void Player::Animation(float dt){
     }
 
     if(isDashing){
-        state_machine->ChangeState(RBSTATE::DASH);
+        
+        state_machine->ChangeState(RBSTATE::DASHUP);
         ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
         ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
 
@@ -495,9 +499,6 @@ void Player::Animation(float dt){
             associated.angleDeg -= 180;
         }
         
-
-   
-    
         // (speed.x <= 0)?cr_state->SetFliped(false):cr_state->SetFliped(true); 
     }else{
         associated.angleDeg = 0;
