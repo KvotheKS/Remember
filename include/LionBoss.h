@@ -9,6 +9,7 @@
 
 class LionBoss : public GameObject
 {   
+public:
     enum {LASER, BALLS, TOWER, SHOCKWAVE};
     enum {IDLE, LASERING, BALLING, TOWERING, SHOCKWAVING};
 
@@ -19,11 +20,13 @@ class LionBoss : public GameObject
     float FARX;
     
     float LASERDURATION;
+    float LASERCHARGE;
     float TOWERDURATION;
     float BALLSDURATION;
     float SHOCKWAVEDURATION;
     
     Vec2 LASERSIZE;
+    Vec2 LASERPREP;
     int LASERDAMAGE;
     Vec2 LASERKNOCK;
 

@@ -2,6 +2,8 @@
 #include <cmath>
 #include <iostream> //por que n ter? -m
 #include <tuple>
+#include <cmath>
+
 using namespace std;
 
 // define pra test -m
@@ -9,6 +11,7 @@ using namespace std;
 #define p(x) cout << #x << ": " << x <<" ";
 
 #define PI 3.14159265358979323846
+const float _f_leniancy = 0.005f;
 
 class Vec2 {
     public:
@@ -34,6 +37,12 @@ class Vec2 {
         float Cross(Vec2 vec);
         friend ostream& operator<<(ostream& out,Vec2 const& v);
 };
+
+bool eq_s(float a, float b, float eps = _f_leniancy);
+
+bool gt_s(float a, float b, float eps = _f_leniancy);
+
+bool lt_s(float a, float b, float eps = _f_leniancy);
 
 // xspeed deve ser a velocidade por segundos
 // Vec2 eh (x,y) que no projectile deve ser traduzido para

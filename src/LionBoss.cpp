@@ -6,6 +6,8 @@
 #include "TimeBomb.h"
 #include "Rand.h"
 #include "Projectile.h"
+#include "Player.h"
+#include "Trigger.h"
 #include <memory>
 #include <cmath>
 
@@ -21,19 +23,21 @@ LionBoss::LionBoss(GameObject& associated)
     FARX = 300.0f;
 
     LASERDURATION = 3.0f;
+    LASERCHARGE   = 1.0f;
     TOWERDURATION = 3.0f;
     BALLSDURATION = 2.5f;
     SHOCKWAVEDURATION = 4.0f;
     
     LASERDAMAGE = 25;
     LASERKNOCK = Vec2();
-    LASERSIZE = Vec2(550,200);
+    LASERSIZE = Vec2(750,325);
+    LASERPREP = Vec2(100, 50);
 
     BALLSDAMAGE = 15;
     BALLSKNOCK = Vec2();
-    BALLSSPEED = -300.0f;
-    BALLSYSPEED = -800.0f;
-    BALLSIZE = Vec2(50,50);
+    BALLSSPEED = -600.0f;
+    BALLSYSPEED = -1000.0f;
+    BALLSIZE = Vec2(70,60);
 
     TOWERDAMAGE = 15;
     TOWERKNOCK = Vec2(-10, -15);
@@ -41,7 +45,7 @@ LionBoss::LionBoss(GameObject& associated)
     WAVESIZE = Vec2(50,250);
     SHOCKWAVEDAMAGE = 25;
     SHOCKWAVEKNOCK = Vec2(10, 40);
-    SHOCKWAVESPEED = 250;
+    SHOCKWAVESPEED = 400;
 
     auto& currstate = Game::GetInstance().GetCurrentState();
     
@@ -55,27 +59,29 @@ LionBoss::LionBoss(GameObject& associated)
     auto stmac = new StateMachine(associated);
     auto lionbrainz = new IA(associated, target.lock().get(), 1.5f);
     lionbrainz->SetActions({
-        {Vec2(MIDDLEX, 0), 1, LASERDURATION},
+        {Vec2(FARX, 0), 1, LASERDURATION + LASERCHARGE},
         {Vec2(MIDDLEX, 0), 1, BALLSDURATION},
         {Vec2(CLOSEX, 0), 1, TOWERDURATION},
         {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
         }
     );
-    associated.AddComponent(lionbrainz);
-    associated.AddComponents({stmac});
+    associated.AddComponents({lionbrainz, stmac});
 
     auto anm = new AnimNode("assets/img/Lion/closed_mouth.png", 1,1,Vec2(1,1), false, false);
-    anm->SetSize(LIONSIZE.x, LIONSIZE.y);
+    // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
+    anm->SetScaleX(2,2);
     stmac->AddNode(IDLE, anm);
     stmac->ChangeState(IDLE);
 
     anm = new AnimNode("assets/img/Lion/open_mouth.png", 1, LASERDURATION,Vec2(1,1), false, false);
-    anm->SetSize(LIONSIZE.x, LIONSIZE.y);
-    stmac->AddNode(LASERING, anm);
+    // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
+    anm->SetScaleX(2,2);
+    stmac->AddNode(LASERING, anm); stmac->AddTransition(LASERING, IDLE);
     
     anm = new AnimNode("assets/img/Lion/low_tail.png", 1,BALLSDURATION/2,Vec2(1,1), false, false);
-    anm->SetSize(LIONSIZE.x, LIONSIZE.y);
-    stmac->AddNode(BALLING, anm);
+    // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
+    anm->SetScaleX(2,2);
+    stmac->AddNode(BALLING, anm); stmac->AddTransition(BALLING, IDLE);
     activated = false;
 }
 
@@ -105,9 +111,9 @@ void LionBoss::Update(float dt)
     switch(choice)
     {
         case LASER: Laser(); stmac->ChangeState(LASERING); break;
-        case BALLS: FlameBalls(); stmac->ChangeState_s(BALLING); break;
+        case BALLS: FlameBalls(); stmac->ChangeState(BALLING); break;
         case TOWER: FlameTower(); stmac->ChangeState(LASERING); break;
-        case SHOCKWAVE: ShockWave(); stmac->ChangeState_s(SHOCKWAVING); break;
+        case SHOCKWAVE: ShockWave(); stmac->ChangeState(BALLING); break;
         default:
         break;
     }
@@ -117,31 +123,51 @@ void LionBoss::ShockWave()
 {
     auto& st = Game::GetInstance().GetCurrentState();
     
-    GameObject* wave_go = new GameObject;
-        Sprite* spr = new Sprite(*wave_go, "assets/img/lion/wave.png", 1, 0, -1);
+    GameObject* wave_go = new GameObject();
+        Sprite* spr = new Sprite(*wave_go, "assets/img/Lion/wave.png", 1, 0, -1); 
         spr->SetSize(WAVESIZE.x, WAVESIZE.y);
+
         wave_go->box.x = associated.box.x - spr->GetWidth();
-        wave_go->box.y = associated.box.y; //+ associated.box.h - spr->GetHeight();
+        wave_go->box.y = associated.box.y + associated.box.h - spr->GetHeight();
+
         Projectile* wave_proj = new Projectile(*wave_go, 7.0f, -180.0f, SHOCKWAVESPEED);
         Attack* atk = new Attack(*wave_go, SHOCKWAVEDAMAGE, SHOCKWAVEKNOCK);
         wave_go->AddComponents({spr, wave_proj, atk});
     st.bulletArray.emplace_back(wave_go);
+
 }
 
 void LionBoss::Laser()
 {
     auto& st = Game::GetInstance().GetCurrentState();
-
-    GameObject* laser_go = new GameObject();
-        Sprite* spr = new Sprite(*laser_go, "assets/img/laser.png", 1, 0, -1);
-        spr->SetSize(LASERSIZE.x, LASERSIZE.y);
-        laser_go->box.x = associated.box.x - spr->GetWidth();
-        laser_go->box.y = associated.box.y;
-        Collider* cld = new Collider(*laser_go);
-        TimeBomb* tmb = new TimeBomb(*laser_go,LASERDURATION);
-        Attack* laser_atk = new Attack(*laser_go, LASERDAMAGE, LASERKNOCK);
-        laser_go->AddComponents({spr, cld, tmb, laser_atk});
-    st.bulletArray.emplace_back(laser_go);
+    GameObject* laser_prep = new GameObject;
+        Sprite* spr = new Sprite(*laser_prep, "assets/img/laser.png", 1, 0, -1);
+        TimeBomb* tmb = new TimeBomb(*laser_prep, LASERCHARGE);
+        spr->SetSize(LASERPREP.x, LASERPREP.y);
+        laser_prep->box.x = associated.box.x - spr->GetWidth();
+        laser_prep->box.y = associated.box.y;
+        laser_prep->AddComponents({spr, tmb});
+    st.objectArray.emplace_back(laser_prep);
+    
+    this->AddComponent(new TimedTrigger(*this, LASERCHARGE,
+        [](GameObject& associated)
+        {
+            auto& st = Game::GetInstance().GetCurrentState();
+            auto target = st.GetObject(C_ID::Player, &st.rigidArray).lock().get();
+            LionBoss& assc = (LionBoss&)associated;
+            GameObject* laser_go = new GameObject();
+                Sprite* spr = new Sprite(*laser_go, "assets/img/laser.png", 1, 0, -1);
+                spr->SetSize(assc.LASERSIZE.x, assc.LASERSIZE.y);
+                laser_go->box.x = assc.associated.box.x - spr->GetWidth();
+                laser_go->box.y = assc.associated.box.y;
+                Collider* cld = new Collider(*laser_go);
+                TimeBomb* tmb = new TimeBomb(*laser_go,assc.LASERDURATION);
+                Attack* laser_atk = new Attack(*laser_go, assc.LASERDAMAGE, assc.LASERKNOCK);
+                laser_go->AddComponents({spr, cld, tmb, laser_atk});
+            st.bulletArray.emplace_back(laser_go);
+            // std::cout << "SUSUSUS";
+        }
+    ));
 }
 
 void LionBoss::FlameBalls()

@@ -456,43 +456,44 @@ void Player::Animation(float dt){
     Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
   
     if(speed.y < 0 && !*isGrounded){
-        state_machine->ChangeState(RBSTATE::JUMP);
+        state_machine->ChangeState_s(RBSTATE::JUMP);
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
     }
     if(speed.y > 2 && !*isGrounded){
-        state_machine->ChangeState(RBSTATE::FALL);
+        state_machine->ChangeState_s(RBSTATE::FALL);
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
     }
     
     if(crouchHeld && *isGrounded){
-        state_machine->ChangeState(RBSTATE::CROUCH);
+        state_machine->ChangeState_s(RBSTATE::CROUCH);
         ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
         ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
     }else{
         if(speed.x != 0 && *isGrounded && state_idx != RBSTATE::RUN && state_idx != RBSTATE::WALK){    
-        state_machine->ChangeState(RBSTATE::WALK);
+        state_machine->ChangeState_s(RBSTATE::WALK);
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
         }
         
 
         if(speed.x == 0 && *isGrounded && state_idx != RBSTATE::IDLE){
-            state_machine->ChangeState(RBSTATE::IDLE);
+            state_machine->ChangeState_s(RBSTATE::IDLE);
             ass_collider->SetScale(Vec2(nxsize,nysize)); 
             ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
         }
     }
 
     if(isDashing){
+        auto dasht = speed.y < 0 ? RBSTATE::DASHUP : RBSTATE::DASH;
+        state_machine->ChangeState_s(dasht);
         
-        state_machine->ChangeState(RBSTATE::DASHUP);
         ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
         ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
 
-        
-        associated.angleDeg = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592);
+        auto v = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592); 
+        associated.angleDeg = v;
      
 
         if(cr_state->GetFliped()){
@@ -505,7 +506,7 @@ void Player::Animation(float dt){
     }
     if(isStunned){
         
-        state_machine->ChangeState(RBSTATE::STUN);
+        state_machine->ChangeState_s(RBSTATE::STUN);
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(0,8));
     }

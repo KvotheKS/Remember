@@ -12,13 +12,3 @@ public:
     void Update(float);
 };
 
-typedef void (*go_func)(GameObject&);
-
-class TimedTrigger : public GameObject
-{
-    Timer tm;
-    go_func fnc;
-public:
-    TimedTrigger(GameObject&, float, go_func);
-    void Update(float);
-};

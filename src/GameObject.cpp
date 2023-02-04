@@ -24,12 +24,12 @@ void GameObject::Start(){
 
 void GameObject::UpdateNodes(float dt)
 {
-    for(unsigned i = 0; i < components.size(); i++)
+    for(unsigned i = 0; i < components.size(); i++, deletedcpt=false)
     {
         components[i]->Update(dt);
+        if(deletedcpt) continue;
         components[i]->box = box + relative;
-        components[i]->UpdateNodes(dt);
-        
+        components[i]->UpdateNodes(dt); 
     
     }
     // para garantir que o collider seja atualizado depois de sprite, ele esta sendo atualizado 2 vezes todo frame
@@ -42,9 +42,10 @@ void GameObject::UpdateNodes(float dt)
 }
 
 void GameObject::RenderNodes(){
-    for(unsigned i = 0; i < components.size(); i++)
-    {    
+    for(unsigned i = 0; i < components.size(); i++, deletedcpt=false)
+    {   
         components[i]->Render();
+        if(deletedcpt) continue;
         components[i]->RenderNodes();
     }
 }
@@ -80,6 +81,7 @@ void GameObject::RemoveComponent(GameObject* cpt){
     for(unsigned i = 0; i < components.size(); i++){
         if(components[i].get() == cpt){
             components.erase(components.begin()+i);
+            deletedcpt = true;
             break;
         }
     }

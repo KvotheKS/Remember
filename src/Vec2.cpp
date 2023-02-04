@@ -85,3 +85,18 @@ ostream& operator<<(ostream& out,Vec2 const& v){
     out << "Vec2: "<< v.x << " , "<< v.y << "\n";
     return out ;
 }
+
+bool eq_s(float a, float b, float eps)
+{
+    return a >= (b-eps) && a <= (b+eps);
+}
+
+bool gt_s(float a, float b, float eps)
+{
+    return a >= (b + eps);
+}
+
+bool lt_s(float a, float b, float eps)
+{
+    return a <= (b - eps);
+}

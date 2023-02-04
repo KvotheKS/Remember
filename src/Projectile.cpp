@@ -50,6 +50,7 @@ Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* targe
 {}
 
 void Projectile::Update(float dt){
+    // std::cout << "PROJEEEEEEEEEEEEET";
     if(lifeTimeCount.Update(dt))
     {
         associated.RequestDelete();

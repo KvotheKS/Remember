@@ -20,6 +20,7 @@ class GameObject {
         bool started;
         double angleDeg;
         float depth;
+        bool deletedcpt;
     public:
         GameObject(GameObject& associated = *((GameObject*)nullptr));
         ~GameObject();
