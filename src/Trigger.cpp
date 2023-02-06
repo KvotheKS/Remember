@@ -8,7 +8,6 @@ void TimedTrigger::Update(float dt)
 {
     if(tm.Update(dt))
     {
-        // std::cout << "CHGUSAJJKSR\n";
         fnc(associated);
         if(repeating == 0)
         {

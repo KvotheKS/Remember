@@ -8,6 +8,11 @@ void TimeBomb::Update(float dt)
 {
     if(tm.Update(dt))
     {
-        associated.RequestDelete();
+        if(&associated == nullptr)
+            RequestDelete();
+        else if(&associated.associated == nullptr)
+            associated.RequestDelete();
+        else
+            associated.associated.RemoveComponent(&associated);
     }
 }

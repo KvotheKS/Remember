@@ -72,6 +72,15 @@ void GameObject::AddComponent(GameObject* cpt){
         cpt->Start();
 }
 
+void GameObject::AddComponent(GameObject* cpt, GameObject* base)
+{
+    for(auto it = components.begin(); ;it++)
+    {
+        if(it->get() == base || it == components.end())
+            components.insert(it, std::unique_ptr<GameObject>(cpt));
+    }
+}
+
 void GameObject::AddComponents(std::initializer_list<GameObject*> cpts)
 {
     for(auto& it : cpts) AddComponent(it);

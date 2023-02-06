@@ -47,6 +47,9 @@ LionBoss::LionBoss(GameObject& associated)
     SHOCKWAVEKNOCK = Vec2(10, 40);
     SHOCKWAVESPEED = 400;
 
+    LIONMAXHEALTH = 200;
+    currentHealth = LIONMAXHEALTH;
+
     auto& currstate = Game::GetInstance().GetCurrentState();
     
     auto target = currstate.GetObject(C_ID::Player);
@@ -58,14 +61,15 @@ LionBoss::LionBoss(GameObject& associated)
 
     auto stmac = new StateMachine(associated);
     auto lionbrainz = new IA(associated, target.lock().get(), 1.5f);
+    auto cld = new Collider(associated);
     lionbrainz->SetActions({
-        {Vec2(FARX, 0), 1, LASERDURATION + LASERCHARGE},
-        {Vec2(MIDDLEX, 0), 1, BALLSDURATION},
-        {Vec2(CLOSEX, 0), 1, TOWERDURATION},
-        {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
+            {Vec2(FARX, 0), 1, LASERDURATION + LASERCHARGE},
+            {Vec2(MIDDLEX, 0), 1, BALLSDURATION},
+            {Vec2(CLOSEX, 0), 1, TOWERDURATION},
+            {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
         }
     );
-    associated.AddComponents({lionbrainz, stmac});
+    associated.AddComponents({lionbrainz, stmac, cld});
 
     auto anm = new AnimNode("assets/img/Lion/closed_mouth.png", 1,1,Vec2(1,1), false, false);
     // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
@@ -73,7 +77,7 @@ LionBoss::LionBoss(GameObject& associated)
     stmac->AddNode(IDLE, anm);
     stmac->ChangeState(IDLE);
 
-    anm = new AnimNode("assets/img/Lion/open_mouth.png", 1, LASERDURATION,Vec2(1,1), false, false);
+    anm = new AnimNode("assets/img/Lion/open_mouth.png", 1, LASERDURATION+LASERCHARGE,Vec2(1,1), false, false);
     // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
     anm->SetScaleX(2,2);
     stmac->AddNode(LASERING, anm); stmac->AddTransition(LASERING, IDLE);
@@ -131,7 +135,7 @@ void LionBoss::ShockWave()
         wave_go->box.y = associated.box.y + associated.box.h - spr->GetHeight();
 
         Projectile* wave_proj = new Projectile(*wave_go, 7.0f, -180.0f, SHOCKWAVESPEED);
-        Attack* atk = new Attack(*wave_go, SHOCKWAVEDAMAGE, SHOCKWAVEKNOCK);
+        Attack* atk = new Attack(*wave_go, SHOCKWAVEDAMAGE, SHOCKWAVEKNOCK, &associated);
         wave_go->AddComponents({spr, wave_proj, atk});
     st.bulletArray.emplace_back(wave_go);
 
@@ -162,7 +166,7 @@ void LionBoss::Laser()
                 laser_go->box.y = assc.associated.box.y;
                 Collider* cld = new Collider(*laser_go);
                 TimeBomb* tmb = new TimeBomb(*laser_go,assc.LASERDURATION);
-                Attack* laser_atk = new Attack(*laser_go, assc.LASERDAMAGE, assc.LASERKNOCK);
+                Attack* laser_atk = new Attack(*laser_go, assc.LASERDAMAGE, assc.LASERKNOCK, &assc.associated);
                 laser_go->AddComponents({spr, cld, tmb, laser_atk});
             st.bulletArray.emplace_back(laser_go);
             // std::cout << "SUSUSUS";
@@ -190,7 +194,7 @@ void LionBoss::FlameBalls()
             balls_go->angleDeg = vecinic.AngleX();
             balls_go->box.x = associated.box.x + associated.box.w; 
             balls_go->box.y = associated.box.y + associated.box.h - BALLSIZE.y;
-            Attack* ball_atk = new Attack(*balls_go, BALLSDAMAGE, BALLSKNOCK);
+            Attack* ball_atk = new Attack(*balls_go, BALLSDAMAGE, BALLSKNOCK, &associated);
             balls_go->AddComponents({dsp, spr, ballsproj, ball_atk});
         st.bulletArray.emplace_back(balls_go);
     }
@@ -208,10 +212,32 @@ void LionBoss::FlameTower()
         tower_go->box.x = associated.box.x - spr->GetWidth(); 
         tower_go->box.y = associated.box.y - 100;
         Collider* tower_co = new Collider(*tower_go);
-        Attack* atk = new Attack(*tower_go, TOWERDAMAGE, TOWERKNOCK);
+        Attack* atk = new Attack(*tower_go, TOWERDAMAGE, TOWERKNOCK, &associated);
         tower_go->AddComponents({spr, tower_co, atk, new TimeBomb(*tower_go, TOWERDURATION)});
     st.bulletArray.emplace_back(tower_go);
 }
 
 bool LionBoss::Is(C_ID type)
 { return type == C_ID::Lion; }
+
+void LionBoss::NotifyCollision(GameObject* other, Vec2 sep)
+{
+    auto bingus = (Attack*)other->GetComponent(C_ID::Attack);
+    
+    if(!bingus || bingus->OwnedBy(&associated))
+        return;
+    
+    TakeDamage(bingus->GetDamage());
+}
+
+void LionBoss::TakeDamage(int damage)
+{
+    currentHealth -= damage;
+    if(currentHealth <= 0)
+        DIEEE();
+}
+
+void LionBoss::DIEEE()
+{
+    std::cout << "Uãããããããããã eu morri :(\n";
+}

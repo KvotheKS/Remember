@@ -13,9 +13,9 @@ class GameObject {
     private:
         std::vector<std::unique_ptr<GameObject>> components;
     protected:
-        GameObject& associated;
         bool isDead;
     public:
+        GameObject& associated;
         Rect box, relative;
         bool started;
         double angleDeg;
@@ -38,6 +38,7 @@ class GameObject {
         void RequestDelete();
 
         void AddComponent(GameObject* cpt);
+        void AddComponent(GameObject* cpt, GameObject* base);
         void AddComponents(std::initializer_list<GameObject*> cpts);
         void RemoveComponent(GameObject* cpt);
         

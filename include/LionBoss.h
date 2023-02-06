@@ -42,7 +42,11 @@ public:
     Vec2 WAVESIZE;
     int SHOCKWAVEDAMAGE;
     Vec2 SHOCKWAVEKNOCK;
+
+    int LIONMAXHEALTH;
     
+    int currentHealth;
+
     bool activated;
     
 private:
@@ -53,6 +57,9 @@ private:
 
 public:
     LionBoss(GameObject&); // Devemos settar sua posicao manualmente por seu associated.
+    void NotifyCollision(GameObject*, Vec2);
+    void TakeDamage(int damage);
+    void DIEEE();
     void Update(float);
     bool Is(C_ID);
 };

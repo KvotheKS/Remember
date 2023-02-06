@@ -1,15 +1,19 @@
 #include "Attack.h"
 
-Attack::Attack(GameObject& associated, int damage, Vec2 knockback)
+Attack::Attack(GameObject& associated, int damage, Vec2 knockback, GameObject* owner)
     : GameObject(associated)
 {
     this->damage = damage;
     this->knockback = knockback;   
+    this->owner = owner;
 }
 
 int Attack::GetDamage() { return damage; }
 
 Vec2 Attack::GetKnockback() { return knockback; }
+
+bool Attack::OwnedBy(GameObject* isOwner)
+{ return isOwner == owner; }
 
 bool Attack::Is(C_ID type)
 { return type == C_ID::Attack; }
