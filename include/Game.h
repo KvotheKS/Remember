@@ -25,6 +25,7 @@ class Game {
         State* storedState;
         std::stack<std::unique_ptr<State>> stateStack;
         int frameStart;
+        bool noVSync;
         float dt;
         Game(std::string title, int width, int height);
         void CalculateDeltaTime();
