@@ -62,7 +62,7 @@ void Sprite::Update(float dt){
 
 void Sprite::Render(){
     float paralax_mul;
-    switch((int)associated.depth){
+    switch((int)associated.depth){//deepts -1 to -4 are afected  paralax
         case -1:
             paralax_mul = 0.95;
             break;
@@ -109,6 +109,9 @@ void Sprite::Print(float x, float y)
     }
     SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture.get(), &this->clipRect, &dstRect,
             associated.angleDeg, nullptr,flip_val);
+
+    
+    
             
     SDL_SetTextureColorMod(texture.get(), 255,255,255);
 }

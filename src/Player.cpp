@@ -1,8 +1,9 @@
 #include "Player.h"
 #include "RigidBody.h"
 #include "TerrainBody.h"
-#include "Rand.h"
 
+#include "Rand.h"
+#include "ScreenFade.h"
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
 #include <iostream>
@@ -294,18 +295,22 @@ void Player::Controls(float dt){
 
             if(*isGrounded ){
                 dreamGround = true;
+                
                 GameObject* GO_jumpdust_effect = new GameObject();
     
                     
-                    Effect* effect = new Effect(*GO_jumpdust_effect,0,0,"assets/img/Ype/dashdust.png",4,0.075);
+                    Effect* effect = new Effect(*GO_jumpdust_effect,0,0,"assets/img/Effects/dashdust.png",4,0.075);
                     
                     GO_jumpdust_effect->AddComponent(effect);
                     auto ass_center = associated.box.GetCenter();
-                    GO_jumpdust_effect->box.SetCenter(ass_center.x,ass_center.y+56);
+                   
                 
+                    int x_offset = -associated.box.w/2.5;
                     if(movement_direction.x == -1){//!!fazer isso no effect
                         ((Sprite*) GO_jumpdust_effect->GetComponent(C_ID::Sprite))->SetFliped(true);
+                        x_offset *= -1;
                     }
+                    GO_jumpdust_effect->box.SetCenter(ass_center.x+x_offset,ass_center.y+56);
                     State& state = Game::GetInstance().GetCurrentState();
                 state.AddObject(GO_jumpdust_effect);
             }
@@ -327,6 +332,28 @@ void Player::Controls(float dt){
         
         isAttacking = true;
         atackTimer.Restart();
+
+        SDL_Rect clipRect;
+        clipRect.x = 0;
+        clipRect.y = 0;
+        clipRect.w = 500;
+        clipRect.h = 500;
+
+        
+
+        GameObject* GO_fade = new GameObject();
+            GO_fade->depth = 1000;
+            float fadeinTime = 1; float fadeoutTime = 1;float duration = 4;
+            ScreenFade* effect = new ScreenFade(*GO_fade, fadeinTime, fadeoutTime, duration);
+            
+            GO_fade->AddComponent(effect);
+            
+            GO_fade->box.SetCenter(0,0);
+        
+
+            State& state = Game::GetInstance().GetCurrentState();
+        state.AddObject(GO_fade);
+       
         // mouse direction code
         // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
         // (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
@@ -489,10 +516,6 @@ void Player::Animation(float dt){
         
         
         
-
-        
-        
-        
         // (speed.x <= 0)?cr_state->SetFliped(false):cr_state->SetFliped(true); 
     }else{
 
@@ -543,7 +566,7 @@ void Player::Jump (bool type){
 
     GameObject* GO_jumpdust_effect = new GameObject();
         string dust_sprite_name = "";
-        (type == 1)?dust_sprite_name = "assets/img/Ype/jumpdust.png":dust_sprite_name = "assets/img/Ype/airjumpdust.png";
+        (type == 1)?dust_sprite_name = "assets/img/Effects/jumpdust.png":dust_sprite_name = "assets/img/Effects/airjumpdust.png";
         Effect* effect = new Effect(*GO_jumpdust_effect,0,0,dust_sprite_name,4,0.075);
         
         GO_jumpdust_effect->AddComponent(effect);
