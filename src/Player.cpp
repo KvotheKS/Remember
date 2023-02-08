@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Projectile.h"
 #include "Game.h"
+#include "Attack.h"
 #include <limits>
 // define pra test -m
 using namespace std;
@@ -23,7 +24,7 @@ Player::Player(GameObject& associated):GameObject(associated){
     // Sprite* pbody = new Sprite(associated, "assets/img/Zidle.png");
     // associated.AddComponent(pbody);
     // pbody->SetScaleX(2,2);
-   
+    // associated.AddComponent(new Attack(associated, 10, Vec2(0,0), &associated));
    
     isFiring = false;
     isSlashing = false;
@@ -186,6 +187,22 @@ void Player::Controls(float dt){
         }      
     }
     
+    if(inManager.KeyPress(Q_KEY))
+    {
+        auto& st = Game::GetInstance().GetCurrentState();
+        auto proj_go = new GameObject();
+            auto proj = new Projectile(*proj_go, 5.0f, 0.0f, 250.0f, 250.0f);
+            auto spr = new Sprite(*proj_go, "assets/img/laser.png", 1,0,-1);
+            auto atk = new Attack(*proj_go, 50, Vec2(), proj_go);
+            auto dsp = new DisappearOnHit(*proj_go);
+            auto cld = (Collider*)proj_go->GetComponent(C_ID::Collider);
+            cld->type = C_ID::Hitbox;
+            proj_go->AddComponents({proj, spr, atk, dsp});
+            spr->SetSize(50,50);
+            proj_go->box.x = associated.box.x;
+            proj_go->box.y = associated.box.y;
+        st.bulletArray.emplace_back(proj_go);
+    }
     // LEFT COMMAND
     if(inManager.IsKeyDown(LEFT_ARROW_KEY) ){ 
         if(!isDashing && !(*isGrounded && isAttacking)){

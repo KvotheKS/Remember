@@ -20,7 +20,7 @@
 class TerrainBody : public GameObject {
 private:
 public:
-    TerrainBody(GameObject& associated);
+    TerrainBody(GameObject& associated, bool hascpts = true);
     ~TerrainBody();
 
     void Start();

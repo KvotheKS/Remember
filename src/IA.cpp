@@ -34,6 +34,7 @@ void IA::Update(float dt)
             // std::cout << (associated.box.GetCenter() - target->box.GetCenter()).Magnitude() << '\n';
             selectedAction = i;
             SetActionTimer((int)i);
+            // std::cout << '\n';
             // std::cout << selectedAction << '\n';
             return;
         }
@@ -44,6 +45,7 @@ void IA::Heuristic(ActionInfo& it)
 {
     auto tgcntr = target->box.GetCenter();
     float dst = (box.GetCenter() + it.range.Rotate((tgcntr - box.GetCenter()).AngleX()) - tgcntr).Magnitude();
+    // std::cout << dst << ' ';
     dst = std::pow(max(dst, 1.0f),positionWeight);
     it.weight = ((1/dst) / it.rarity);
 }

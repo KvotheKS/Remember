@@ -84,7 +84,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         associated.box.x += d+1;
     };
 
-    if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::Collider)){
+    if(TerrainBody * terrain = (TerrainBody*)other.GetComponent(C_ID::TerrainBody)){
 
         Collider * terrain_collider = (Collider*)other.GetComponent(C_ID::Collider);
         /* pegar ponto central de cada aresta */

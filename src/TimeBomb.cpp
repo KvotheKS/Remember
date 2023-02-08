@@ -16,3 +16,6 @@ void TimeBomb::Update(float dt)
             associated.associated.RemoveComponent(&associated);
     }
 }
+
+bool TimeBomb::Is(C_ID type)
+{ return type == C_ID::TimeBomb; }

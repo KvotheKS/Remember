@@ -256,6 +256,7 @@ void TestState::Update(float dt){
     // std::cout << "SAI";
 
     CollideVectors(rigidArray, terrainArray);
+    CollideVectors(rigidArray, bulletArray);
     // std::cout << "colidiu";
     
     Camera::Update(dt);
@@ -276,10 +277,11 @@ void TestState::CollideVectors(std::vector<std::shared_ptr<GameObject>>& alpha, 
         float angleOfA = alphaObj->angleDeg * (PI / 180.0);
         for(auto& betaObj : beta)
         {
-            
+            // if(&betaObj == &alphaObj) continue;
+
             Collider* colliderB = (Collider*) betaObj->GetComponent(C_ID::Collider);
-            if(!colliderB)
-                continue;
+            
+            if(!colliderB) continue;
             
             float angleOfB = betaObj->angleDeg * (PI / 180.0);
             

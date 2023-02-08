@@ -61,5 +61,6 @@ public:
     void TakeDamage(int damage);
     void DIEEE();
     void Update(float);
+    // void Start();
     bool Is(C_ID);
 };

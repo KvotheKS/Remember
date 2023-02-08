@@ -8,6 +8,8 @@
 #include "Projectile.h"
 #include "Player.h"
 #include "Trigger.h"
+#include "ShakeBehavior.h"
+#include "TerrainBody.h"
 #include <memory>
 #include <cmath>
 
@@ -49,6 +51,7 @@ LionBoss::LionBoss(GameObject& associated)
 
     LIONMAXHEALTH = 200;
     currentHealth = LIONMAXHEALTH;
+    activated = false;
 
     auto& currstate = Game::GetInstance().GetCurrentState();
     
@@ -62,14 +65,8 @@ LionBoss::LionBoss(GameObject& associated)
     auto stmac = new StateMachine(associated);
     auto lionbrainz = new IA(associated, target.lock().get(), 1.5f);
     auto cld = new Collider(associated);
-    lionbrainz->SetActions({
-            {Vec2(FARX, 0), 1, LASERDURATION + LASERCHARGE},
-            {Vec2(MIDDLEX, 0), 1, BALLSDURATION},
-            {Vec2(CLOSEX, 0), 1, TOWERDURATION},
-            {Vec2(MIDDLEX, 0), 1, SHOCKWAVEDURATION}
-        }
-    );
-    associated.AddComponents({lionbrainz, stmac, cld});
+    auto terr = new TerrainBody(associated, false);
+    associated.AddComponents({lionbrainz, stmac, terr, cld});
 
     auto anm = new AnimNode("assets/img/Lion/closed_mouth.png", 1,1,Vec2(1,1), false, false);
     // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
@@ -86,13 +83,19 @@ LionBoss::LionBoss(GameObject& associated)
     // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
     anm->SetScaleX(2,2);
     stmac->AddNode(BALLING, anm); stmac->AddTransition(BALLING, IDLE);
-    activated = false;
+    
+    auto lionw = anm->GetWidth()/2.0f;
+    lionbrainz->SetActions({
+            {Vec2(FARX+lionw, 0), 1, LASERDURATION + LASERCHARGE},
+            {Vec2(MIDDLEX+lionw, 0), 1, BALLSDURATION},
+            {Vec2(CLOSEX+lionw, 0), 1, TOWERDURATION},
+            {Vec2(MIDDLEX+lionw, 0), 1, SHOCKWAVEDURATION}
+        }
+    );
 }
 
 void LionBoss::Update(float dt)
 {
-    // static int timing = 0;
-    // std::cout << timing++ << associated.box;
     if(!activated)
     {
         auto& currstate = Game::GetInstance().GetCurrentState();
@@ -110,8 +113,8 @@ void LionBoss::Update(float dt)
     auto lionbrainz = (IA*)associated.GetComponent(C_ID::IA);
     auto stmac = (StateMachine*)associated.GetComponent(C_ID::StateMachine);
     int choice = lionbrainz->selectedAction;
-    if(choice != -1)
-        std::cout << choice << '\n';
+    // if(choice != -1)
+    //     std::cout << choice << '\n';
     switch(choice)
     {
         case LASER: Laser(); stmac->ChangeState(LASERING); break;
@@ -135,6 +138,8 @@ void LionBoss::ShockWave()
         wave_go->box.y = associated.box.y + associated.box.h - spr->GetHeight();
 
         Projectile* wave_proj = new Projectile(*wave_go, 7.0f, -180.0f, SHOCKWAVESPEED);
+        auto cld = (Collider*)wave_go->GetComponent(C_ID::Collider);
+        cld->type = C_ID::Hitbox;
         Attack* atk = new Attack(*wave_go, SHOCKWAVEDAMAGE, SHOCKWAVEKNOCK, &associated);
         wave_go->AddComponents({spr, wave_proj, atk});
     st.bulletArray.emplace_back(wave_go);
@@ -165,11 +170,11 @@ void LionBoss::Laser()
                 laser_go->box.x = assc.associated.box.x - spr->GetWidth();
                 laser_go->box.y = assc.associated.box.y;
                 Collider* cld = new Collider(*laser_go);
+                cld->type = C_ID::Hitbox;
                 TimeBomb* tmb = new TimeBomb(*laser_go,assc.LASERDURATION);
                 Attack* laser_atk = new Attack(*laser_go, assc.LASERDAMAGE, assc.LASERKNOCK, &assc.associated);
                 laser_go->AddComponents({spr, cld, tmb, laser_atk});
             st.bulletArray.emplace_back(laser_go);
-            // std::cout << "SUSUSUS";
         }
     ));
 }
@@ -195,6 +200,8 @@ void LionBoss::FlameBalls()
             balls_go->box.x = associated.box.x + associated.box.w; 
             balls_go->box.y = associated.box.y + associated.box.h - BALLSIZE.y;
             Attack* ball_atk = new Attack(*balls_go, BALLSDAMAGE, BALLSKNOCK, &associated);
+            auto cld = (Collider*)balls_go->GetComponent(C_ID::Collider);
+            cld->type = C_ID::Hitbox;
             balls_go->AddComponents({dsp, spr, ballsproj, ball_atk});
         st.bulletArray.emplace_back(balls_go);
     }
@@ -212,6 +219,7 @@ void LionBoss::FlameTower()
         tower_go->box.x = associated.box.x - spr->GetWidth(); 
         tower_go->box.y = associated.box.y - 100;
         Collider* tower_co = new Collider(*tower_go);
+        tower_co->type = C_ID::Hitbox;
         Attack* atk = new Attack(*tower_go, TOWERDAMAGE, TOWERKNOCK, &associated);
         tower_go->AddComponents({spr, tower_co, atk, new TimeBomb(*tower_go, TOWERDURATION)});
     st.bulletArray.emplace_back(tower_go);
@@ -233,6 +241,8 @@ void LionBoss::NotifyCollision(GameObject* other, Vec2 sep)
 void LionBoss::TakeDamage(int damage)
 {
     currentHealth -= damage;
+    auto spr = associated.GetComponent(C_ID::StateMachine);
+    spr->AddComponent(new ShakeBehavior(*spr, Vec2(50,0), 1.0f, 0.3f));
     if(currentHealth <= 0)
         DIEEE();
 }
@@ -240,4 +250,5 @@ void LionBoss::TakeDamage(int damage)
 void LionBoss::DIEEE()
 {
     std::cout << "Uãããããããããã eu morri :(\n";
+    associated.RequestDelete();
 }
