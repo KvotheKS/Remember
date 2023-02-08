@@ -60,7 +60,10 @@ void Sprite::Update(float dt){
    
 }
 
-void Sprite::Render(){
+
+
+void Sprite::Render()
+{
     float paralax_mul;
     switch((int)associated.depth){//deepts -1 to -4 are afected  paralax
         case -1:
@@ -101,8 +104,8 @@ void Sprite::Print(float x, float y)
     // if(associated.GetComponent(C_ID::Attack))
     //     std::cout << "SPRITE" << dstRect.x << ' ' << dstRect.y << ' ' << dstRect.w << ' ' << dstRect.h << '\n';
 
-    SDL_SetTextureColorMod(texture.get(), r, g, b);
-
+    SDL_SetTextureColorMod(texture.get(),r , g, b);
+    SDL_SetTextureAlphaMod(texture.get(), a); // transparencia
     SDL_RendererFlip flip_val = SDL_FLIP_NONE;
     if(fliped) {
         flip_val = SDL_FLIP_HORIZONTAL;
@@ -171,11 +174,12 @@ void Sprite::SetFrameTime(float frameTime){
     timeElapsed = 0;
 }
 
-void Sprite::SetTint(Uint8 r, Uint8 g, Uint8 b)
+void Sprite::SetTint(Uint8 r, Uint8 g, Uint8 b,Uint8 a)
 {
     this->r = r;
     this->g = g;
     this->b = b;
+    this->a = a;
 }
 bool Sprite::GetFliped(){
     return fliped;

@@ -26,10 +26,11 @@ class Sprite : public GameObject {
         float frameTime;
         Timer selfDestructCount;
         bool fliped;
+        
     public:
-        Uint8 r=255, g=255, b=255;
+        Uint8 r = 255, g = 255, b = 255, a= 255;
 
-    public:
+  
         Sprite(GameObject& associated);
         Sprite(GameObject& associated, std::string file, int frameCount = 1,
                float frameTime = 1, float secondsToSelfDestruct = 0);
@@ -37,6 +38,8 @@ class Sprite : public GameObject {
         void Open(std::string file);
         void SetClip(int x, int y, int w, int h);
         void Update(float dt);
+
+        
         void Render();
         void Render(float x, float y);
         void Print(float x=-1, float y=-1);
@@ -54,7 +57,7 @@ class Sprite : public GameObject {
         void SetFrame(int frame);
         void SetFrameCount(int frameCount);
         void SetFrameTime(float frameTime);
-        void SetTint(Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
+        void SetTint(Uint8 r = 255, Uint8 g = 255, Uint8 b = 255, Uint8 a = 255);
         bool GetFliped();
         void SetFliped(bool value);
 };

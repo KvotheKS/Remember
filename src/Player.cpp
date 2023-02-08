@@ -333,26 +333,22 @@ void Player::Controls(float dt){
         isAttacking = true;
         atackTimer.Restart();
 
-        SDL_Rect clipRect;
-        clipRect.x = 0;
-        clipRect.y = 0;
-        clipRect.w = 500;
-        clipRect.h = 500;
+        
 
         
 
-        GameObject* GO_fade = new GameObject();
-            GO_fade->depth = 1000;
-            float fadeinTime = 1; float fadeoutTime = 1;float duration = 4;
-            ScreenFade* effect = new ScreenFade(*GO_fade, fadeinTime, fadeoutTime, duration);
+        // GameObject* GO_fade = new GameObject();
+        //     GO_fade->depth = 1000;
+        //     float fadeinTime = 1; float fadeoutTime = 1;float duration = 4;
+        //     ScreenFade* effect = new ScreenFade(*GO_fade, fadeinTime, fadeoutTime, duration);
             
-            GO_fade->AddComponent(effect);
+        //     GO_fade->AddComponent(effect);
             
-            GO_fade->box.SetCenter(0,0);
+        //     GO_fade->box.SetCenter(0,0);
         
 
-            State& state = Game::GetInstance().GetCurrentState();
-        state.AddObject(GO_fade);
+        //     State& state = Game::GetInstance().GetCurrentState();
+        // state.AddObject(GO_fade);
        
         // mouse direction code
         // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
@@ -361,9 +357,9 @@ void Player::Controls(float dt){
         //GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y),dt);
         
         /* teleport to mouse click position*/ 
-        // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
-        // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
-        // speed = Vec2(0,0);
+        associated.box.x = inManager.GetMouseX() + Camera::pos.x;
+        associated.box.y = inManager.GetMouseY() + Camera::pos.y;
+        speed = Vec2(0,0);
     }
     // RIGHT CLICK COMAND
     if(inManager.MousePress(RIGHT_MOUSE_BUTTON) ){
@@ -497,7 +493,7 @@ void Player::Animation(float dt){
     
 
     if(isDashing){
-        
+        auto v = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592); 
         if(speed.x == 0) {
             state_machine->ChangeState_s(RBSTATE::DASHUP);
             ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
@@ -506,15 +502,32 @@ void Player::Animation(float dt){
             ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
             ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
 
-            auto v = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592); 
+          
             associated.angleDeg = v;
             
             if(cr_state->GetFliped()){
                 associated.angleDeg -= 180;
             }
         }
-        
-        
+        if(Rand::Get_r()<0.20){
+            GameObject* GO_dashline_effect = new GameObject();
+
+                Effect* effect = new Effect(*GO_dashline_effect,0,0,"assets/img/Effects/dashline.png",8,0.07);
+            
+                GO_dashline_effect->AddComponent(effect);
+                auto ass_center = associated.box.GetCenter();
+
+                
+                int offset_y = (60 * Rand::Get_r())-30;
+            
+                GO_dashline_effect->angleDeg = v;
+                GO_dashline_effect->box.SetCenter(ass_center.x+((speed.x>0)?offset_y:(-offset_y)),ass_center.y+((speed.y<0)?offset_y:(-offset_y)));
+            
+
+                State& state = Game::GetInstance().GetCurrentState();
+            state.AddObject(GO_dashline_effect);
+        }
+      
         
         // (speed.x <= 0)?cr_state->SetFliped(false):cr_state->SetFliped(true); 
     }else{
