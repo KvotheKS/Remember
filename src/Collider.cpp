@@ -28,8 +28,7 @@ void Collider::Update(float dt){
     //     std::cout << this->box;
 }
 
-void Collider::Render()
-{
+void Collider::Render(){
     // std::cout << "COLLIDER RENDER\n";
     Scheduler::Push(this, associated.depth);
 }

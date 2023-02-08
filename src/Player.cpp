@@ -15,7 +15,7 @@ using namespace std;
 #define p(x) cout << #x << ": " << x <<" ";
 
 #define nysize 0.7
-#define nxsize 0.3
+#define nxsize 0.4
 
 #define nyoffset 18
 #define nycrouchoffset 41
@@ -239,7 +239,23 @@ void Player::Controls(float dt){
     // JUMP COMMAND
     if(inManager.IsKeyDown(S_KEY)){
        
-        if(inManager.KeyPress(S_KEY)){
+        
+      
+        if (*isGrounded || dreamGround){
+            
+            
+            Jump(1);
+            *isGrounded = false;
+        
+            speed.y = -JUMP_FORCE*dt;
+            
+            if(isDashing){
+                isDreamDashing = true;
+            }
+            isDashing = false;  
+            dreamGround = false;
+        }
+        else if(inManager.KeyPress(S_KEY)){
             if (hasDoubleJump > 0){
                 if(isDashing){
                     JumpStoredTimer.Restart();
@@ -253,21 +269,6 @@ void Player::Controls(float dt){
                   
                 }
             }
-        }
-      
-        if (*isGrounded || dreamGround){
-            
-            hasDoubleJump = MAX_DOUBLE_JUMP_QT;
-            Jump(1);
-            *isGrounded = false;
-        
-            speed.y = -JUMP_FORCE*dt;
-            
-            if(isDashing){
-                isDreamDashing = true;
-            }
-            isDashing = false;  
-            dreamGround = false;
         }
         if (jumpTimer.Get()<JUMP_ACCE_TIMELIMIT){     
             if(!isDashing)speed.y = -JUMP_FORCE*dt;
@@ -332,8 +333,6 @@ void Player::Controls(float dt){
         
         isAttacking = true;
         atackTimer.Restart();
-
-        
 
         
 
@@ -466,6 +465,8 @@ void Player::Physics(float dt){
 
     // grounded
     if(*isGrounded){
+        
+        
         if(speed.y>0) speed.y = 0;
         // if(speed.x > 0){
         //     if(*surface_inclination <45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
@@ -592,10 +593,11 @@ void Player::Jump (bool type){
     
     // speed.y = -JUMP_FORCE*dt;
 }
-void Player::JustGrounded(){//!!doesn work
+void Player::JustGrounded(){//!!doesn work, so retorna is grounded
     // isAttacking = false;
     isDreamDashing = false;
     hasDash = MAX_DASH_QT;
+    hasDoubleJump = MAX_DOUBLE_JUMP_QT;
     
 }
 

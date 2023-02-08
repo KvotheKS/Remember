@@ -28,7 +28,7 @@ void Stage2::LoadAssets(){
 
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
-        Sprite* bg = new Sprite(*goBackground, "assets/img/stage1/stg01bgl01.png");
+        Sprite* bg = new Sprite(*goBackground, "assets/img/stage2/stg02bgl01.png");
         goBackground->AddComponent(bg);
 
         goBackground->box.x = 0;
@@ -37,7 +37,7 @@ void Stage2::LoadAssets(){
     
     GameObject* goBackground2 = new GameObject();
         goBackground2->depth = -2;
-        bg = new Sprite(*goBackground2, "assets/img/stage1/stg01bgl02.png");
+        bg = new Sprite(*goBackground2, "assets/img/stage2/stg02bgl02.png");
         goBackground2->AddComponent(bg);
 
 
@@ -46,7 +46,7 @@ void Stage2::LoadAssets(){
     cameraFollowerObjectArray.emplace_back(goBackground2);
     GameObject* goBackground3 = new GameObject();
         goBackground3->depth = -3;
-        bg = new Sprite(*goBackground3, "assets/img/stage1/stg01bgl03.png");
+        bg = new Sprite(*goBackground3, "assets/img/stage2/stg02bgl03.png");
         goBackground3->AddComponent(bg);
 
 
@@ -56,7 +56,7 @@ void Stage2::LoadAssets(){
 
     GameObject* goBackground4 = new GameObject();
         goBackground4->depth = -4;
-        bg = new Sprite(*goBackground4, "assets/img/stage1/stg01bgl04.png");
+        bg = new Sprite(*goBackground4, "assets/img/stage2/stg02bgl04.png");
         goBackground4->AddComponent(bg);
 
 
@@ -66,7 +66,7 @@ void Stage2::LoadAssets(){
 
     GameObject* goBackground5 = new GameObject();
         goBackground5->depth = -5;
-        bg = new Sprite(*goBackground5, "assets/img/stage1/stg01bgl05.png");
+        bg = new Sprite(*goBackground5, "assets/img/stage2/stg2bgcolor.png");
         goBackground4->AddComponent(bg);
 
 
@@ -111,13 +111,13 @@ void Stage2::LoadAssets(){
 
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
-    Camera::Bounds = Rect(0,0, 5968 + Camera::width, 0);
+    Camera::Bounds = Rect(0,0, 60*84, 60*24);
 
 
 
     GameObject* goTileMap = new GameObject();
         goTileMap->depth = 1;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state2.txt", tileSet);
         goTileMap->AddComponent(tileMap);
         goTileMap->box.x = 0;
         goTileMap->box.y = 0;
@@ -171,9 +171,7 @@ void Stage2::Update(float dt){
     // std::cout << "colidiu";
     
     Camera::Update(dt);
-    if(Camera::pos.x <0)Camera::pos.x = 0;
-    Camera::pos.y = 0;
-
+   
     KillDeads();
 }
 
