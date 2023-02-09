@@ -13,7 +13,7 @@
 
 Stage2::Stage2() : State(){
     backgroundMusic.Open("assets/audio/StageState.ogg");
-    tileSet = new TileSet(60, 60, "assets/img/Tileset01.png");
+    tileSet = new TileSet(60, 60, "assets/img/Tileset02.png");
 }
 
 Stage2::~Stage2(){
@@ -32,7 +32,7 @@ void Stage2::LoadAssets(){
         goBackground->AddComponent(bg);
 
         goBackground->box.x = 0;
-        goBackground->box.y = 0;
+        goBackground->box.y = 60*-1;
     cameraFollowerObjectArray.emplace_back(goBackground);
     
     GameObject* goBackground2 = new GameObject();
@@ -42,8 +42,9 @@ void Stage2::LoadAssets(){
 
 
         goBackground2->box.x = 0;
-        goBackground2->box.y = 0;
+        goBackground2->box.y = 60*2;
     cameraFollowerObjectArray.emplace_back(goBackground2);
+
     GameObject* goBackground3 = new GameObject();
         goBackground3->depth = -3;
         bg = new Sprite(*goBackground3, "assets/img/stage2/stg02bgl03.png");
@@ -60,18 +61,28 @@ void Stage2::LoadAssets(){
         goBackground4->AddComponent(bg);
 
 
-        goBackground4->box.x = 0;
-        goBackground4->box.y = 0;
+        goBackground4->box.x = 60*12;
+        goBackground4->box.y = 60*-5;
     cameraFollowerObjectArray.emplace_back(goBackground4);
 
+    // GameObject* goBackground5 = new GameObject();
+    //     goBackground5->depth = -5;
+    //     bg = new Sprite(*goBackground5, "assets/img/stage2/stg2bgcolor.png");
+    //     goBackground4->AddComponent(bg);
+
+
+    //     goBackground5->box.x = 0;
+    //     goBackground5->box.y = 0;
+    // cameraFollowerObjectArray.emplace_back(goBackground5);
+
     GameObject* goBackground5 = new GameObject();
-        goBackground5->depth = -5;
-        bg = new Sprite(*goBackground5, "assets/img/stage2/stg2bgcolor.png");
+        goBackground5->depth = -10;
+        bg = new Sprite(*goBackground5, "assets/img/stage2/stg02Moon.png");
         goBackground4->AddComponent(bg);
 
-
-        goBackground5->box.x = 0;
-        goBackground5->box.y = 0;
+        // goBackground5->AddComponent(new CameraFollower(*goBackground5));
+        goBackground5->box.x = 60*3.5;
+        goBackground5->box.y = 60;
     cameraFollowerObjectArray.emplace_back(goBackground5);
 
 
@@ -86,7 +97,7 @@ void Stage2::LoadAssets(){
     
 
     GameObject* player_GO = new GameObject();
-        player_GO->depth = 999;
+        player_GO->depth = 10;
 
 
         StateMachine* st = new StateMachine(*player_GO);
@@ -109,9 +120,7 @@ void Stage2::LoadAssets(){
 
     Camera::Follow(player_GO);
 
-    Camera::SetCameraFunction(&Camera::FollowTarget);
-    Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
-    Camera::Bounds = Rect(0,0, 60*84, 60*24);
+    
 
 
 
@@ -122,6 +131,10 @@ void Stage2::LoadAssets(){
         goTileMap->box.x = 0;
         goTileMap->box.y = 0;
     objectArray.emplace_back(goTileMap);
+
+    Camera::SetCameraFunction(&Camera::FollowTarget);
+    Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
+    Camera::Bounds = Rect(0,0, 60*tileMap->GetWidth(), 60*tileMap->GetHeight());
 }
 
 void Stage2::Start(){

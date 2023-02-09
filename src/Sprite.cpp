@@ -67,22 +67,25 @@ void Sprite::Render()
     float paralax_mul;
     switch((int)associated.depth){//deepts -1 to -4 are afected  paralax
         case -1:
-            paralax_mul = 0.95;
+            paralax_mul = 0.925;
             break;
         case -2:
-            paralax_mul = 0.9;
-            break;
-        case -3:
             paralax_mul = 0.85;
             break;
+        case -3:
+            paralax_mul = 0.775;
+            break;
         case -4:
-            paralax_mul = 0.8;
+            paralax_mul = 0.7;
+            break;
+        case -10:
+            paralax_mul = 0;
             break;
         default:
             paralax_mul = 1;
             break;
     }
-    Render(associated.box.x - Camera::pos.x*paralax_mul, associated.box.y - Camera::pos.y);
+    Render(associated.box.x - Camera::pos.x*paralax_mul, associated.box.y - Camera::pos.y*paralax_mul);
 }
 
 void Sprite::Render(float x, float y){

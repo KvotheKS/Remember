@@ -14,11 +14,11 @@
 using namespace std;
 #define p(x) cout << #x << ": " << x <<" ";
 
-#define nysize 0.7
-#define nxsize 0.4
+#define nysize 0.6
+#define nxsize 0.3
 
-#define nyoffset 18
-#define nycrouchoffset 41
+#define nyoffset 24
+#define nycrouchoffset 43
 #define nxoffset 0
 
 Player::Player(GameObject& associated):GameObject(associated){
@@ -449,7 +449,7 @@ void Player::Physics(float dt){
             float norm = speed.x/abs(speed.x);
             speed = Vec2( (speed.x - overspeed * norm * 0.5) , speed.y );          
         }
-        // limitar velocidade de queda
+        // limitar velocidade de queda //!! isso fode em frammerate alta provavel
         if(speed.y > MAX_FALL_SPEED*dt){         
             speed.y =  MAX_FALL_SPEED*dt;  
             float overspeed = abs(speed.y) - MAX_FALL_SPEED*dt;

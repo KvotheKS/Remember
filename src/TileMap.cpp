@@ -114,7 +114,7 @@ void TileMap::Load(std::string file){
                 break;
                 case(82)://45° pra esquerda
                     terrainbox->box.x = tileX+18;
-                    terrainbox->box.y = tileY+18;
+                    terrainbox->box.y = tileY+20;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
                   
@@ -122,7 +122,7 @@ void TileMap::Load(std::string file){
                 break;
                 case(112)://45° pra esquerda teto
                     terrainbox->box.x = tileX+18;
-                    terrainbox->box.y = tileY-44;
+                    terrainbox->box.y = tileY-42;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
                   
@@ -131,27 +131,27 @@ void TileMap::Load(std::string file){
                 case(84)://45° pra direita
                  
                     terrainbox->box.x = tileX-42;
-                    terrainbox->box.y = tileY+18;
+                    terrainbox->box.y = tileY+20;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
                   
-                    terrainbox->angleDeg = -45;
+                    terrainbox->angleDeg = 45;
                         
                 break;
                 case(114)://45° pra direita teto
                  
                     terrainbox->box.x = tileX-42;
-                    terrainbox->box.y = tileY-44;
+                    terrainbox->box.y = tileY-42;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(2);
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(2);
                   
-                    terrainbox->angleDeg = -45;
+                    terrainbox->angleDeg = 45;
                         
                 break;
 
                 case(26)://22.5° pra direita primeira metada
                     terrainbox->box.x = tileX+12;
-                    terrainbox->box.y = tileY+41;
+                    terrainbox->box.y = tileY+42;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   
