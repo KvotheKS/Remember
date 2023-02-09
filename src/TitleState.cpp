@@ -1,5 +1,7 @@
 #include "TitleState.h"
 #include "TestState.h"
+#include "Stage2.h"
+#include "Stage3.h"
 #include "Game.h"
 
 TitleState::TitleState() : State(){
@@ -44,6 +46,9 @@ void TitleState::Update(float dt){
 
     if(inManager.KeyPress(ENTER_KEY))
         Game::GetInstance().Push(new TestState());
+
+    if(inManager.KeyPress(A_KEY))
+        Game::GetInstance().Push(new Stage3());
 
     UpdateArray(dt);
 }

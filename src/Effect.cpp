@@ -1,5 +1,6 @@
 #include "Effect.h"
 
+//moving animated effect
 Effect::Effect(GameObject& associated, float angle, float speed, float maxDistance, float duration,
     std::string sprite, int frameCount, float frameTime) : GameObject(associated){
     Sprite* Effect = new Sprite(associated, sprite, frameCount, frameTime);
@@ -13,8 +14,8 @@ Effect::Effect(GameObject& associated, float angle, float speed, float maxDistan
     this->duration = duration;
     distanceLeft = maxDistance;
 }
-
-Effect::Effect(GameObject &associated, float angle, float duration, std::string sprite, int frameCount, float frameTime):GameObject(associated){
+//animated effect
+Effect::Effect(GameObject &associated, float angle, float duration, std::string sprite, int frameCount, float frameTime): GameObject(associated){
     Sprite* Effect = new Sprite(associated, sprite, frameCount, frameTime);
     Effect->SetScaleX(2,2);
     associated.AddComponent(Effect);
@@ -25,12 +26,14 @@ Effect::Effect(GameObject &associated, float angle, float duration, std::string 
     this->speed = Vec2(0,0);
     this->duration = duration;
     distanceLeft = 10;
-}
 
+
+}
+//non animated effect
 Effect::Effect(GameObject &associated, float angle, float duration, std::string sprite):GameObject(associated){
-    Sprite* Effect = new Sprite(associated, sprite, 1);
-    Effect->SetScaleX(2,2);
-    associated.AddComponent(Effect);
+    this->sprite = new Sprite(associated, sprite, 1);
+    this->sprite->SetScaleX(2,2);
+    associated.AddComponent(this->sprite);
 
 
     if(duration == 0)duration = 1;
@@ -55,7 +58,11 @@ void Effect::Update(float dt){
         associated.RequestDelete();
 
 }
+void Effect::SetColor(Uint8 r , Uint8 g ,Uint8 b, Uint8 a)
+{      
+    // sprite->SetTint(r,g,b,a);
 
+}
 void Effect::Render(){
 }
 

@@ -60,26 +60,36 @@ void Sprite::Update(float dt){
    
 }
 
-void Sprite::Render(){
+
+
+void Sprite::Render()
+{
     float paralax_mul;
-    switch((int)associated.depth){
+    switch((int)associated.depth){//deepts -1 to -4 are afected  paralax
         case -1:
-            paralax_mul = 0.95;
+            paralax_mul = 0.925;
             break;
         case -2:
-            paralax_mul = 0.9;
-            break;
-        case -3:
             paralax_mul = 0.85;
             break;
+        case -3:
+            paralax_mul = 0.775;
+            break;
         case -4:
-            paralax_mul = 0.8;
+            paralax_mul = 0.7;
+            break;
+        case -10:
+            paralax_mul = 0;
             break;
         default:
             paralax_mul = 1;
             break;
     }
+
+    Render(associated.box.x - Camera::pos.x*paralax_mul, associated.box.y - Camera::pos.y*paralax_mul);
+
     Render(associated.box.x + relative.x - Camera::pos.x*paralax_mul, associated.box.y + relative.y - Camera::pos.y);
+
 }
 
 void Sprite::Render(float x, float y){
@@ -101,14 +111,17 @@ void Sprite::Print(float x, float y)
     // if(associated.GetComponent(C_ID::Attack))
     //     std::cout << "SPRITE" << dstRect.x << ' ' << dstRect.y << ' ' << dstRect.w << ' ' << dstRect.h << '\n';
 
-    SDL_SetTextureColorMod(texture.get(), r, g, b);
-
+    SDL_SetTextureColorMod(texture.get(),r , g, b);
+    SDL_SetTextureAlphaMod(texture.get(), a); // transparencia
     SDL_RendererFlip flip_val = SDL_FLIP_NONE;
     if(fliped) {
         flip_val = SDL_FLIP_HORIZONTAL;
     }
     SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture.get(), &this->clipRect, &dstRect,
             associated.angleDeg, nullptr,flip_val);
+
+    
+    
             
     SDL_SetTextureColorMod(texture.get(), 255,255,255);
 }
@@ -168,11 +181,12 @@ void Sprite::SetFrameTime(float frameTime){
     timeElapsed = 0;
 }
 
-void Sprite::SetTint(Uint8 r, Uint8 g, Uint8 b)
+void Sprite::SetTint(Uint8 r, Uint8 g, Uint8 b,Uint8 a)
 {
     this->r = r;
     this->g = g;
     this->b = b;
+    this->a = a;
 }
 bool Sprite::GetFliped(){
     return fliped;

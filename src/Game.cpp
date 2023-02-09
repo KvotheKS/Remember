@@ -17,6 +17,8 @@ Game::Game(std::string title, int width, int height){
     std::cin.tie(0);
     std::cout.tie(0);
 
+    noVSync = false;
+
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0){
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
@@ -51,8 +53,18 @@ Game::Game(std::string title, int width, int height){
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if(renderer == nullptr){
         std::cerr << SDL_GetError() << std::endl;
+     
         exit(EXIT_FAILURE);
     }
+
+    //Cria uma variável no header da game pra guardar isso, e inicializa ela como false
+//daí coloca a linha abaixo depois de criar sua render
+    if (SDL_RenderSetVSync(renderer,1) != 0) {
+        noVSync = true;
+    }
+
+    
+
 
     dt = 0.0;
     frameStart = 0;
@@ -116,7 +128,10 @@ void Game::Run(){
         Scheduler::Render();
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(15);
+        //Daí coloca no gameloop essa parte, pra ter o delay padrão caso o vsync não funcione
+        if(noVSync) {
+            SDL_Delay(15);
+        }
         
     }
 

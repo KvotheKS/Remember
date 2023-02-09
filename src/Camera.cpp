@@ -62,7 +62,7 @@ void Camera::FollowTarget(float dt){
         pos.y = floor(focusCenter.y) - height/2;
 
         pos.x = min(Bounds.x + Bounds.w - width, max(Bounds.x, pos.x));
-        pos.y = max(Bounds.y + Bounds.h - height, max(Bounds.y, pos.y));
+        pos.y = min(Bounds.y + Bounds.h - height, max(Bounds.y, pos.y));
         
         //--- update objetos dependentes da posição da camera ---//
         State& state = Game::GetInstance().GetCurrentState();

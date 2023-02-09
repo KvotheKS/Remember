@@ -75,7 +75,7 @@ void StageState::LoadAssets(){
             [](GameObject* cpt, float pct)
             { 
                 auto spr = ((Sprite*)cpt->GetComponent("Sprite"));
-                spr->SetTint(pct*255, (1-pct)*255, (1-pct)*255);
+                spr->SetTint(pct*255, (1-pct)*255, (1-pct)*255,(1-pct)*255);
             }
         )
     );

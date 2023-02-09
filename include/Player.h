@@ -17,7 +17,7 @@
 
 enum RBSTATE
 {
-    LEFT, RIGHT, STILL, CROUCH, IDLE, WALK, RUN, JUMP, FALL, DASH ,DASHUP, MELEE, SHOT, SKID, STUN
+    LEFT, RIGHT, STILL, CROUCH, IDLE, IDLE_B, WALK, RUN, JUMP, FALL, DASH ,DASHUP, MELEE, SHOT, SKID, STUN
 };
 
 class Player : public GameObject{
@@ -101,6 +101,7 @@ public:
     float MAX_GLOBAL_SPEED;// = 1200;
 
     float MAX_DASH_SPEED;
+    float MAX_DASHDOWN_SPEED;
     float MAX_MOVE_SPEED;// = 400;
     float MAX_FALL_SPEED;// = 700;
 

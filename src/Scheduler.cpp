@@ -15,6 +15,7 @@ void Scheduler::Render()
     SDL_RenderClear(renderer);    
     std::stable_sort(Scheduler::textureVec.begin(), Scheduler::textureVec.end(), SchedulerComp);
     for(auto& it : Scheduler::textureVec)
+    
         it.cpt->Print(it.x, it.y);
     
     Scheduler::Clear();

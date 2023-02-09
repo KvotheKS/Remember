@@ -88,12 +88,11 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
         Collider * terrain_collider = (Collider*)other.GetComponent(C_ID::Collider);
         /* pegar ponto central de cada aresta */
-        Vec2 top = (Vec2(0,-1).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.h/2) + terrain_collider->box.GetCenter();
+        Vec2 top   = (Vec2(0,-1).Rotate(other.angleDeg*PI/180))* (terrain_collider->box.h/2)+ terrain_collider->box.GetCenter();
         Vec2 right = (Vec2(1,0).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.w/2)+ terrain_collider->box.GetCenter();
-        Vec2 down = (Vec2(0,1).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.h/2)+ terrain_collider->box.GetCenter();
-        Vec2 left = (Vec2(-1,0).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.w/2)+ terrain_collider->box.GetCenter();
+        Vec2 down  = (Vec2(0,1).Rotate(other.angleDeg*PI/180))* (terrain_collider->box.h/2)+ terrain_collider->box.GetCenter();
+        Vec2 left  = (Vec2(-1,0).Rotate(other.angleDeg*PI/180))*(terrain_collider->box.w/2)+ terrain_collider->box.GetCenter();
        
-        
         
         /* achar distancia entre esse RigidBody e cada ponto central de aresta */
         vector<float> distances;
@@ -104,7 +103,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         distances.push_back(left.Distance(ass_collider->box.GetCenter()));
 
         /*achar menor das distancia e cconverter em index */ 
-        min_element(distances.begin(), distances.end());
+     
         auto it = std::min_element(std::begin(distances), std::end(distances));
         int idx = std::distance(std::begin(distances), it); 
         
@@ -132,16 +131,20 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
             
             case 0://up
                 // cout << "up:";
+             
                 associated.box.y -= b;
-                if(speed.y >= 0){
+            
+                if(speed.y >= 0  ){
                     if(isGrounded == false){
                         if( Player * l_pl = ((Player*)associated.GetComponent(C_ID::Player))) l_pl->JustGrounded(); 
                     }
                     isGrounded = true; 
-                    
-                    
+                        
+                        
                     speed.y =0;
                 }    
+              
+                
 
             break;
             case 1://right
@@ -163,10 +166,8 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
 
             break;
             case 3://left
-                // cout << "left\n";
+                // cout << "left:";
                 GoLeft(b);
-
-              
 
             break;
             }
@@ -194,7 +195,7 @@ void RigidBody::NotifyCollision(GameObject& other,Vec2 sep){
         }
 
        
-           
+        // p(distances[0]) p(distances[3]) cout <<endl;
         
 
         
