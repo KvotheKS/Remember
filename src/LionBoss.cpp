@@ -26,6 +26,7 @@ LionBoss::LionBoss(GameObject& associated)
 
     LASERDURATION = 3.0f;
     LASERCHARGE   = 1.0f;
+    LASERCOOLDOWN = 1.5f;
     TOWERDURATION = 3.0f;
     BALLSDURATION = 2.5f;
     SHOCKWAVEDURATION = 4.0f;
@@ -49,6 +50,8 @@ LionBoss::LionBoss(GameObject& associated)
     SHOCKWAVEKNOCK = Vec2(10, 40);
     SHOCKWAVESPEED = 400;
 
+    EXPLOSIONDURATION = 0.8f;
+
     LIONMAXHEALTH = 200;
     currentHealth = LIONMAXHEALTH;
     activated = false;
@@ -71,6 +74,7 @@ LionBoss::LionBoss(GameObject& associated)
     auto anm = new AnimNode("assets/img/Lion/closed_mouth.png", 1,1,Vec2(1,1), false, false);
     // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
     anm->SetScaleX(2,2);
+    anm->SetTint(255,0,0);
     stmac->AddNode(IDLE, anm);
     stmac->ChangeState(IDLE);
 
@@ -86,12 +90,13 @@ LionBoss::LionBoss(GameObject& associated)
     
     auto lionw = anm->GetWidth()/2.0f;
     lionbrainz->SetActions({
-            {Vec2(FARX+lionw, 0), 1, LASERDURATION + LASERCHARGE},
+            {Vec2(FARX+lionw, 0), 2.5f, LASERDURATION + LASERCHARGE + LASERCOOLDOWN},
             {Vec2(MIDDLEX+lionw, 0), 1, BALLSDURATION},
             {Vec2(CLOSEX+lionw, 0), 1, TOWERDURATION},
             {Vec2(MIDDLEX+lionw, 0), 1, SHOCKWAVEDURATION}
         }
     );
+
 }
 
 void LionBoss::Update(float dt)
@@ -157,26 +162,36 @@ void LionBoss::Laser()
         laser_prep->box.y = associated.box.y;
         laser_prep->AddComponents({spr, tmb});
     st.objectArray.emplace_back(laser_prep);
-    
+    std::cout << &associated << '\n';
     this->AddComponent(new TimedTrigger(*this, LASERCHARGE,
         [](GameObject& associated)
         {
             auto& st = Game::GetInstance().GetCurrentState();
-            auto target = st.GetObject(C_ID::Player, &st.rigidArray).lock().get();
+            auto playerweakptr = st.GetObject(C_ID::Lion, &st.rigidArray);
             LionBoss& assc = (LionBoss&)associated;
+            // auto target = &assc.associated;
             GameObject* laser_go = new GameObject();
                 Sprite* spr = new Sprite(*laser_go, "assets/img/laser.png", 1, 0, -1);
                 spr->SetSize(assc.LASERSIZE.x, assc.LASERSIZE.y);
                 laser_go->box.x = assc.associated.box.x - spr->GetWidth();
                 laser_go->box.y = assc.associated.box.y;
-                Collider* cld = new Collider(*laser_go);
-                cld->type = C_ID::Hitbox;
+                Collider* cld = new Collider(*laser_go); cld->type = C_ID::Hitbox;
                 TimeBomb* tmb = new TimeBomb(*laser_go,assc.LASERDURATION);
                 Attack* laser_atk = new Attack(*laser_go, assc.LASERDAMAGE, assc.LASERKNOCK, &assc.associated);
-                laser_go->AddComponents({spr, cld, tmb, laser_atk});
+                auto dpsow = new DisappearOnDeadOwner(*laser_go, playerweakptr);
+                laser_go->AddComponents({spr, cld, tmb, laser_atk, dpsow});
             st.bulletArray.emplace_back(laser_go);
         }
     ));
+
+    // this->AddComponent(new TimedTrigger(*this, LASERCHARGE + LASERDURATION, // TODO -- deixar um efeito de "cansado?"
+    //     [](GameObject& associated)
+    //     {
+    //         LionBoss& assc = (LionBoss&)associated;
+    //         auto stm = (StateMachine*)assc.GetComponent(C_ID::StateMachine);
+    //         stm->ChangeState(LionBoss::IDLE);
+    //     }
+    // ));
 }
 
 void LionBoss::FlameBalls()
@@ -193,7 +208,7 @@ void LionBoss::FlameBalls()
         float grav = 2*BALLSYSPEED/time;
         GameObject* balls_go = new GameObject();
             Sprite* spr = new Sprite(*balls_go, "assets/img/laser.png", 1, 0, -1);
-            DisappearOnHit* dsp = new DisappearOnHit(*balls_go);
+            DisappearOnHit* dsp = new DisappearOnHit(*balls_go, &associated);
             Projectile* ballsproj = new Projectile(*balls_go, 5.0f, vecinic.AngleX() * PI_DEG, vecinic.Magnitude(), vecinic.Magnitude(), grav);
             spr->SetSize(BALLSIZE.x, BALLSIZE.y);
             balls_go->angleDeg = vecinic.AngleX();
@@ -202,6 +217,7 @@ void LionBoss::FlameBalls()
             Attack* ball_atk = new Attack(*balls_go, BALLSDAMAGE, BALLSKNOCK, &associated);
             auto cld = (Collider*)balls_go->GetComponent(C_ID::Collider);
             cld->type = C_ID::Hitbox;
+               
             balls_go->AddComponents({dsp, spr, ballsproj, ball_atk});
         st.bulletArray.emplace_back(balls_go);
     }
@@ -211,7 +227,6 @@ void LionBoss::FlameBalls()
 void LionBoss::FlameTower()
 {
     auto& st = Game::GetInstance().GetCurrentState();
-    // std::cout << "wtfman\n";
     GameObject* tower_go = new GameObject();
         Sprite* spr = new Sprite(*tower_go, "assets/img/laser.png", 1,0, -1);
         spr->SetSize(150, 100 + associated.box.h);
@@ -221,17 +236,17 @@ void LionBoss::FlameTower()
         Collider* tower_co = new Collider(*tower_go);
         tower_co->type = C_ID::Hitbox;
         Attack* atk = new Attack(*tower_go, TOWERDAMAGE, TOWERKNOCK, &associated);
-        tower_go->AddComponents({spr, tower_co, atk, new TimeBomb(*tower_go, TOWERDURATION)});
+        auto dpsow = new DisappearOnDeadOwner(*tower_go, st.GetObject(C_ID::Lion, &st.rigidArray));
+        tower_go->AddComponents({spr, tower_co, atk, new TimeBomb(*tower_go, TOWERDURATION), dpsow});
     st.bulletArray.emplace_back(tower_go);
 }
 
 bool LionBoss::Is(C_ID type)
 { return type == C_ID::Lion; }
 
-void LionBoss::NotifyCollision(GameObject* other, Vec2 sep)
+void LionBoss::NotifyCollision(GameObject& other, Vec2 sep)
 {
-    auto bingus = (Attack*)other->GetComponent(C_ID::Attack);
-    
+    auto bingus = (Attack*)other.GetComponent(C_ID::Attack);
     if(!bingus || bingus->OwnedBy(&associated))
         return;
     
@@ -241,14 +256,33 @@ void LionBoss::NotifyCollision(GameObject* other, Vec2 sep)
 void LionBoss::TakeDamage(int damage)
 {
     currentHealth -= damage;
-    auto spr = associated.GetComponent(C_ID::StateMachine);
-    spr->AddComponent(new ShakeBehavior(*spr, Vec2(50,0), 1.0f, 0.3f));
+    
+    // std::cout << "ai" << ' ' << currentHealth << '\n';
     if(currentHealth <= 0)
         DIEEE();
+    else
+        TakeDamageVisuals();
+    
+}
+
+void LionBoss::TakeDamageVisuals() // TODO -> quando receber um ataque gerar os efeitos (tanto visuais quanto sonoros)
+{
+    auto spr = associated.GetComponent(C_ID::StateMachine);
+    spr->AddComponent(new ShakeBehavior(*spr, Vec2(7,7), 1.0f, 0.2f));
 }
 
 void LionBoss::DIEEE()
 {
-    std::cout << "Uãããããããããã eu morri :(\n";
+    auto [_, anmptr] = ((StateMachine*)associated.GetComponent(C_ID::StateMachine))->GetCurrent();
+    auto spr_go = new GameObject;
+        auto spr = new Sprite(*spr_go, "assets/img/aliendeath.png", 4, EXPLOSIONDURATION/4.0f);
+        auto tmb = new TimeBomb(*spr_go, EXPLOSIONDURATION);
+        auto explsound = new Sound(*spr_go, "assets/audio/boom.wav");
+
+        spr->SetSize(anmptr->GetWidth(), anmptr->GetHeight());
+        spr_go->box.x = associated.box.x; spr_go->box.y = associated.box.y;
+        spr_go->AddComponents({spr,tmb, explsound});
+
+    Game::GetInstance().GetCurrentState().objectArray.emplace_back(spr_go);
     associated.RequestDelete();
 }

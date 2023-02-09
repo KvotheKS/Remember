@@ -80,7 +80,6 @@ void Player::Start(){
     state_machine = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
     if(state_machine == nullptr) cout << "erro pegando statemachine em player start2\n";
     
-    
     // state creation
     Vec2 scale = Vec2(2,2);
     SSNode* sprite_sheet_node = new SSNode("assets/img/Ype/Ycrouch.png",  {0, 0, 80, 80}, 1, 1,scale);
@@ -132,7 +131,6 @@ void Player::Start(){
     ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
 
     state_machine->ChangeState(RBSTATE::IDLE);//st->AddTransition(0, RBSTATE::RUN); st->AddTransition(RBSTATE::RUN, 0);
-    
 }
 
 /// @brief Player Update
@@ -193,8 +191,8 @@ void Player::Controls(float dt){
         auto proj_go = new GameObject();
             auto proj = new Projectile(*proj_go, 5.0f, 0.0f, 250.0f, 250.0f);
             auto spr = new Sprite(*proj_go, "assets/img/laser.png", 1,0,-1);
-            auto atk = new Attack(*proj_go, 50, Vec2(), proj_go);
-            auto dsp = new DisappearOnHit(*proj_go);
+            auto atk = new Attack(*proj_go, 10000, Vec2(), proj_go);
+            auto dsp = new DisappearOnHit(*proj_go, &associated);
             auto cld = (Collider*)proj_go->GetComponent(C_ID::Collider);
             cld->type = C_ID::Hitbox;
             proj_go->AddComponents({proj, spr, atk, dsp});
