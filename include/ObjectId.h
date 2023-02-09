@@ -24,5 +24,7 @@ enum class C_ID
     Lion,
     Attack,
     Hitbox,
-    Hurtbox
+    Hurtbox,
+    TimeBomb,
+    ShakeBehavior
 };

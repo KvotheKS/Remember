@@ -21,6 +21,7 @@ public:
     
     float LASERDURATION;
     float LASERCHARGE;
+    float LASERCOOLDOWN;
     float TOWERDURATION;
     float BALLSDURATION;
     float SHOCKWAVEDURATION;
@@ -44,7 +45,9 @@ public:
     Vec2 SHOCKWAVEKNOCK;
 
     int LIONMAXHEALTH;
-    
+
+    float EXPLOSIONDURATION;
+
     int currentHealth;
 
     bool activated;
@@ -57,9 +60,11 @@ private:
 
 public:
     LionBoss(GameObject&); // Devemos settar sua posicao manualmente por seu associated.
-    void NotifyCollision(GameObject*, Vec2);
+    void NotifyCollision(GameObject&, Vec2);
     void TakeDamage(int damage);
+    void TakeDamageVisuals();
     void DIEEE();
     void Update(float);
+    // void Start();
     bool Is(C_ID);
 };

@@ -65,6 +65,7 @@ void TileMap::Load(std::string file){
             GameObject* terrainbox = new GameObject();
             terrainbox->depth = 1;
             Collider* collider = new Collider(*terrainbox);
+            auto terr = new TerrainBody(*terrainbox, false);
             
 
             switch(tileMatrix[j+i*mapWidth]){
@@ -296,7 +297,7 @@ void TileMap::Load(std::string file){
                 break;
             }
 
-            terrainbox->AddComponent(collider);
+            terrainbox->AddComponents({collider, terr});
             state.terrainArray.emplace_back(terrainbox);
          
                                       

@@ -256,6 +256,9 @@ void TestState::Update(float dt){
     // std::cout << "SAI";
 
     CollideVectors(rigidArray, terrainArray);
+    CollideVectors(rigidArray, bulletArray);
+    CollideVectors(rigidArray, rigidArray);
+    CollideVectors(bulletArray, terrainArray);
     // std::cout << "colidiu";
     
     Camera::Update(dt);
@@ -275,16 +278,19 @@ void TestState::CollideVectors(std::vector<std::shared_ptr<GameObject>>& alpha, 
         float angleOfA = alphaObj->angleDeg * (PI / 180.0);
         for(auto& betaObj : beta)
         {
-            
+            if(&betaObj == &alphaObj) continue;
+
             Collider* colliderB = (Collider*) betaObj->GetComponent(C_ID::Collider);
-            if(!colliderB)
-                continue;
+            
+            if(!colliderB) continue;
             
             float angleOfB = betaObj->angleDeg * (PI / 180.0);
             
             auto [flag, sep] = Collision::IsColliding(colliderA->box, colliderB->box, angleOfA, angleOfB);
             // std::cout << "\nCOLLISION TESTED";
             if(flag){    
+                // if(alphaObj->GetComponent(C_ID::Lion) && betaObj->GetComponent(C_ID::Attack))
+                    // std::cout << "KLKKKK";
                 // std::cout << "COL MSG\n";
                 alphaObj->NotifyCollisionBehavior(*betaObj,sep);
                 // std::cout << "B INFORMED\n";

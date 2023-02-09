@@ -85,7 +85,11 @@ void Sprite::Render()
             paralax_mul = 1;
             break;
     }
+
     Render(associated.box.x - Camera::pos.x*paralax_mul, associated.box.y - Camera::pos.y*paralax_mul);
+
+    Render(associated.box.x + relative.x - Camera::pos.x*paralax_mul, associated.box.y + relative.y - Camera::pos.y);
+
 }
 
 void Sprite::Render(float x, float y){

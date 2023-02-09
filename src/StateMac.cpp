@@ -187,8 +187,8 @@ void StateMachine::Render()
     // std::cout << "SUSUSYSY";
     states[__curr]->Render();
     // std::cout << "RENDENRING STATE\n";
-    float x = associated.box.x - Camera::pos.x;
-    float y = associated.box.y - Camera::pos.y;
+    float x = associated.box.x - Camera::pos.x + relative.x;
+    float y = associated.box.y - Camera::pos.y + relative.y;
     // std::cout << "STATEMACHIEN";
     Scheduler::Push(this, associated.depth + depth, x, y);
 }

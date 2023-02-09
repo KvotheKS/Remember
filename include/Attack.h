@@ -18,7 +18,16 @@ public:
 
 class DisappearOnHit : public GameObject
 {
+    GameObject* owner;
 public:
-    DisappearOnHit(GameObject&);
+    DisappearOnHit(GameObject&, GameObject*);
     void NotifyCollision(GameObject&, Vec2);
+};
+
+class DisappearOnDeadOwner : public GameObject
+{
+    std::weak_ptr<GameObject> owner;
+public:
+    DisappearOnDeadOwner(GameObject&, std::weak_ptr<GameObject>);
+    void Update(float);
 };

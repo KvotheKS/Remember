@@ -10,5 +10,6 @@ class TimeBomb : public GameObject
 public:
     TimeBomb(GameObject&, float);
     void Update(float);
+    bool Is(C_ID);
 };
 

@@ -132,10 +132,13 @@ std::vector<GameObject*> GameObject::GetComponents(C_ID type)
 }
 
 void GameObject::NotifyCollisionBehavior(GameObject& other,Vec2 sep){
+    // if(Is(C_ID::Lion) && other.GetComponent(C_ID::Attack))
+        // std::cout << "SYUUYUASRSUDSAU\n";
     NotifyCollision(other,sep);
     for(unsigned i = 0; i < components.size(); i++){
         
-        components[i]->NotifyCollision(other,sep);
+        components[i]->NotifyCollisionBehavior(other,sep);
+        // components[i]->NotifyCollisionBehavior(other,sep);
     }
 }
 void GameObject::NotifyCollision(GameObject& other,Vec2 sep){ 

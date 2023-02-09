@@ -16,3 +16,15 @@ float Rand::Get_r()
 {
 	return ((double)Rand::Get()) / ((double)std::numeric_limits<int>::max());;
 }
+
+float Rand::FloatRange(float lft, float rgt)
+{
+	return lft + (rgt-lft)*Get_r();
+}
+
+int Rand::IntRange(int lft, int rgt)
+{
+	float rng = Get_r();
+	rng = ((float)rgt-lft)*rng;
+	return lft + ((int)rng);
+}

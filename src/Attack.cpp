@@ -18,9 +18,16 @@ bool Attack::OwnedBy(GameObject* isOwner)
 bool Attack::Is(C_ID type)
 { return type == C_ID::Attack; }
 
-DisappearOnHit::DisappearOnHit(GameObject& associated)
-    : GameObject(associated)
+DisappearOnHit::DisappearOnHit(GameObject& associated, GameObject* owner)
+    : GameObject(associated), owner(owner)
 {}
 
 void DisappearOnHit::NotifyCollision(GameObject& other, Vec2 sep)
-{ associated.RequestDelete(); }
+{ if(&other != owner) associated.RequestDelete(); }
+
+DisappearOnDeadOwner::DisappearOnDeadOwner(GameObject& associated, std::weak_ptr<GameObject> owner)
+    : GameObject(associated), owner(owner)
+{}
+
+void DisappearOnDeadOwner::Update(float dt)
+{ if(owner.expired() || owner.lock()->IsDead()) associated.RequestDelete(); }
