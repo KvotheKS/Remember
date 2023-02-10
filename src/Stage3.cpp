@@ -96,7 +96,10 @@ void Stage3::LoadAssets(){
     cameraFollowerObjectArray.emplace_back(goBackground6);
 
 
-
+    //STAGEART
+    //FOREGROUND
+    //OBJECTS
+    
     GameObject* fpsChecker = new GameObject();
         fpsChecker->depth = 9999;
         fpsChecker->AddComponent(new FpsPrinter(*fpsChecker));

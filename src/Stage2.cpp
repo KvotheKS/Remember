@@ -24,8 +24,16 @@ Stage2::~Stage2(){
 
 void Stage2::LoadAssets(){
 
-   
+    //TILEMAP
+    GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 1;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state2.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
 
+    //BACKGROUND
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
         Sprite* bg = new Sprite(*goBackground, "assets/img/stage2/stg02bgl01.png");
@@ -86,7 +94,10 @@ void Stage2::LoadAssets(){
     cameraFollowerObjectArray.emplace_back(goBackground5);
 
 
-
+    //STAGEART
+    //FOREGROUND
+    //OBJECTS
+    
     GameObject* fpsChecker = new GameObject();
         fpsChecker->depth = 9999;
         fpsChecker->AddComponent(new FpsPrinter(*fpsChecker));
@@ -124,13 +135,7 @@ void Stage2::LoadAssets(){
 
 
 
-    GameObject* goTileMap = new GameObject();
-        goTileMap->depth = 1;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state2.txt", tileSet);
-        goTileMap->AddComponent(tileMap);
-        goTileMap->box.x = 0;
-        goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
+    
 
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);

@@ -13,7 +13,7 @@
 
 StageFox::StageFox() : State(){
     backgroundMusic.Open("assets/audio/StageState.ogg");
-    tileSet = new TileSet(60, 60, "assets/img/Tileset01.png");
+    tileSet = new TileSet(60, 60, "assets/img/Tileset02.png");
 }
 
 StageFox::~StageFox(){
@@ -24,69 +24,50 @@ StageFox::~StageFox(){
 
 void StageFox::LoadAssets(){
 
-   
+    //TILESET
+    GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 1;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_stagefox.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
 
+    // BACKGROUNDS
     GameObject* goBackground = new GameObject();
-        goBackground->depth = -1;
-        Sprite* bg = new Sprite(*goBackground, "assets/img/StageFox/stg02bgl01.png");
+        goBackground->depth = -4;
+        Sprite* bg = new Sprite(*goBackground, "assets/img/stagefox/Background_fox.png");
         goBackground->AddComponent(bg);
 
-        goBackground->box.x = 0;
+        goBackground->box.x = -26;
         goBackground->box.y = 60*-1;
     cameraFollowerObjectArray.emplace_back(goBackground);
     
-    GameObject* goBackground2 = new GameObject();
-        goBackground2->depth = -2;
-        bg = new Sprite(*goBackground2, "assets/img/StageFox/stg02bgl02.png");
-        goBackground2->AddComponent(bg);
-
-
-        goBackground2->box.x = 0;
-        goBackground2->box.y = 60*2;
-    cameraFollowerObjectArray.emplace_back(goBackground2);
-
-    GameObject* goBackground3 = new GameObject();
-        goBackground3->depth = -3;
-        bg = new Sprite(*goBackground3, "assets/img/StageFox/stg02bgl03.png");
-        goBackground3->AddComponent(bg);
-
-
-        goBackground3->box.x = 0;
-        goBackground3->box.y = 0;
-    cameraFollowerObjectArray.emplace_back(goBackground3);
-
-    GameObject* goBackground4 = new GameObject();
-        goBackground4->depth = -4;
-        bg = new Sprite(*goBackground4, "assets/img/StageFox/stg02bgl04.png");
-        goBackground4->AddComponent(bg);
-
-
-        goBackground4->box.x = 60*12;
-        goBackground4->box.y = 60*-5;
-    cameraFollowerObjectArray.emplace_back(goBackground4);
-
-    // GameObject* goBackground5 = new GameObject();
-    //     goBackground5->depth = -5;
-    //     bg = new Sprite(*goBackground5, "assets/img/StageFox/stg2bgcolor.png");
+  
+    // GameObject* goBackground4 = new GameObject();
+    //     goBackground4->depth = -4;
+    //     bg = new Sprite(*goBackground4, "assets/img/StageFox/stg02bgl04.png");
     //     goBackground4->AddComponent(bg);
 
 
-    //     goBackground5->box.x = 0;
-    //     goBackground5->box.y = 0;
+    //     goBackground4->box.x = 60*12;
+    //     goBackground4->box.y = 60*-5;
+    // cameraFollowerObjectArray.emplace_back(goBackground4);
+
+   
+    // GameObject* goBackground5 = new GameObject();
+    //     goBackground5->depth = -10;
+    //     bg = new Sprite(*goBackground5, "assets/img/StageFox/stg02Moon.png");
+    //     goBackground4->AddComponent(bg);
+
+    //     // goBackground5->AddComponent(new CameraFollower(*goBackground5));
+    //     goBackground5->box.x = 60*3.5;
+    //     goBackground5->box.y = 60;
     // cameraFollowerObjectArray.emplace_back(goBackground5);
 
-    GameObject* goBackground5 = new GameObject();
-        goBackground5->depth = -10;
-        bg = new Sprite(*goBackground5, "assets/img/StageFox/stg02Moon.png");
-        goBackground4->AddComponent(bg);
-
-        // goBackground5->AddComponent(new CameraFollower(*goBackground5));
-        goBackground5->box.x = 60*3.5;
-        goBackground5->box.y = 60;
-    cameraFollowerObjectArray.emplace_back(goBackground5);
-
-
-
+    //STAGEART
+    //FOREGROUND
+    //OBJECTS
     GameObject* fpsChecker = new GameObject();
         fpsChecker->depth = 9999;
         fpsChecker->AddComponent(new FpsPrinter(*fpsChecker));
@@ -121,18 +102,10 @@ void StageFox::LoadAssets(){
     Camera::Follow(player_GO);
 
     Camera::SetCameraFunction(&Camera::FollowTarget);
-    Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
-    Camera::Bounds = Rect(0,0, 60*84, 60*24);
+    // Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
+    Camera::Bounds = Rect(0,0, 60*tileMap->GetWidth(), 60*tileMap->GetHeight());
 
 
-
-    GameObject* goTileMap = new GameObject();
-        goTileMap->depth = 1;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state2.txt", tileSet);
-        goTileMap->AddComponent(tileMap);
-        goTileMap->box.x = 0;
-        goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
 }
 
 void StageFox::Start(){

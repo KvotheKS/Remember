@@ -24,11 +24,19 @@ StageMask::~StageMask(){
 
 void StageMask::LoadAssets(){
 
-   
+    // TILEMAP
+    GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 1;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state2.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
 
+    // BACKGROUND
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
-        Sprite* bg = new Sprite(*goBackground, "assets/img/StageMask/stg02bgl01.png");
+        Sprite* bg = new Sprite(*goBackground, "assets/img/Stage2/stg02bgl01.png");
         goBackground->AddComponent(bg);
 
         goBackground->box.x = 0;
@@ -37,7 +45,7 @@ void StageMask::LoadAssets(){
     
     GameObject* goBackground2 = new GameObject();
         goBackground2->depth = -2;
-        bg = new Sprite(*goBackground2, "assets/img/StageMask/stg02bgl02.png");
+        bg = new Sprite(*goBackground2, "assets/img/Stage2/stg02bgl02.png");
         goBackground2->AddComponent(bg);
 
 
@@ -45,46 +53,9 @@ void StageMask::LoadAssets(){
         goBackground2->box.y = 60*2;
     cameraFollowerObjectArray.emplace_back(goBackground2);
 
-    GameObject* goBackground3 = new GameObject();
-        goBackground3->depth = -3;
-        bg = new Sprite(*goBackground3, "assets/img/StageMask/stg02bgl03.png");
-        goBackground3->AddComponent(bg);
-
-
-        goBackground3->box.x = 0;
-        goBackground3->box.y = 0;
-    cameraFollowerObjectArray.emplace_back(goBackground3);
-
-    GameObject* goBackground4 = new GameObject();
-        goBackground4->depth = -4;
-        bg = new Sprite(*goBackground4, "assets/img/StageMask/stg02bgl04.png");
-        goBackground4->AddComponent(bg);
-
-
-        goBackground4->box.x = 60*12;
-        goBackground4->box.y = 60*-5;
-    cameraFollowerObjectArray.emplace_back(goBackground4);
-
-    // GameObject* goBackground5 = new GameObject();
-    //     goBackground5->depth = -5;
-    //     bg = new Sprite(*goBackground5, "assets/img/StageMask/stg2bgcolor.png");
-    //     goBackground4->AddComponent(bg);
-
-
-    //     goBackground5->box.x = 0;
-    //     goBackground5->box.y = 0;
-    // cameraFollowerObjectArray.emplace_back(goBackground5);
-
-    GameObject* goBackground5 = new GameObject();
-        goBackground5->depth = -10;
-        bg = new Sprite(*goBackground5, "assets/img/StageMask/stg02Moon.png");
-        goBackground4->AddComponent(bg);
-
-        // goBackground5->AddComponent(new CameraFollower(*goBackground5));
-        goBackground5->box.x = 60*3.5;
-        goBackground5->box.y = 60;
-    cameraFollowerObjectArray.emplace_back(goBackground5);
-
+    //STAGEART
+    
+    //FOREGROUND
 
 
     GameObject* fpsChecker = new GameObject();
@@ -114,7 +85,8 @@ void StageMask::LoadAssets(){
       
     rigidArray.emplace_back(player_GO);
 
-  
+    
+
 
     backgroundMusic.Play();
 
@@ -122,17 +94,11 @@ void StageMask::LoadAssets(){
 
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
-    Camera::Bounds = Rect(0,0, 60*84, 60*24);
+    Camera::Bounds = Rect(0,0, 60*tileMap->GetWidth(), 60*tileMap->GetHeight());
 
 
 
-    GameObject* goTileMap = new GameObject();
-        goTileMap->depth = 1;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state2.txt", tileSet);
-        goTileMap->AddComponent(tileMap);
-        goTileMap->box.x = 0;
-        goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
+    
 }
 
 void StageMask::Start(){

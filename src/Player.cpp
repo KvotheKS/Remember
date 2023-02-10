@@ -489,7 +489,7 @@ void Player::Physics(float dt){
         // if(speed.x < 0){
         //     if(*surface_inclination >45)associated.box.y += MAX_MOVE_SPEED * 0.030 ;
         // }
-        if(*surface_inclination !=0)associated.box.y += MAX_MOVE_SPEED * 0.030 ;//!! isso esconde o bug dele tremer em plataforma, n sei por uqe
+        if(*surface_inclination !=0)associated.box.y += MAX_MOVE_SPEED * 2 * dt ;//!! isso esconde o bug dele tremer em plataforma, n sei por uqe
     }
     if(isAttacking){
         if(*isGrounded)speed.x = 0;

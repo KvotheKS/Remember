@@ -3,6 +3,7 @@
 enum class C_ID
 {
     GameObject,
+    Gate,
     Bullet,
     Projectile,
     CameraFollower,

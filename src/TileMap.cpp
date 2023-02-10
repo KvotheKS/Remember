@@ -69,7 +69,7 @@ void TileMap::Load(std::string file){
             
 
             switch(tileMatrix[j+i*mapWidth]){
-                case(16):case(20):case(18):case(50):case(48):case(46):case(78):case(53):case(113)://block platform
+                case(16):case(20):case(18):case(50):case(48):case(46):case(78):case(53):case(113):case(83):////block platform
                     terrainbox->box.x = tileX;
                     terrainbox->box.y = tileY;
                     terrainbox->box.h = tileSet->GetTileHeight();
@@ -206,7 +206,7 @@ void TileMap::Load(std::string file){
 
                 case(27)://22.5° pra direita segunda metade
                     terrainbox->box.x = tileX+13;
-                    terrainbox->box.y = tileY+11;
+                    terrainbox->box.y = tileY+12;
                     terrainbox->box.h = tileSet->GetTileHeight()*sqrt(5)/2;
                     terrainbox->box.w = tileSet->GetTileWidth()*sqrt(5)/2;
                   

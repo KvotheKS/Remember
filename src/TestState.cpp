@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "LionBoss.h"
+#include "Gate.h"
 
 //test stage pra mecher em collision
 
@@ -23,13 +24,16 @@ TestState::~TestState(){
 
 void TestState::LoadAssets(){
 
-    // collision_targets.assign(
-    //     {
-    //         {C_ID::TerrainBody}, 
-    //         {C_ID::RigidBody}
-    //     }
-    // );
+   //TILEMAP
+   GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 1;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
 
+    //BACKGROUD
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
         Sprite* bg = new Sprite(*goBackground, "assets/img/stage1/stg01bgl01.png");
@@ -76,10 +80,64 @@ void TestState::LoadAssets(){
         goBackground5->box.x = 0;
         goBackground5->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground5);
+    //STAGEART
+            
+            
+    GameObject* goArt1 = new GameObject();
+        goArt1->depth = 0;
+        bg = new Sprite(*goArt1, "assets/img/stage1/bridge_bg.png");
+        goBackground4->AddComponent(bg);
 
 
+        goArt1->box.x = 60*93;
+        goArt1->box.y = 60;
+
+        goArt1->box.h = 60;
+        goArt1->box.w = 60*10;
+
+    
+    cameraFollowerObjectArray.emplace_back(goArt1);
+
+    
+    for(int i = 0;i < 10;i++){
+        GameObject* goArt1terrain = new GameObject();
+        goArt1terrain->depth = 1;
+        Collider* collider = new Collider(*goArt1terrain);
+        auto terr = new TerrainBody(*goArt1terrain, false);
+        goArt1terrain->box.x = 60*(93+i);
+        goArt1terrain->box.y = 60*10 ;
+
+        goArt1terrain->box.h = 60;
+        goArt1terrain->box.w = 60;
+
+        goArt1terrain->AddComponents({collider, terr});
+        terrainArray.emplace_back(goArt1terrain);
+    }
+           
+        
+
+    
+    //FOREGROUND
+
+              
+    GameObject* goForeground1 = new GameObject();
+        goForeground1->depth = 101;
+        bg = new Sprite(*goForeground1, "assets/img/stage1/stg01fgl01.png");
+        goForeground1->AddComponent(bg);
 
 
+        goForeground1->box.x = 60*50;
+        goForeground1->box.y = 0;
+
+
+    
+    cameraFollowerObjectArray.emplace_back(goForeground1);
+
+    //OTHER
+    GameObject* GO_Gate = new GameObject();
+
+        GO_Gate->AddComponent(new Gate(*GO_Gate));
+    terrainArray.emplace_back(GO_Gate);
 
     GameObject* fpsChecker = new GameObject();
         fpsChecker->depth = 9999;
@@ -89,23 +147,21 @@ void TestState::LoadAssets(){
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
+    //PLAYER
     GameObject* player_GO = new GameObject();
-        player_GO->depth = 999;
+        player_GO->depth = 10;
         //morte ao primbus
-
-
-        
 
         StateMachine* st = new StateMachine(*player_GO);
         player_GO->AddComponent(st);
-        Collider* collider = new Collider(*player_GO);
-        player_GO->AddComponent(collider);
+        Collider* pl_collider = new Collider(*player_GO);
+        player_GO->AddComponent(pl_collider);
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
         Player* pl = new Player(*player_GO);
         player_GO->AddComponent(pl);
         
-        
+
         player_GO->box.SetCenter(0, 0);
       
     rigidArray.emplace_back(player_GO);
@@ -123,7 +179,7 @@ void TestState::LoadAssets(){
 
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
-    Camera::Bounds = Rect(0,0, 60*120 +Camera::width, Camera::height);
+    Camera::Bounds = Rect(0,0, 60*tileMap->GetWidth(), 60*tileMap->GetHeight());
 
 
     /*STAGE TERRAIN*/
@@ -203,13 +259,7 @@ void TestState::LoadAssets(){
     //     terrainArray.emplace_back(terrainbox);
     // }
 
-    GameObject* goTileMap = new GameObject();
-        goTileMap->depth = 1;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/testmap.txt", tileSet);
-        goTileMap->AddComponent(tileMap);
-        goTileMap->box.x = 0;
-        goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
+    
 }
 
 void TestState::Start(){

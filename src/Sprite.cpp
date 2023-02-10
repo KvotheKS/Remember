@@ -81,14 +81,16 @@ void Sprite::Render()
         case -10:
             paralax_mul = 0;
             break;
+        case 101:
+            paralax_mul = 1.1;
+            break;
         default:
             paralax_mul = 1;
             break;
     }
 
-    Render(associated.box.x - Camera::pos.x*paralax_mul, associated.box.y - Camera::pos.y*paralax_mul);
 
-    Render(associated.box.x + relative.x - Camera::pos.x*paralax_mul, associated.box.y + relative.y - Camera::pos.y);
+    Render(associated.box.x + relative.x - Camera::pos.x*paralax_mul, associated.box.y + relative.y - Camera::pos.y*paralax_mul);
 
 }
 

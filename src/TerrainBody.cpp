@@ -7,8 +7,7 @@
 TerrainBody::TerrainBody(GameObject& associated, bool hascpts):GameObject(associated){
     if(hascpts)
     {
-        Sprite* pbody = new Sprite(associated, "assets/img/testterrain.png");
-        associated.AddComponent(pbody);
+        
         Collider* collider = new Collider(associated);
         associated.AddComponent(collider);
     }
