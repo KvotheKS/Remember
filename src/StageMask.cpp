@@ -13,7 +13,7 @@
 
 StageMask::StageMask() : State(){
     backgroundMusic.Open("assets/audio/StageState.ogg");
-    tileSet = new TileSet(60, 60, "assets/img/Tileset01.png");
+    tileSet = new TileSet(60, 60, "assets/img/tilesetcave.png");
 }
 
 StageMask::~StageMask(){
@@ -27,7 +27,7 @@ void StageMask::LoadAssets(){
     // TILEMAP
     GameObject* goTileMap = new GameObject();
         goTileMap->depth = 1;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state2.txt", tileSet);
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_stagemask.txt", tileSet);
         goTileMap->AddComponent(tileMap);
         goTileMap->box.x = 0;
         goTileMap->box.y = 0;
@@ -35,23 +35,54 @@ void StageMask::LoadAssets(){
 
     // BACKGROUND
     GameObject* goBackground = new GameObject();
-        goBackground->depth = -1;
-        Sprite* bg = new Sprite(*goBackground, "assets/img/Stage2/stg02bgl01.png");
+        goBackground->depth = -15;
+        Sprite* bg = new Sprite(*goBackground, "assets/img/StageMask/caverna_bgfundo.png");
         goBackground->AddComponent(bg);
-
-        goBackground->box.x = 0;
+        goBackground->AddComponent(new CameraFollower(*goBackground));
+        goBackground->box.x = 60*-5;
         goBackground->box.y = 60*-1;
     cameraFollowerObjectArray.emplace_back(goBackground);
     
     GameObject* goBackground2 = new GameObject();
-        goBackground2->depth = -2;
-        bg = new Sprite(*goBackground2, "assets/img/Stage2/stg02bgl02.png");
+        goBackground2->depth = -5;
+        bg = new Sprite(*goBackground2, "assets/img/StageMask/caverna_bgl01.png");
         goBackground2->AddComponent(bg);
 
 
-        goBackground2->box.x = 0;
-        goBackground2->box.y = 60*2;
+        goBackground2->box.x = 60*-3;
+        goBackground2->box.y = 60*-3;
     cameraFollowerObjectArray.emplace_back(goBackground2);
+
+
+    GameObject* goBackground3 = new GameObject();
+        goBackground3->depth = -6;
+        bg = new Sprite(*goBackground3, "assets/img/StageMask/caverna_bgl02.png");
+        goBackground3->AddComponent(bg);
+
+
+        goBackground3->box.x = 60*-3;
+        goBackground3->box.y = 60*0;
+    cameraFollowerObjectArray.emplace_back(goBackground3);
+
+     GameObject* goBackground4 = new GameObject();
+        goBackground4->depth = -7;
+        bg = new Sprite(*goBackground4, "assets/img/StageMask/caverna_bgl03.png");
+        goBackground4->AddComponent(bg);
+
+
+        goBackground4->box.x = 60*-3;
+        goBackground4->box.y = 60*-1;
+    cameraFollowerObjectArray.emplace_back(goBackground4);
+
+    GameObject* goBackground5 = new GameObject();
+        goBackground5->depth = -8;
+        bg = new Sprite(*goBackground5, "assets/img/StageMask/caverna_bgl04.png");
+        goBackground2->AddComponent(bg);
+
+
+        goBackground5->box.x = 60*-3.5;
+        goBackground5->box.y = 60*-5;
+    cameraFollowerObjectArray.emplace_back(goBackground5);
 
     //STAGEART
     
@@ -66,7 +97,9 @@ void StageMask::LoadAssets(){
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
-
+    //PLAYER 
+    
+    spawnList ={Vec2(1,7)};
     GameObject* player_GO = new GameObject();
         player_GO->depth = 10;
 
@@ -81,7 +114,7 @@ void StageMask::LoadAssets(){
         player_GO->AddComponent(pl);
         
         
-        player_GO->box.SetCenter(0, 0);
+        player_GO->box.SetCenter(spawnList[GameData::spawn_ID].x*60, spawnList[GameData::spawn_ID].y*60);
       
     rigidArray.emplace_back(player_GO);
 

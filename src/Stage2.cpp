@@ -106,7 +106,8 @@ void Stage2::LoadAssets(){
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
-
+    //PLAYER
+    spawnList = {Vec2(1,20),Vec2(54,-2)};
     GameObject* player_GO = new GameObject();
         player_GO->depth = 10;
 
@@ -121,7 +122,7 @@ void Stage2::LoadAssets(){
         player_GO->AddComponent(pl);
         
         
-        player_GO->box.SetCenter(0, 0);
+        player_GO->box.SetCenter(spawnList[GameData::spawn_ID].x*60, spawnList[GameData::spawn_ID].y*60);
       
     rigidArray.emplace_back(player_GO);
 

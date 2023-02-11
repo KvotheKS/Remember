@@ -3,5 +3,5 @@
 class GameData {
     public:
         static bool playerVictory;
-        static int spawn_ID:
+        static int spawn_ID;
 };

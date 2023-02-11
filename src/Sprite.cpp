@@ -65,7 +65,7 @@ void Sprite::Update(float dt){
 void Sprite::Render()
 {
     float paralax_mul;
-    switch((int)associated.depth){//deepts -1 to -4 are afected  paralax
+    switch((int)associated.depth){//deepts -1 to -10 are afected by paralax
         case -1:
             paralax_mul = 0.925;
             break;
@@ -77,6 +77,21 @@ void Sprite::Render()
             break;
         case -4:
             paralax_mul = 0.7;
+            break;
+        case -5:
+            paralax_mul = 0.625;
+            break;
+        case -6:
+            paralax_mul = 0.55;
+            break;
+        case -7:
+            paralax_mul = 0.475;
+            break;
+        case -8:
+            paralax_mul = 0.4;
+            break;
+        case -9:
+            paralax_mul = 0.375;
             break;
         case -10:
             paralax_mul = 0;

@@ -148,6 +148,7 @@ void TestState::LoadAssets(){
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
     //PLAYER
+    spawnList = {Vec2(2,8),Vec2(90,8)}; 
     GameObject* player_GO = new GameObject();
         player_GO->depth = 10;
         //morte ao primbus
@@ -161,8 +162,8 @@ void TestState::LoadAssets(){
         Player* pl = new Player(*player_GO);
         player_GO->AddComponent(pl);
         
-
-        player_GO->box.SetCenter(0, 0);
+        
+        player_GO->box.SetCenter(spawnList[GameData::spawn_ID].x*60, spawnList[GameData::spawn_ID].y*60);
       
     rigidArray.emplace_back(player_GO);
 

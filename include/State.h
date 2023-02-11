@@ -9,7 +9,8 @@ class State {
         bool popRequested;
         bool quitRequested;
         bool started;
-        
+        std::vector<Vec2> spawnList; //lista locais pro jogador spawnar
+
         virtual void StartArray();
         void StartVector(std::vector<std::shared_ptr<GameObject>>&);
         virtual void UpdateArray(float dt);
