@@ -58,7 +58,7 @@ Player::Player(GameObject& associated):GameObject(associated){
 
     MAX_GLOBAL_SPEED = 3000;
     DASH_FORCE = 1200;
-    JUMP_FORCE = 1000 ;
+    JUMP_FORCE = 16 ;
     MAX_FALL_SPEED = 1000;
     FALL_ACCELERATION = 100;
 
@@ -262,7 +262,7 @@ void Player::Controls(float dt){
             Jump(1);
             *isGrounded = false;
         
-            speed.y = -JUMP_FORCE*dt;
+            speed.y = -JUMP_FORCE;
             
             if(isDashing){
                 isDreamDashing = true;
@@ -280,18 +280,18 @@ void Player::Controls(float dt){
                     
                     hasDoubleJump --;
                     speed.y  = 0;
-                    speed.y =  -JUMP_FORCE*dt;
+                    speed.y =  -JUMP_FORCE;
                   
                 }
             }
         }
         if (jumpTimer.Get()<JUMP_ACCE_TIMELIMIT){     
-            if(!isDashing)speed.y = -JUMP_FORCE*dt;
+            if(!isDashing)speed.y = -JUMP_FORCE;
            
         }
         
     }else{      
-        jumpTimer.Update(JUMP_ACCE_TIMELIMIT);
+        jumpTimer.Update(dt);
     }
     
     // DASH COMMAND
@@ -421,7 +421,7 @@ void Player::Physics(float dt){
     
     if(jumpStored && !isDashing){
         hasDoubleJump = false;
-        speed.y = -JUMP_FORCE*dt;
+        speed.y = -JUMP_FORCE;
         jumpStored = false;
     }
 
@@ -606,7 +606,7 @@ void Player::Jump (bool type){
         State& state = Game::GetInstance().GetCurrentState();
     state.AddObject(GO_jumpdust_effect);
     
-    // speed.y = -JUMP_FORCE*dt;
+    // speed.y = -JUMP_FORCE;
 }
 void Player::JustGrounded(){//!!doesn work, so retorna is grounded
     // isAttacking = false;

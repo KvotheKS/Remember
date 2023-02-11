@@ -9,6 +9,7 @@
 #include "LionBoss.h"
 #include "Gate.h"
 
+
 //test stage pra mecher em collision
 
 TestState::TestState() : State(){
@@ -23,6 +24,17 @@ TestState::~TestState(){
 }
 
 void TestState::LoadAssets(){
+
+    //FADE IN EFFECT
+    GameObject* GO_fade = new GameObject();
+        GO_fade->depth = 1000;
+        float fadeinTime = 0; float fadeoutTime = 0.8;float duration = 1;
+        ScreenFade* effect = new ScreenFade(*GO_fade, fadeinTime, fadeoutTime, duration);
+        
+        GO_fade->AddComponent(effect);
+    
+        State& state = Game::GetInstance().GetCurrentState();
+    state.AddObject(GO_fade);
 
    //TILEMAP
    GameObject* goTileMap = new GameObject();

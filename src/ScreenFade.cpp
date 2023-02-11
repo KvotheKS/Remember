@@ -4,7 +4,7 @@
 #include "Rand.h"
 
 ScreenFade::ScreenFade(GameObject& associated, float fadeinTime, float fadeoutTime,float duration): GameObject(associated){
-   
+    
     local_state = FSTATE::F_IN;
     this->duration.SetFinish(duration);
     fadeTimer.SetFinish(fadeinTime);
@@ -38,8 +38,9 @@ void ScreenFade::Update(float dt){
     if(duration.Update(dt))
         associated.RequestDelete();
 
-    if(fadeTimer.Update(dt)){
-
+    
+    if(fadeTimer.Update(dt) || fadeTimer.GetFinish() == 0){
+       
         switch(local_state){
             case FSTATE::F_IN:
                 local_state = FSTATE::SOLID;

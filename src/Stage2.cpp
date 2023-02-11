@@ -8,6 +8,7 @@
 #include "Enemy.h"
 #include "LionBoss.h"
 #include "Stage2.h"
+#include "ScreenFade.h"
 
 
 
@@ -24,6 +25,17 @@ Stage2::~Stage2(){
 
 void Stage2::LoadAssets(){
 
+    //FADE IN EFFECT
+    GameObject* GO_fade = new GameObject();
+        GO_fade->depth = 1000;
+        float fadeinTime = 0; float fadeoutTime = 0.8;float duration = 1;
+        ScreenFade* effect = new ScreenFade(*GO_fade, fadeinTime, fadeoutTime, duration);
+        
+        GO_fade->AddComponent(effect);
+    
+        State& state = Game::GetInstance().GetCurrentState();
+    state.AddObject(GO_fade);
+        
     //TILEMAP
     GameObject* goTileMap = new GameObject();
         goTileMap->depth = 1;

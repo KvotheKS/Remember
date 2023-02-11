@@ -12,6 +12,7 @@
 #include "Sound.h"
 #include "Collider.h"
 #include "Vec2.h"
+#include "ScreenFade.h"
 #include <string>
 #include <memory>
 #include <algorithm>

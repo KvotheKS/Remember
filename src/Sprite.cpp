@@ -99,6 +99,9 @@ void Sprite::Render()
         case 101:
             paralax_mul = 1.1;
             break;
+        case 102:
+            paralax_mul = 1.2;
+            break;
         default:
             paralax_mul = 1;
             break;

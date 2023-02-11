@@ -2,6 +2,7 @@
 #include "TestState.h"
 #include "Stage2.h"
 #include "Stage3.h"
+#include "Stage4.h"
 #include "StageMask.h"
 #include "StageFox.h"
 #include "Game.h"
@@ -57,6 +58,8 @@ void TitleState::Update(float dt){
         Game::GetInstance().Push(new Stage3());
     if(inManager.KeyPress(A_KEY))
         Game::GetInstance().Push(new Stage2());
+    if(inManager.KeyPress(Q_KEY))
+        Game::GetInstance().Push(new Stage4());
 
     UpdateArray(dt);
 }
