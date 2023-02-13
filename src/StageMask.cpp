@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "LionBoss.h"
+#include "MaskBoss.h"
 #include "StageMask.h"
 #include "ScreenFade.h"
 
@@ -130,8 +131,13 @@ void StageMask::LoadAssets(){
       
     rigidArray.emplace_back(player_GO);
 
+    GameObject* enemy_GO = new GameObject();
+        enemy_GO->depth = 3;
+        enemy_GO->AddComponent(new MaskBoss(*enemy_GO));
+        enemy_GO->box.x = 1100 - enemy_GO->box.w;
+        enemy_GO->box.y = 510 - enemy_GO->box.h;
+    rigidArray.emplace_back(enemy_GO);
     
-
 
     backgroundMusic.Play();
 

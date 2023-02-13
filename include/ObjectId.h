@@ -27,5 +27,6 @@ enum class C_ID
     Hitbox,
     Hurtbox,
     TimeBomb,
-    ShakeBehavior
+    ShakeBehavior,
+    Mask
 };
