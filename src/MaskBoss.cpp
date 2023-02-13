@@ -49,8 +49,10 @@ void MaskBoss::Update(float dt){
         t.Restart();
         idx = !idx;
         flag++;
-        if(flag == 2)
+        if(flag == 2){
             stmac->ChangeState(Rand::Get() % 3);
+            flag = 0;
+        }
     }
     else if(flag < 2){
         float x = t.Get() / MAXMOVETIME;

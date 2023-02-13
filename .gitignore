@@ -1,7 +1,5 @@
 *.json
 .vscode
-*.d
-/dep
-*.o
-/bin
+dep/
+bin/
 JOGO.exe
