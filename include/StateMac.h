@@ -28,6 +28,7 @@ public:
     float frameTime;
     bool fliped;
     bool reverse;
+    bool oneWay = false;
     bool finished = false;
     Uint8 r=255, g=255, b=255;
 

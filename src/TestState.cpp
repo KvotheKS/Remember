@@ -184,7 +184,7 @@ void TestState::LoadAssets(){
         enemy_GO->AddComponent(new LionBoss(*enemy_GO));
         enemy_GO->box.x = 7151.86 + 48 - enemy_GO->box.w;
         enemy_GO->box.y = 488 + 112 - enemy_GO->box.h;
-    rigidArray.emplace_back(enemy_GO);
+    enemyArray.emplace_back(enemy_GO);
 
     backgroundMusic.Play();
 
@@ -320,9 +320,9 @@ void TestState::Update(float dt){
 
     CollideVectors(rigidArray, terrainArray);
     CollideVectors(rigidArray, bulletArray);
-    CollideVectors(rigidArray, rigidArray);
+    CollideVectors(rigidArray, enemyArray);
     CollideVectors(bulletArray, terrainArray);
-    // std::cout << "colidiu";
+    CollideVectors(bulletArray, enemyArray);
     
     Camera::Update(dt);
     

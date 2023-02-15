@@ -25,7 +25,8 @@ class State {
         std::vector<std::shared_ptr<GameObject>> terrainArray; // terreno 
         std::vector<std::shared_ptr<GameObject>> rigidArray; // player/boss (para todas as colisoes)
         std::vector<std::shared_ptr<GameObject>> bulletArray; // bullets (para colisoes de player/terreno)
-        
+        std::vector<std::shared_ptr<GameObject>> enemyArray;
+
         State();
         virtual ~State();
         virtual void LoadAssets() = 0;

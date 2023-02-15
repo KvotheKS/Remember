@@ -86,7 +86,7 @@ void Player::Start(){
     // state creation
     Vec2 scale = Vec2(2,2);
     SSNode* sprite_sheet_node = new SSNode("assets/img/Ype/Ycrouch.png",  {0, 0, 80*5, 80}, 5, 0.1,scale);
-    state_machine->AddNode(RBSTATE::CROUCH, sprite_sheet_node); 
+    state_machine->AddNode(RBSTATE::CROUCH, sprite_sheet_node); sprite_sheet_node->oneWay=true;
 
     sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80*18, 80}, 18, 0.1,scale);
     state_machine->AddNode(RBSTATE::IDLE, sprite_sheet_node); 
@@ -143,7 +143,6 @@ void Player::Start(){
 
 /// @brief Player Update
 void Player::Update(float dt){
-  
     Controls(dt);
     RunTimers(dt);
     Physics(dt);
