@@ -28,5 +28,6 @@ enum class C_ID
     Hurtbox,
     TimeBomb,
     ShakeBehavior,
-    Mask
+    Mask,
+    ProjectileB
 };
