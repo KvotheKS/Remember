@@ -11,7 +11,7 @@ Vec2::Vec2(float x, float y){
 }
 
 bool Vec2::operator==(Vec2 vec){
-    return (this->x == vec.x , this->y == vec.y);
+    return (this->x == vec.x && this->y == vec.y);
 }
 Vec2 Vec2::operator+(Vec2 vec){
     return Vec2(this->x + vec.x, this->y + vec.y);

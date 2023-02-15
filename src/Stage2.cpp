@@ -9,6 +9,9 @@
 #include "LionBoss.h"
 #include "Stage2.h"
 #include "ScreenFade.h"
+#include "Gate.h"
+#include "TestState.h"
+#include "Stage3.h"
 
 
 
@@ -109,6 +112,22 @@ void Stage2::LoadAssets(){
     //STAGEART
     //FOREGROUND
     //OBJECTS
+    //GATES
+    GameObject* GO_Gate = new GameObject();
+        int spawnpoint = 0;
+        bool active = true;
+        GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage3(),spawnpoint,active));
+        GO_Gate->box.x = 60*55;
+        GO_Gate->box.y = 60*-2;
+    terrainArray.emplace_back(GO_Gate);
+
+    GameObject* GO_Gate2 = new GameObject();
+        spawnpoint = 1;
+        active = true;
+        GO_Gate2->AddComponent(new Gate(*GO_Gate2,new TestState(),spawnpoint,active));
+        GO_Gate2->box.x = 60*-1.8;
+        GO_Gate2->box.y = 60*19;
+    terrainArray.emplace_back(GO_Gate2);
     
     GameObject* fpsChecker = new GameObject();
         fpsChecker->depth = 9999;
@@ -163,6 +182,8 @@ void Stage2::Start(){
 }
 
 void Stage2::Update(float dt){
+    
+   
     // removendo condicao de vitoria/derrota -m
     
     // if(PenguinBody::player == nullptr){

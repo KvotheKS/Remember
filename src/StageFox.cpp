@@ -9,6 +9,8 @@
 #include "LionBoss.h"
 #include "StageFox.h"
 #include "ScreenFade.h"
+#include "Stage4.h"
+#include "Gate.h"
 
 
 
@@ -86,7 +88,15 @@ void StageFox::LoadAssets(){
         fpsChecker->AddComponent(new Text(*fpsChecker, file, 35, Text::TextStyle::BLENDED, "0", {0, 100, 255, 255}, 0.35));
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
-    
+    //GATES
+    GameObject* GO_Gate = new GameObject();
+        int spawnpoint = 1;
+        bool active = true;
+        GO_Gate->AddComponent(new Gate(*GO_Gate,new StageFox(),spawnpoint,active));
+        GO_Gate->box.x = 60*-1.8;
+        GO_Gate->box.y = 60*15;
+    terrainArray.emplace_back(GO_Gate);
+   
     //PLAYER
     spawnList = {Vec2(1,15)};
     GameObject* player_GO = new GameObject();

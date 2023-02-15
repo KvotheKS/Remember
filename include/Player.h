@@ -17,11 +17,12 @@
 
 enum RBSTATE
 {
-    LEFT, RIGHT, STILL, CROUCH, IDLE, IDLE_B, WALK, RUN, JUMP, FALL, DASH ,DASHUP, MELEE, SHOT, SKID, STUN
+    LEFT, RIGHT, STILL, CROUCHSTART, CROUCH, IDLE, IDLE_B, WALK, RUN, JUMP, FALL, DASH ,DASHUP, MELEE, SHOT, SKID, STUN,CASTR,CASTL
 };
 
 class Player : public GameObject{
 private:
+    
     void Controls(float dt);
     void RunTimers(float dt);
     void Physics(float dt);
@@ -29,7 +30,7 @@ private:
     
     
 public:
-    
+    bool pause;
 
     Player(GameObject& associated);
     ~Player();
@@ -51,7 +52,7 @@ public:
     void JustGrounded();
 
     int GetState();
-    
+    void SetPause(bool pause);
     
 
     int hp;
@@ -78,8 +79,9 @@ public:
     Timer jumpTimer;
     Timer dashTimer;
     Timer dashCooldown;
+    
     Timer stunTimer;
-    Timer atackTimer;
+    Timer castTimer;
     
 
 
@@ -94,6 +96,9 @@ public:
     float DASH_COOLDOWN;
     float STUN_TIMELIMIT;
     float JUMP_TIMER;
+    float CAST_TIMELIMIT;
+    float CAST_COOLDOWN;
+
 
 
     StateMachine * state_machine;

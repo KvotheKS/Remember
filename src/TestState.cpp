@@ -54,6 +54,7 @@ void TestState::LoadAssets(){
         goBackground->box.x = 0;
         goBackground->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground);
+
     GameObject* goBackground2 = new GameObject();
         goBackground2->depth = -2;
         bg = new Sprite(*goBackground2, "assets/img/stage1/stg01bgl02.png");
@@ -63,6 +64,7 @@ void TestState::LoadAssets(){
         goBackground2->box.x = 0;
         goBackground2->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground2);
+
     GameObject* goBackground3 = new GameObject();
         goBackground3->depth = -3;
         bg = new Sprite(*goBackground3, "assets/img/stage1/stg01bgl03.png");
@@ -147,8 +149,11 @@ void TestState::LoadAssets(){
 
     //OTHER
     GameObject* GO_Gate = new GameObject();
-
-        GO_Gate->AddComponent(new Gate(*GO_Gate));
+        int spawnpoint = 0;
+        bool active = true;
+        GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage2(),spawnpoint,active));
+        GO_Gate->box.x = 60*119;
+        GO_Gate->box.y = 60*8;
     terrainArray.emplace_back(GO_Gate);
 
     GameObject* fpsChecker = new GameObject();
@@ -283,6 +288,7 @@ void TestState::Start(){
 }
 
 void TestState::Update(float dt){
+    
     // removendo condicao de vitoria/derrota -m
     
     // if(PenguinBody::player == nullptr){
@@ -311,7 +317,7 @@ void TestState::Update(float dt){
         Collider::debugMode = !Collider::debugMode;
     }
     
-
+    
     /* ordem de update necessaria
     */
     // std::cout << "ENTRA";
@@ -372,6 +378,7 @@ void TestState::Render(){
 }
 
 void TestState::Pause(){
+    paused = true;
 }
 
 void TestState::Resume(){
