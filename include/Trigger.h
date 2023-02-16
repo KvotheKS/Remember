@@ -6,6 +6,7 @@
 
 typedef void (*go_func)(GameObject&);
 typedef bool (*condgo_func)(GameObject&);
+typedef void (*prog_func)(GameObject&, float);
 
 class TimedTrigger : public GameObject
 {
@@ -41,5 +42,24 @@ class ConditionalTrigger : public GameObject
     int repeating;
 public:
     ConditionalTrigger(GameObject&, condgo_func, go_func, int = 0);
+    void Update(float);
+};
+
+class AltenatingTrigger : public GameObject
+{
+    go_func frst, snd;
+    int __curr;
+    Timer duration, frequency;
+public:
+    AltenatingTrigger(GameObject&, float, float, go_func, go_func);
+    void Update(float);
+};
+
+class ProgressTrigger : public GameObject
+{
+    prog_func progress;
+    Timer duration;
+public:
+    ProgressTrigger(GameObject&, float, prog_func);
     void Update(float);
 };

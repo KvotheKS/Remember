@@ -82,7 +82,7 @@ float Vec2::Cross(Vec2 vec){
 }
 
 ostream& operator<<(ostream& out,Vec2 const& v){
-    out << "Vec2: "<< v.x << " , "<< v.y << "\n";
+    out << "Vec2: "<< (float)v.x << " , "<< (float)v.y << "\n";
     return out ;
 }
 

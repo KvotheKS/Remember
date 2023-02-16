@@ -6,7 +6,7 @@
 #include <string>
 
 class Projectile : public GameObject {
-    private:
+    public:
         Vec2 velocity, gravity;
         float pace;
         float homingAccMax, homingRadius, maxSpeed;

@@ -11,6 +11,7 @@ struct ActionInfo
     Vec2 range;
     float rarity;
     float cooldown;
+    bool deactivated = false;
     float weight;
 };
 

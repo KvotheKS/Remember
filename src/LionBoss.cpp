@@ -74,7 +74,6 @@ LionBoss::LionBoss(GameObject& associated)
     auto anm = new AnimNode("assets/img/Lion/closed_mouth.png", 1,1,Vec2(1,1), false, false);
     // anm->SetSize(LIONSIZE.x, LIONSIZE.y);
     anm->SetScaleX(2,2);
-    anm->SetTint(255,0,0);
     stmac->AddNode(IDLE, anm);
     stmac->ChangeState(IDLE);
 
@@ -210,6 +209,7 @@ void LionBoss::FlameBalls()
             Sprite* spr = new Sprite(*balls_go, "assets/img/laser.png", 1, 0, -1);
             DisappearOnHit* dsp = new DisappearOnHit(*balls_go, &associated);
             Projectile* ballsproj = new Projectile(*balls_go, 5.0f, vecinic.AngleX() * PI_DEG, vecinic.Magnitude(), vecinic.Magnitude(), grav);
+            ballsproj->rotSprt = true;
             spr->SetSize(BALLSIZE.x, BALLSIZE.y);
             balls_go->angleDeg = vecinic.AngleX();
             balls_go->box.x = associated.box.x + associated.box.w; 
