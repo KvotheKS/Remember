@@ -62,3 +62,40 @@ void ConditionalTrigger::Update(float dt)
         repeating -= (repeating>0);
     }
 }
+
+AltenatingTrigger::AltenatingTrigger(GameObject& associated, float frequency, float duration, go_func frst, go_func snd)
+    : GameObject(associated), duration(duration), frequency(frequency)
+{
+    this->frst = frst;
+    this->snd = snd;
+    __curr = 0;
+}
+
+void AltenatingTrigger::Update(float dt)
+{
+    if(frequency.Update(dt))
+    {
+        frequency.Restart();
+        if(__curr) snd(associated);
+        else frst(associated);
+        __curr ^= __curr;
+    }
+    if(duration.Update(dt))
+        associated.RemoveComponent(this);
+}
+
+ProgressTrigger::ProgressTrigger(GameObject& associated, float duration, prog_func progress)
+    : GameObject(associated), duration(duration)
+{
+    this->progress = progress;
+}
+
+void ProgressTrigger::Update(float dt)
+{
+    if(duration.Update(dt))
+    {
+        associated.RemoveComponent(this);
+        return;
+    }
+    progress(associated, duration.Get()/duration.GetFinish());
+}

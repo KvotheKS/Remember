@@ -74,11 +74,8 @@ void AnimNode::Update(float dt){
         }
 
         if(currentFrame + 1 == frameCount)
-        {
             finished = true;
-            SetFrame(0);
-        }
-        else
+        if(currentFrame < frameCount-1)
             SetFrame(currentFrame + 1);
         
         timeElapsed -= frameTime;
@@ -160,21 +157,17 @@ void StateMachine::Update(float dt)
 {
     if(!states.empty())
     {
-        // std::cout << "1\n";
         auto it = states.find(__curr);
-        // std::cout << it->second->rendered;
         if(it->second->rendered)
         {
-            // std::cout << "tt1\n";1
             it->second->timeElapsed+=dt;
             it->second->Update(dt);
-            // std::cout << "2\n";
         }
         
         if(it->second->IsDone())
         {
-            // std::cout << "3\n";
-            ChangeState(transitions[__curr]);
+            if(!it->second->oneWay)
+                ChangeState(transitions[__curr]);
             justFinished = true;
         }
         else justFinished = false;
@@ -187,6 +180,7 @@ void StateMachine::Render()
     // std::cout << "SUSUSYSY";
     states[__curr]->Render();
     // std::cout << "RENDENRING STATE\n";
+    
     float x = associated.box.x - Camera::pos.x + relative.x;
     float y = associated.box.y - Camera::pos.y + relative.y;
     // std::cout << "STATEMACHIEN";

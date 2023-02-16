@@ -40,13 +40,13 @@ Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* targe
 
 Projectile::Projectile(GameObject& associated, float lifeTime, float angle, float initialSpeed,
                 float maxSpeed , float gravity, float pace)
-    : Projectile(associated, lifeTime, nullptr, true, angle, initialSpeed, maxSpeed, gravity, 0.0f, 0.0f, false, false, pace)
+    : Projectile(associated, lifeTime, nullptr, false, angle, initialSpeed, maxSpeed, gravity, 0.0f, 0.0f, false, false, pace)
 {}
         
 Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* target, float angle, float initialSpeed, 
         float maxSpeed , float homingRadius,
             float homingAccMax, bool accelerated, float gravity, float pace)
-    : Projectile(associated, lifeTime, target, true, angle, initialSpeed, maxSpeed, gravity, homingRadius, homingAccMax, false, accelerated, pace)
+    : Projectile(associated, lifeTime, target, false, angle, initialSpeed, maxSpeed, gravity, homingRadius, homingAccMax, false, accelerated, pace)
 {}
 
 void Projectile::Update(float dt){
@@ -56,6 +56,7 @@ void Projectile::Update(float dt){
         associated.RequestDelete();
     }
     else{
+        // std::cout << associated.box;
         Vec2 oldVelocity = velocity;
         Vec2 position = associated.box.GetCenter();
 
@@ -85,8 +86,11 @@ void Projectile::Update(float dt){
         if(velocity.Magnitude() > maxSpeed)
             velocity = velocity.Normalize() * maxSpeed;
 
-        position += velocity * dt;
-        associated.box.SetCenter(position.x, position.y);
+        // position += velocity * dt;
+        associated.box+=velocity * dt;
+        // std::cout << associated.box;
+        // std::cout << velocity.Magnitude() * dt << '\n';
+        // associated.box.SetCenter(position.x, position.y);
 
         // Rotaciona o Sprite pela direção da velocidade
         if(rotSprt){

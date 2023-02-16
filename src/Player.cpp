@@ -164,6 +164,7 @@ void Player::Start(){
 
 /// @brief Player Update
 void Player::Update(float dt){
+
     if(pause)return;
     RunTimers(dt);
     Controls(dt); 
@@ -186,7 +187,6 @@ bool Player::Is(C_ID type){
 }
 
 void Player::Controls(float dt){
-
     if(isStunned)return;
 
     auto [state_idx, cr_state] = state_machine->GetCurrent();

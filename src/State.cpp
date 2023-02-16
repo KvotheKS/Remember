@@ -51,7 +51,7 @@ void State::RenderVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
 
 std::vector<std::vector<std::shared_ptr<GameObject>>*> State::GetArrays()
 {
-    return {&objectArray,&rigidArray,&terrainArray,&bulletArray,&cameraFollowerObjectArray};
+    return {&objectArray,&rigidArray,&enemyArray, &terrainArray, &bulletArray, &cameraFollowerObjectArray};
 }
 
 void State::RenderArray()

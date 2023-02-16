@@ -14,7 +14,7 @@
 #define SPRITE_T "Sprite"
 
 class Sprite : public GameObject {
-    private:
+    public:
         std::shared_ptr<SDL_Texture> texture;
         int width;
         int height;

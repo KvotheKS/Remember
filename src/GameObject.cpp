@@ -27,7 +27,7 @@ void GameObject::UpdateNodes(float dt)
     for(unsigned i = 0; i < components.size(); i++, deletedcpt=false)
     {
         components[i]->Update(dt);
-        if(deletedcpt) continue;
+        if(deletedcpt){ i--; continue;}
         components[i]->box = box + relative;
         components[i]->UpdateNodes(dt); 
     
@@ -45,7 +45,8 @@ void GameObject::RenderNodes(){
     for(unsigned i = 0; i < components.size(); i++, deletedcpt=false)
     {   
         components[i]->Render();
-        if(deletedcpt) continue;
+        if(deletedcpt){ i--; continue;}
+        
         components[i]->RenderNodes();
     }
 }

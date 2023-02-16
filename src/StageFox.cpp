@@ -9,10 +9,9 @@
 #include "LionBoss.h"
 #include "StageFox.h"
 #include "ScreenFade.h"
+#include "Fox.h"
 #include "Stage4.h"
 #include "Gate.h"
-
-
 
 StageFox::StageFox() : State(){
     backgroundMusic.Open("assets/audio/StageState.ogg");
@@ -48,7 +47,7 @@ void StageFox::LoadAssets(){
 
     // BACKGROUNDS
     GameObject* goBackground = new GameObject();
-        goBackground->depth = -4;
+        goBackground->depth = -4.0f;
         Sprite* bg = new Sprite(*goBackground, "assets/img/stagefox/Background_fox.png");
         goBackground->AddComponent(bg);
 
@@ -118,6 +117,15 @@ void StageFox::LoadAssets(){
       
     rigidArray.emplace_back(player_GO);
 
+    auto fox_GO = new GameObject();
+        fox_GO->depth = 10;
+        auto fox = new Fox(*fox_GO);
+        fox_GO->AddComponents({fox});
+
+        fox_GO->box.x = 1500.01 - fox->FOXSIZE.x/2;
+        fox_GO->box.y = 850  - fox->FOXSIZE.y/2;
+    
+    enemyArray.emplace_back(fox_GO);
   
 
     backgroundMusic.Play();
@@ -175,6 +183,9 @@ void StageFox::Update(float dt){
     // std::cout << "SAI";
 
     CollideVectors(rigidArray, terrainArray);
+    CollideVectors(rigidArray, bulletArray);
+    CollideVectors(enemyArray, bulletArray);
+    CollideVectors(bulletArray, terrainArray);
     // std::cout << "colidiu";
     
     Camera::Update(dt);
