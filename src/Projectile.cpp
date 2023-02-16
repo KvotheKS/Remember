@@ -16,7 +16,7 @@ Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* targe
                 float homingAccMax, bool prftHmg, bool accHmg, float pace) : GameObject(associated){
     Collider* collider = new Collider(associated);
     associated.AddComponent(collider);
-    // associated.angleDeg = angle;
+    associated.angleDeg = angle;
     this->target = target;
     this->rotSprt = rotSprt;
 
@@ -40,13 +40,13 @@ Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* targe
 
 Projectile::Projectile(GameObject& associated, float lifeTime, float angle, float initialSpeed,
                 float maxSpeed , float gravity, float pace)
-    : Projectile(associated, lifeTime, nullptr, true, angle, initialSpeed, maxSpeed, gravity, 0.0f, 0.0f, false, false, pace)
+    : Projectile(associated, lifeTime, nullptr, false, angle, initialSpeed, maxSpeed, gravity, 0.0f, 0.0f, false, false, pace)
 {}
         
 Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* target, float angle, float initialSpeed, 
         float maxSpeed , float homingRadius,
             float homingAccMax, bool accelerated, float gravity, float pace)
-    : Projectile(associated, lifeTime, target, true, angle, initialSpeed, maxSpeed, gravity, homingRadius, homingAccMax, false, accelerated, pace)
+    : Projectile(associated, lifeTime, target, false, angle, initialSpeed, maxSpeed, gravity, homingRadius, homingAccMax, false, accelerated, pace)
 {}
 
 void Projectile::Update(float dt){
@@ -95,14 +95,14 @@ void Projectile::Update(float dt){
             float b = oldVelocity.Magnitude();
             // Angulo entre dois vetores: A.B / (mag(A) * mag(B))
             if(a > 0.0 && b > 0.0){
-                float degAngle = std::acos(product / (a * b)) * 180.0 / PI;
+                float arcVal = std::min(1.0f, std::max(product / (a * b), -1.0f));
+                float degAngle = std::acos(arcVal) * 180.0 / PI;
                 // Se o cross product for negativo o vetor foi no sentido horário no circulo trigonometrico,
                 // positivo é anti-horário
-                // Se estiver trocado, só trocar += por -= e vice-versa
                 if(oldVelocity.Cross(velocity) > 0)
-                    associated.angleDeg -= degAngle;
-                else
                     associated.angleDeg += degAngle;
+                else
+                    associated.angleDeg -= degAngle;
             }
         }
     }

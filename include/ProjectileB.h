@@ -7,7 +7,6 @@
 class ProjectileB : public GameObject {
     private:
         float MOVEDURATION;
-        float angleOffset;
         Timer lifeTimeCount, movingTimer;
         int damage;
         Bcurve* trajectory;
@@ -15,7 +14,7 @@ class ProjectileB : public GameObject {
         bool rotSprt = false;
     public:
         ProjectileB(GameObject& associated, Bcurve* curve, float lifeTime,
-            float maxMoveTime, int damage, float angleOffset = 0.0f, bool rotSprt = false);
+            float maxMoveTime, int damage, bool rotSprt = false);
         void Update(float dt);
         void Render();
         bool Is(C_ID type);

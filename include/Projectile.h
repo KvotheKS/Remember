@@ -15,7 +15,7 @@ class Projectile : public GameObject {
         bool prftHmg, accHmg, rotSprt;
     public:
         GameObject* target;
-        Projectile(GameObject& associated, float lifeTime = std::numeric_limits<float>::infinity(), GameObject* target = nullptr, bool rotSprt = true,
+        Projectile(GameObject& associated, float lifeTime = std::numeric_limits<float>::infinity(), GameObject* target = nullptr, bool rotSprt = false,
                     float angle = 0.0f, float initialSpeed = 0.0f, float maxSpeed = std::numeric_limits<float>::infinity(), float gravity = 0.0f, float homingRadius = 0.0f,
                     float homingAccMax = 0.0f, bool prftHmg = false, bool accHmg = false, float pace = 1.0f);
         //Projetil simples

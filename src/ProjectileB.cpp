@@ -1,14 +1,14 @@
 #include "ProjectileB.h"
 
 ProjectileB::ProjectileB(GameObject& associated, Bcurve* curve, float lifeTime, float maxMoveTime,
-            int damage, float angleOffset, bool rotSprt)
+            int damage, bool rotSprt)
     : GameObject(associated)
 {
     trajectory = curve;
     if(rotSprt){
         velocity = curve->GetDerivate();
         Vec2 direction = velocity->GetNewPoint(0.0f);
-        associated.angleDeg = direction.AngleX() * PI_DEG + angleOffset;
+        associated.angleDeg = direction.AngleX() * PI_DEG;
     }
 
     lifeTimeCount.Restart();
@@ -19,7 +19,6 @@ ProjectileB::ProjectileB(GameObject& associated, Bcurve* curve, float lifeTime, 
     movingTimer.SetFinish(maxMoveTime);
 
     this->damage = damage;
-    this->angleOffset = angleOffset;
     this->rotSprt = rotSprt;
 }
 
@@ -41,7 +40,7 @@ void ProjectileB::Update(float dt){
         }
         associated.box.SetCenter(pos.x, pos.y);
         if(rotSprt)
-            associated.angleDeg = dir.AngleX() * PI_DEG + angleOffset;
+            associated.angleDeg = dir.AngleX() * PI_DEG;
     }
 }
 
