@@ -14,6 +14,7 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include "Rect.h"
 
 enum RBSTATE
 {
@@ -31,6 +32,8 @@ private:
     
 public:
     bool pause;
+
+    
 
     Player(GameObject& associated);
     ~Player();
@@ -51,10 +54,10 @@ public:
     void GetStunned(Vec2 dir,float dt);
     void JustGrounded();
 
-    int GetState();
+    // int GetState();
     void SetPause(bool pause);
     
-
+    Rect Bounds;
     int hp;
     bool isFiring;
     bool isSlashing;

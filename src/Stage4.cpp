@@ -38,7 +38,14 @@ void Stage4::LoadAssets(){
     
         State& state = Game::GetInstance().GetCurrentState();
     state.AddObject(GO_fade);
-
+     //TILEMAP
+    GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 2;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_stage4.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
     //BACKGROUND
     GameObject* goBackground = new GameObject();
         goBackground->depth = -6;
@@ -142,6 +149,7 @@ void Stage4::LoadAssets(){
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
         Player* pl = new Player(*player_GO);
+        pl->Bounds = Rect(-70,-500, 60*tileMap->GetWidth()+140,60*tileMap->GetHeight()+500);
         player_GO->AddComponent(pl);
         
         
@@ -154,14 +162,7 @@ void Stage4::LoadAssets(){
     backgroundMusic.Play();
 
     Camera::Follow(player_GO);
-    //TILEMAP
-    GameObject* goTileMap = new GameObject();
-        goTileMap->depth = 2;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_stage4.txt", tileSet);
-        goTileMap->AddComponent(tileMap);
-        goTileMap->box.x = 0;
-        goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
+   
 
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);

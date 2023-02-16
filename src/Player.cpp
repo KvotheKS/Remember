@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "RigidBody.h"
 #include "TerrainBody.h"
-
+#include "ActionMachine.h"
 #include "Rand.h"
 #include "ScreenFade.h"
 #include "StateMac.h"
@@ -10,6 +10,7 @@
 #include "Projectile.h"
 #include "Game.h"
 #include "Attack.h"
+
 #include <limits>
 // define pra test -m
 using namespace std;
@@ -133,7 +134,7 @@ void Player::Start(){
     sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::SKID, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ydano.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::STUN, sprite_sheet_node); 
 
     sprite_sheet_node = new SSNode("assets/img/Ype/YmagicR.png",  {0, 0, 80*4, 80}, 4, 0.1,scale);
@@ -172,6 +173,7 @@ void Player::Update(float dt){
     *isGrounded = false;
     inputDone = false;
     crouchHeld = false;
+
 }
 void Player::Render(){
 }
@@ -387,15 +389,15 @@ void Player::Controls(float dt){
         // state.AddObject(GO_fade);
        
         // mouse direction code
-        // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
-        // (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
+        speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
+        (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
 
-        //GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y),dt);
+        GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y),dt);
         
         /* teleport to mouse click position*/ 
-        associated.box.x = inManager.GetMouseX() + Camera::pos.x;
-        associated.box.y = inManager.GetMouseY() + Camera::pos.y;
-        speed = Vec2(0,0);
+        // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
+        // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
+        // speed = Vec2(0,0);
     }
     // RIGHT CLICK COMAND
     if(inManager.MousePress(RIGHT_MOUSE_BUTTON) ){
@@ -519,7 +521,12 @@ void Player::Physics(float dt){
     // mova-se de acordo com a velocidade 
     Vec2 center = Vec2(associated.box.GetCenter() + speed);
     associated.box.SetCenter(center.x,center.y);
-   
+    
+    
+    Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
+    associated.box.x = min(Bounds.x + Bounds.w - associated.box.w, max(Bounds.x, associated.box.x));
+    associated.box.y = min(Bounds.y + Bounds.h - associated.box.h, max(Bounds.y, associated.box.y));
+    
 }
 
 
@@ -530,7 +537,7 @@ void Player::Animation(float dt){
     state_machine = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
     auto [state_idx, cr_state] = state_machine->GetCurrent();
     Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
-   
+    
     if(isAttacking){
         state_machine->ChangeState_s(RBSTATE::CASTR); 
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
@@ -617,7 +624,7 @@ void Player::Animation(float dt){
         
         state_machine->ChangeState_s(RBSTATE::STUN);
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
-        ass_collider->SetOffset(Vec2(0,8));
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
     }
 
     
@@ -667,15 +674,4 @@ void Player::GetStunned(Vec2 dir, float dt){
 
 void Player::SetPause(bool pause){
     this->pause = pause;
-}
-
-int Player::GetState()
-{
-    return  RBSTATE::RIGHT*(speed.x > 0 && *isGrounded) +
-            RBSTATE::LEFT*(speed.x < 0 && *isGrounded) +
-            RBSTATE::STILL*(speed.x == 0 && *isGrounded) +
-            RBSTATE::JUMP*(speed.y < 0 && !*isGrounded) +
-            RBSTATE::FALL*(speed.y > 2 && !*isGrounded) +
-            RBSTATE::RUN*(speed.x != 0 && *isGrounded) +
-            RBSTATE::IDLE*(speed.x == 0 && *isGrounded);
 }

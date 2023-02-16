@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
-#include "ActionMachine.h"
+#include "MovementBehavior.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "LionBoss.h"
@@ -172,13 +172,19 @@ void TestState::LoadAssets(){
 
         StateMachine* st = new StateMachine(*player_GO);
         player_GO->AddComponent(st);
+
         Collider* pl_collider = new Collider(*player_GO);
         player_GO->AddComponent(pl_collider);
+
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
+
         Player* pl = new Player(*player_GO);
+        pl->Bounds = Rect(-70,-500, 60*tileMap->GetWidth()+140,60*tileMap->GetHeight()+500);
         player_GO->AddComponent(pl);
-        
+
+        // MovementBehavior* mb = new MovementBehavior(*player_GO);
+        // player_GO->AddComponent(mb);
         
         player_GO->box.SetCenter(spawnList[GameData::spawn_ID].x*60, spawnList[GameData::spawn_ID].y*60);
       
@@ -198,6 +204,7 @@ void TestState::LoadAssets(){
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
     Camera::Bounds = Rect(0,0, 60*tileMap->GetWidth(), 60*tileMap->GetHeight());
+
 
 
     /*STAGE TERRAIN*/

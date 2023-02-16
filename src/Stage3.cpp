@@ -39,6 +39,14 @@ void Stage3::LoadAssets(){
         State& state = Game::GetInstance().GetCurrentState();
     state.AddObject(GO_fade);
 
+    //TTILEMAP
+     GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 2;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state3.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
     //BACKGROUND
     GameObject* goBackground = new GameObject();
         goBackground->depth = -1;
@@ -116,7 +124,7 @@ void Stage3::LoadAssets(){
     //GATES
     GameObject* GO_Gate = new GameObject();
         int spawnpoint = 1;
-        bool active = false;
+        bool active = true;
         GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage2(),spawnpoint,active));
         GO_Gate->box.x = 60*-1.8;
         GO_Gate->box.y = 60*33;
@@ -159,6 +167,7 @@ void Stage3::LoadAssets(){
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
         Player* pl = new Player(*player_GO);
+        pl->Bounds = Rect(-70,-500, 60*tileMap->GetWidth()+140,60*tileMap->GetHeight()+500);
         player_GO->AddComponent(pl);
         
         
@@ -172,13 +181,7 @@ void Stage3::LoadAssets(){
 
     Camera::Follow(player_GO);
 
-    GameObject* goTileMap = new GameObject();
-        goTileMap->depth = 2;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_state3.txt", tileSet);
-        goTileMap->AddComponent(tileMap);
-        goTileMap->box.x = 0;
-        goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
+   
 
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);

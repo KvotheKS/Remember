@@ -110,6 +110,7 @@ void StageFox::LoadAssets(){
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
         Player* pl = new Player(*player_GO);
+        pl->Bounds = Rect(-70,-500, 60*tileMap->GetWidth()+140,60*tileMap->GetHeight()+500);
         player_GO->AddComponent(pl);
         
         
