@@ -29,5 +29,7 @@ enum class C_ID
     TimeBomb,
     ShakeBehavior,
     Mask,
-    ProjectileB
+    ProjectileB,
+    Spike,
+    FlameSpike
 };

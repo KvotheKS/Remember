@@ -118,10 +118,6 @@ bool Projectile::Is(std::string type){
     return type == "ProjectileF";
 }
 
-int Projectile::GetDamage(){
-    return damage;
-}
-
 void Projectile::SetMaxSpeed(float maxSpeed){
     this->maxSpeed = maxSpeed;
 }

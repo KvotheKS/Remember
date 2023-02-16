@@ -6,16 +6,16 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     CURR_PHASE = PHASE1;
     CURR_MASK = Rand::Get() % 3;
 
-    MAX_HP = 500;
-    hp = MAX_HP;
+    MAX_HEALTH = 500;
+    currentHealth = MAX_HEALTH;
 
-    MOVETIME = 4.5f;
-    MOVELOOP = -1;
-    CURVEIDX = 0;
+    MOVE_TIME = 4.5f;
+    MOVE_LOOP = -1;
+    CURVE_IDX = 0;
 
-    RESTTIME = 2.0f;
+    REST_TIME = 2.0f;
 
-    SWAPTIME = 0.5f;
+    SWAP_TIME = 0.5f;
     SWAPED = false;
 
     Vec2 p1 = Vec2(947, 346);
@@ -62,45 +62,64 @@ void MaskBoss::Activate(){
 
 void MaskBoss::Moving(float dt){
     Vec2 pos;
-    if(MOVELOOP == -1){
-        MOVELOOP = 0;
-        CURVEIDX = Rand::Get() % 2;
-        timer.SetFinish(MOVETIME);
+    if(MOVE_LOOP == -1){
+        MOVE_LOOP = 0;
+        CURVE_IDX = Rand::Get() % 2;
+        timer.SetFinish(MOVE_TIME);
         timer.Restart();
     }
 
-    if(timer.Update(dt) && MOVELOOP < 2){
-        pos = curves[CURVEIDX]->GetNewPoint(1.0f);
+    if(timer.Update(dt) && MOVE_LOOP < 2){
+        pos = curves[CURVE_IDX]->GetNewPoint(1.0f);
         associated.box.SetCenter(pos.x, pos.y);
-        CURVEIDX = !CURVEIDX;
-        MOVELOOP++;
+        CURVE_IDX = !CURVE_IDX;
+        MOVE_LOOP++;
         timer.Restart();
     }
-    else if(MOVELOOP < 2){
-        float t = timer.Get() / MOVETIME;
-        pos = curves[CURVEIDX]->GetNewPoint(t);
+    else if(MOVE_LOOP < 2){
+        float t = timer.Get() / MOVE_TIME;
+        pos = curves[CURVE_IDX]->GetNewPoint(t);
         associated.box.SetCenter(pos.x, pos.y);
     }
     else{
-        MOVELOOP = -1;
+        MOVE_LOOP = -1;
 
         auto stmac = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
         stmac->ChangeState(CURR_MASK + CURR_PHASE + DARK);
         CURR_STATE = IDLE;
 
-        timer.SetFinish(RESTTIME);
+        timer.SetFinish(REST_TIME);
         timer.Restart();
     }
 }
 
 void MaskBoss::Resting(float dt){
-    if(CURR_PHASE == PHASE1 && hp < MAX_HP/2)
+    if(CURR_PHASE == PHASE1 && currentHealth < MAX_HEALTH/2)
         CURR_PHASE = PHASE2;
     if(timer.Update(dt)){
         auto stmac = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
         stmac->ChangeState(CURR_MASK + CURR_PHASE);
-        CURR_STATE = SWAPPING;
+        CURR_STATE = ATTAKING;
     }
+}
+
+void MaskBoss::Attacking(){
+    // auto& st = Game::GetInstance().GetCurrentState();
+    // auto goSpike = new GameObject();
+    // goSpike->depth = 3;
+    // auto spike = new Spike(*goSpike, Spike::SMALL, 1.0f, 3.0f, 660);
+    // goSpike->AddComponent(spike);
+    // goSpike->box.y = 660 - goSpike->box.h;
+    // goSpike->box.x = 600;
+    // st.objectArray.emplace_back(goSpike);
+    // CURR_STATE = CHARGING;
+    auto& st = Game::GetInstance().GetCurrentState();
+    auto goFlames = new GameObject();
+    goFlames->depth = -3;
+    auto flameSpike = new FlameSpike(*goFlames, st.GetObject(C_ID::Mask), 2.0f * MOVE_TIME);
+    goFlames->AddComponents({flameSpike});
+    st.objectArray.emplace_back(goFlames);
+    CURR_STATE = MOVING;
 }
 
 void MaskBoss::Swapping(float dt){
@@ -117,7 +136,7 @@ void MaskBoss::Swapping(float dt){
         CURR_MASK = swapMask[Rand::Get() % 2];
         stmac->ChangeState(CURR_MASK + CURR_PHASE);
 
-        timer.SetFinish(SWAPTIME);
+        timer.SetFinish(SWAP_TIME);
         timer.Restart();
         SWAPED = true;
     }
@@ -140,7 +159,8 @@ void MaskBoss::Update(float dt){
             break;
         case CHARGING:
             break;
-        case ATKING:
+        case ATTAKING:
+            Attacking();
             break;
         case SWAPPING:
             Swapping(dt);
@@ -155,5 +175,5 @@ bool MaskBoss::Is(C_ID type){
 }
 
 void MaskBoss::TakeDamage(int damage){
-    if((hp -= damage) < 0) hp = 0;
+    if((currentHealth -= damage) < 0) currentHealth = 0;
 }

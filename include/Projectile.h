@@ -10,7 +10,6 @@ class Projectile : public GameObject {
         Vec2 velocity, gravity;
         float pace;
         float homingAccMax, homingRadius, maxSpeed;
-        int damage;
         Timer lifeTimeCount;
         bool prftHmg, accHmg, rotSprt;
     public:
@@ -29,6 +28,5 @@ class Projectile : public GameObject {
         void Render();
         bool Is(std::string type);
         bool Is(C_ID);
-        int GetDamage();
         void SetMaxSpeed(float maxSpeed);
 };

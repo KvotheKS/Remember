@@ -1,7 +1,6 @@
 #include "ProjectileB.h"
 
-ProjectileB::ProjectileB(GameObject& associated, Bcurve* curve, float lifeTime, float maxMoveTime,
-            int damage, bool rotSprt)
+ProjectileB::ProjectileB(GameObject& associated, Bcurve* curve, float lifeTime, float maxMoveTime, bool rotSprt)
     : GameObject(associated)
 {
     trajectory = curve;
@@ -18,7 +17,6 @@ ProjectileB::ProjectileB(GameObject& associated, Bcurve* curve, float lifeTime, 
     movingTimer.Restart();
     movingTimer.SetFinish(maxMoveTime);
 
-    this->damage = damage;
     this->rotSprt = rotSprt;
 }
 
@@ -49,8 +47,4 @@ void ProjectileB::Render(){
 
 bool ProjectileB::Is(C_ID type){
     return type == C_ID::ProjectileB;
-}
-
-int ProjectileB::GetDamage(){
-    return damage;
 }
