@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
-#include "ActionMachine.h"
+#include "MovementBehavior.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "LionBoss.h"
@@ -54,6 +54,7 @@ void TestState::LoadAssets(){
         goBackground->box.x = 0;
         goBackground->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground);
+
     GameObject* goBackground2 = new GameObject();
         goBackground2->depth = -2;
         bg = new Sprite(*goBackground2, "assets/img/stage1/stg01bgl02.png");
@@ -63,6 +64,7 @@ void TestState::LoadAssets(){
         goBackground2->box.x = 0;
         goBackground2->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground2);
+
     GameObject* goBackground3 = new GameObject();
         goBackground3->depth = -3;
         bg = new Sprite(*goBackground3, "assets/img/stage1/stg01bgl03.png");
@@ -147,8 +149,11 @@ void TestState::LoadAssets(){
 
     //OTHER
     GameObject* GO_Gate = new GameObject();
-
-        GO_Gate->AddComponent(new Gate(*GO_Gate));
+        int spawnpoint = 0;
+        bool active = true;
+        GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage2(),spawnpoint,active));
+        GO_Gate->box.x = 60*119;
+        GO_Gate->box.y = 60*8;
     terrainArray.emplace_back(GO_Gate);
 
     GameObject* fpsChecker = new GameObject();
@@ -167,13 +172,19 @@ void TestState::LoadAssets(){
 
         StateMachine* st = new StateMachine(*player_GO);
         player_GO->AddComponent(st);
+
         Collider* pl_collider = new Collider(*player_GO);
         player_GO->AddComponent(pl_collider);
+
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
+
         Player* pl = new Player(*player_GO);
+        pl->Bounds = Rect(-70,-500, 60*tileMap->GetWidth()+140,60*tileMap->GetHeight()+500);
         player_GO->AddComponent(pl);
-        
+
+        // MovementBehavior* mb = new MovementBehavior(*player_GO);
+        // player_GO->AddComponent(mb);
         
         player_GO->box.SetCenter(spawnList[GameData::spawn_ID].x*60, spawnList[GameData::spawn_ID].y*60);
       
@@ -193,6 +204,7 @@ void TestState::LoadAssets(){
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
     Camera::Bounds = Rect(0,0, 60*tileMap->GetWidth(), 60*tileMap->GetHeight());
+
 
 
     /*STAGE TERRAIN*/
@@ -283,6 +295,7 @@ void TestState::Start(){
 }
 
 void TestState::Update(float dt){
+    
     // removendo condicao de vitoria/derrota -m
     
     // if(PenguinBody::player == nullptr){
@@ -311,7 +324,7 @@ void TestState::Update(float dt){
         Collider::debugMode = !Collider::debugMode;
     }
     
-
+    
     /* ordem de update necessaria
     */
     // std::cout << "ENTRA";
@@ -372,6 +385,7 @@ void TestState::Render(){
 }
 
 void TestState::Pause(){
+    paused = true;
 }
 
 void TestState::Resume(){

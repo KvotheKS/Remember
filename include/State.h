@@ -6,8 +6,7 @@
 
 class State {
     protected:
-        bool popRequested;
-        bool quitRequested;
+        bool paused = false;
         bool started;
         std::vector<Vec2> spawnList; //lista locais pro jogador spawnar
 
@@ -20,6 +19,8 @@ class State {
         virtual void KillDeads();
         void KillVector(std::vector<std::shared_ptr<GameObject>>&);
     public:
+        bool popRequested;
+        bool quitRequested;
         std::vector<std::vector<std::shared_ptr<GameObject>>*> arrays;
         std::vector<std::shared_ptr<GameObject>> objectArray; // objetos variados (normalmente sem colisao)
         std::vector<std::shared_ptr<GameObject>> terrainArray; // terreno 

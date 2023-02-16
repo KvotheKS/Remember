@@ -16,13 +16,20 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include "State.h"
+#include "Stage2.h"
 
 
 class Gate : public GameObject {
 private:
+    State * target_state;
+    int spawn_point;
+    bool active;
+
+    Timer exitTimer;
     
 public:
-    Gate(GameObject& associated, bool hascpts = true);
+    Gate(GameObject& associated, State * target_state, int spawn_point = 0,bool active = true);
     ~Gate();
 
     void Start();
