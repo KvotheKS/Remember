@@ -14,8 +14,6 @@
 #include <memory>
 #include <cmath>
 
-#define PI_DEG 180.0f / M_PI
-
 LionBoss::LionBoss(GameObject& associated)
     : GameObject(associated)
 {

@@ -28,7 +28,8 @@ Player::Player(GameObject& associated):GameObject(associated){
     // associated.AddComponent(pbody);
     // pbody->SetScaleX(2,2);
     // associated.AddComponent(new Attack(associated, 10, Vec2(0,0), &associated));
-    
+    invul = false;
+    isDead = false;
     pause = false;
     isFiring = false;
     isSlashing = false;
@@ -81,7 +82,8 @@ Player::~Player(){
 }
 
 void Player::Start(){
-
+    invulTimer.SetFinish(2.0);
+    deathTimer.SetFinish(1.3);
     pause = false;
     hp = MAX_HP;
     // ------------------ STATE MACHINE SETUP --------------------
@@ -131,8 +133,8 @@ void Player::Start(){
     sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::SHOT, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
-    state_machine->AddNode(RBSTATE::SKID, sprite_sheet_node); 
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ymorte.png",  {0, 0, 80*13, 80}, 13, 0.1,scale);
+    state_machine->AddNode(RBSTATE::DIE, sprite_sheet_node); 
 
     sprite_sheet_node = new SSNode("assets/img/Ype/Ydano.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::STUN, sprite_sheet_node); 
@@ -205,9 +207,11 @@ void Player::Controls(float dt){
 
         auto& st = Game::GetInstance().GetCurrentState();
         auto proj_go = new GameObject();
-            auto proj = new Projectile(*proj_go, 5.0f, 0.0f, 250.0f, 250.0f);
-            auto spr = new Sprite(*proj_go, "assets/img/Ype/Ymagic.png", 6,0.1,1);
-            auto atk = new Attack(*proj_go, 10000, 0, proj_go);
+
+            auto proj = new Projectile(*proj_go, 20.0f, 0.0f, 600.0f, 600.0f);
+            auto spr = new Sprite(*proj_go, "assets/img/Ype/Ymagic.png", 6,0.1,0);
+            auto atk = new Attack(*proj_go, 10000, 1, &associated);
+
             auto dsp = new DisappearOnHit(*proj_go, &associated);
             auto cld = (Collider*)proj_go->GetComponent(C_ID::Collider);
             cld->type = C_ID::Hitbox;
@@ -390,11 +394,12 @@ void Player::Controls(float dt){
         // state.AddObject(GO_fade);
        
         // mouse direction code
-        speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
-        (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
+        // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
+        // (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
 
-        GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y),dt);
+        // GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y));
         
+
         /* teleport to mouse click position*/ 
         // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
         // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
@@ -417,7 +422,7 @@ void Player::RunTimers(float dt){
 
     if(isStunned){
         stunTimer.Update(dt);
-        if(stunTimer.Get()> STUN_TIMELIMIT) isStunned = false;
+        if(stunTimer.Get()> STUN_TIMELIMIT)isStunned = false; 
     }
     
 
@@ -435,6 +440,15 @@ void Player::RunTimers(float dt){
         JumpStoredTimer.Update(dt);
         if(JumpStoredTimer.Get() > JUMP_STORED_TIMELIMIT)jumpStored = false;
     }
+    if(isDead){
+        if(deathTimer.Update(dt)){
+            associated.RequestDelete();
+        }
+    }
+    if(invulTimer.Update(dt)){
+        invul = false;
+    }
+
 }
 
 void Player::Physics(float dt){
@@ -543,6 +557,10 @@ void Player::Animation(float dt){
         state_machine->ChangeState_s(RBSTATE::CASTR); 
         ass_collider->SetScale(Vec2(nxsize,nysize)); 
         ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
+    }else if(isDead){
+        state_machine->ChangeState_s(RBSTATE::DIE); 
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
     }
     else if(isDashing){
         auto v = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592); 
@@ -587,6 +605,12 @@ void Player::Animation(float dt){
       
         
         // (speed.x <= 0)?cr_state->SetFliped(false):cr_state->SetFliped(true); 
+    }else if(isStunned){
+        
+        state_machine->ChangeState_s(RBSTATE::STUN);
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
+    
     }else{
 
         associated.angleDeg = 0;
@@ -621,12 +645,7 @@ void Player::Animation(float dt){
             }
         
     }
-    if(isStunned){
-        
-        state_machine->ChangeState_s(RBSTATE::STUN);
-        ass_collider->SetScale(Vec2(nxsize,nysize)); 
-        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
-    }
+    
 
     
 }
@@ -657,22 +676,67 @@ void Player::JustGrounded(){//!!doesn work, so retorna is grounded
     
 }
 
-void Player::GetStunned(Vec2 dir, float dt){
+void Player::GetStunned(Vec2 dir){
     auto [state_idx, cr_state] = state_machine->GetCurrent();
     InputManager& inManager = InputManager::GetInstance();
-    speed = dir.Normalize()*1000*dt;
+    speed = dir.Normalize()*30;
     
     if(speed.x >0){
-        cr_state->SetFliped(true);
-    }else{
         cr_state->SetFliped(false);
+    }else{
+        cr_state->SetFliped(true);
     }
     isStunned = true;
     isDashing = false;
     isDreamDashing = false;
     stunTimer.Restart();
 }
+void Player::Die(){
+    isStunned = false;
+    isDashing = false;
+    isDreamDashing = false;
+    stunTimer.SetFinish(1);
+
+    isDead = true;
+    
+
+}
+
+void Player::NotifyCollision(GameObject& other, Vec2 sep)
+{
+    auto bingus = (Attack*)other.GetComponent(C_ID::Attack);
+    if(!bingus || bingus->OwnedBy(&associated))
+        return;
+    
+    
+    TakeDamage(bingus->GetDamage(), (other.box.x>associated.box.x)?0:1);
+}
+
+void Player::TakeDamage(int damage, int direction){
+    if(invul)return;
+    hp -= damage;
+    invulTimer.Restart();
+    invul = true;
+
+    if(direction == 1){
+        GetStunned(Vec2(1,-1));
+    }else{
+        GetStunned(Vec2(-1,-1));
+    }
+
+   if(hp<=0){
+        Die();
+    }
+}
 
 void Player::SetPause(bool pause){
     this->pause = pause;
 }
+
+// void Player::Tint(bool trans){
+//     auto statelist = state_machine->GetStates();
+
+//     for(auto & node: statelist){
+//         node.second->SetTint(255,255,255);
+//     }
+// }

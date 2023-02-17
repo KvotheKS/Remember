@@ -24,11 +24,11 @@ class Gate : public GameObject {
 private:
     State * target_state;
     int spawn_point;
-    bool active;
 
     Timer exitTimer;
     
 public:
+    bool active;
     Gate(GameObject& associated, State * target_state, int spawn_point = 0,bool active = true);
     ~Gate();
 
