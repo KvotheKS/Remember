@@ -1,5 +1,6 @@
 #include "IA.h"
 #include "Rand.h"
+#include "Game.h"
 #include <limits>
 
 IA::IA(GameObject& associated, GameObject* target, float positionWeight)
@@ -9,9 +10,11 @@ IA::IA(GameObject& associated, GameObject* target, float positionWeight)
 
 void IA::Update(float dt)
 {
-    if(!rendered || !tm.Update(dt) || !target)
+    auto& st = Game::GetInstance().GetCurrentState();
+
+    if(!rendered || !tm.Update(dt) || !target || st.GetObject(C_ID::Player, &st.rigidArray).expired())
     {
-        // std::cout<<'\n'<< tm.Get(); 
+        std::cout<<'\n'<< tm.Get(); 
         selectedAction = -1;
         return;
     }
