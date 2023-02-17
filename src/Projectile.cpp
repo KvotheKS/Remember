@@ -89,6 +89,7 @@ void Projectile::Update(float dt){
         // position += velocity * dt;
         associated.box+=velocity * dt;
         // std::cout << associated.box;
+        // std::cout << associated.box;
         // std::cout << velocity.Magnitude() * dt << '\n';
         // associated.box.SetCenter(position.x, position.y);
 
@@ -104,9 +105,9 @@ void Projectile::Update(float dt){
                 // positivo é anti-horário
                 // Se estiver trocado, só trocar += por -= e vice-versa
                 if(oldVelocity.Cross(velocity) > 0)
-                    associated.angleDeg -= degAngle;
-                else
                     associated.angleDeg += degAngle;
+                else
+                    associated.angleDeg -= degAngle;
             }
         }
     }

@@ -6,10 +6,12 @@
 
 class TimeBomb : public GameObject
 {
+    bool rendered;
     Timer tm;
 public:
     TimeBomb(GameObject&, float);
     void Update(float);
+    void Render();
     bool Is(C_ID);
 };
 

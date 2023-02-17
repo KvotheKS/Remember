@@ -1,6 +1,6 @@
 #include "Attack.h"
 
-Attack::Attack(GameObject& associated, int damage, Vec2 knockback, GameObject* owner)
+Attack::Attack(GameObject& associated, int damage, int knockback, GameObject* owner)
     : GameObject(associated)
 {
     this->damage = damage;
@@ -10,7 +10,7 @@ Attack::Attack(GameObject& associated, int damage, Vec2 knockback, GameObject* o
 
 int Attack::GetDamage() { return damage; }
 
-Vec2 Attack::GetKnockback() { return knockback; }
+int Attack::GetKnockback() { return knockback; }
 
 bool Attack::OwnedBy(GameObject* isOwner)
 { return isOwner == owner; }
@@ -23,11 +23,11 @@ DisappearOnHit::DisappearOnHit(GameObject& associated, GameObject* owner)
 {}
 
 void DisappearOnHit::NotifyCollision(GameObject& other, Vec2 sep)
-{ if(&other != owner) associated.RequestDelete(); }
+{ if(&other != owner) {associated.RequestDelete();}}
 
 DisappearOnDeadOwner::DisappearOnDeadOwner(GameObject& associated, std::weak_ptr<GameObject> owner)
     : GameObject(associated), owner(owner)
 {}
 
 void DisappearOnDeadOwner::Update(float dt)
-{ if(owner.expired() || owner.lock()->IsDead()) associated.RequestDelete(); }
+{ if(owner.expired() || owner.lock()->IsDead()){ associated.RequestDelete(); } }

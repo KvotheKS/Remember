@@ -6,7 +6,7 @@ TimeBomb::TimeBomb(GameObject& associated, float time)
 
 void TimeBomb::Update(float dt)
 {
-    if(tm.Update(dt))
+    if(rendered && tm.Update(dt))
     {
         if(&associated == nullptr)
             RequestDelete();
@@ -16,6 +16,9 @@ void TimeBomb::Update(float dt)
             associated.associated.RemoveComponent(&associated);
     }
 }
+
+void TimeBomb::Render()
+{rendered = true;}
 
 bool TimeBomb::Is(C_ID type)
 { return type == C_ID::TimeBomb; }

@@ -15,6 +15,7 @@ std::pair<ConditionalLambda, CameraFunction> Camera::transition = std::make_pair
 
 void Camera::Follow(GameObject* newFocus){
     focus = newFocus;
+    SetCameraFunction(FollowTarget);
 }
 
 void Camera::Unfollow(){

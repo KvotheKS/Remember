@@ -207,7 +207,7 @@ void Player::Controls(float dt){
         auto proj_go = new GameObject();
             auto proj = new Projectile(*proj_go, 5.0f, 0.0f, 250.0f, 250.0f);
             auto spr = new Sprite(*proj_go, "assets/img/Ype/Ymagic.png", 6,0.1,1);
-            auto atk = new Attack(*proj_go, 10000, Vec2(), proj_go);
+            auto atk = new Attack(*proj_go, 10000, 0, proj_go);
             auto dsp = new DisappearOnHit(*proj_go, &associated);
             auto cld = (Collider*)proj_go->GetComponent(C_ID::Collider);
             cld->type = C_ID::Hitbox;
@@ -226,6 +226,7 @@ void Player::Controls(float dt){
   
     // DOWN COMMAND
     if(inManager.IsKeyDown(DOWN_ARROW_KEY) ){
+        // std::cout << associated.box;
         movement_direction.y += 1;
        
         

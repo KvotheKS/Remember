@@ -93,9 +93,10 @@ void State::Collision(){
     
 }
 std::weak_ptr<GameObject> State::GetObjectPtr(GameObject* object){
-    for(unsigned i = 0; i < objectArray.size(); i++)
-        if(objectArray[i].get() == object)
-            return std::weak_ptr<GameObject>(objectArray[i]);
+    for(auto objarr : arrays)
+        for(unsigned i = 0; i < objarr->size(); i++)
+            if((*objarr)[i].get() == object)
+                return std::weak_ptr<GameObject>((*objarr)[i]);
     return std::weak_ptr<GameObject>();
 }
 

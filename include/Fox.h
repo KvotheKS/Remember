@@ -5,12 +5,22 @@
 class Fox : public GameObject
 {
 public:
-    enum ANM {IDLE, BULLETHELLANIM, DAMAGED, KONANIM, SNAPANIM, STUNNED};
-    enum ATK {ARCBALLS, KON, LIONLASER, BULLETHELL, WÕE, COMETS, TORNADO};
+    enum ANM {IDLE, BULLETHELLANIM, DAMAGED, KONANIM, SNAPANIM, STUNNED, SWIPEANIM, SNAPIDLEANIM};
+    enum ATK {ARCBALLS, KON, LIONLASER, BULLETHELL, WÕE, COMETS, TORNADO, SWIPE};
 
 public:
     
     Vec2 FOXSIZE;
+    float IDLEFRAMES;
+    float IDLEFRAMETIME;
+
+    float SNAPTRANSITIONFRAMES;
+    float SNAPTRANSITIONFRAMETIME;
+
+    float SNAPMOVEMENTFRAMES;
+    float SNAPMOVEMENTFRAMETIME;
+
+    float WARNINGCIRCLEFRAMES;
 
     Vec2 ARCBALLSSIZE;
     int ARCBALLSQTT;
@@ -32,6 +42,9 @@ public:
 
     float LIONPHASINGTIME;
     float LIONLASERDURATION;
+    float LIONLASERFULLDURATION;
+    float LIONLASERDAMAGEDURATION;
+    Vec2  LIONLASERSIZE;
 
     Rect StageLBound;
     Rect StageRBound;
@@ -69,4 +82,12 @@ public:
     void LIONLASERS_f();
     void COMET_f();
     void TORNADO_f();
+    bool Is(C_ID);
 };
+
+void PhasingLion(GameObject&, float);
+void UnphasingLion(GameObject&, float);
+void UnphasingLionTrg(GameObject& associated);
+void SpawnLionLaser(GameObject&);
+
+bool FinishedSnap(GameObject&);
