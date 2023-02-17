@@ -210,7 +210,7 @@ void Player::Controls(float dt){
 
             auto proj = new Projectile(*proj_go, 20.0f, 0.0f, 600.0f, 600.0f);
             auto spr = new Sprite(*proj_go, "assets/img/Ype/Ymagic.png", 6,0.1,0);
-            auto atk = new Attack(*proj_go, 10000, Vec2(),&associated);
+            auto atk = new Attack(*proj_go, 10000, 1, &associated);
 
             auto dsp = new DisappearOnHit(*proj_go, &associated);
             auto cld = (Collider*)proj_go->GetComponent(C_ID::Collider);
