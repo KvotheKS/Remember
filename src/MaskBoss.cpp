@@ -4,8 +4,8 @@
 MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     CURR_STATE = INACTIVED;
     CURR_PHASE = PHASE1;
-    CURR_MASK = RED;
-    CURR_ATK = 0;
+    CURR_MASK = Rand::Get() % 3;
+    CURR_ATK = Rand::Get() % 2;
 
     MAX_HEALTH = 500;
     currentHealth = MAX_HEALTH;
@@ -31,7 +31,7 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     CHARGE_SHOOT = false;
 
     LASERING_TIME = 1.0f;
-    LASERING_COOLDOWN = 0.5f;
+    LASERING_COOLDOWN = 1.0f;
 
     RAINING_TIME = 2.5f;
     DELAY_RAIN = 0.265f;
@@ -49,7 +49,8 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     curves.push_back(new Bcurve(points2));
 
     auto stmac = new StateMachine(associated);
-    associated.AddComponent(stmac);
+    auto collider = new Collider(associated);
+    associated.AddComponents({stmac, collider});
 
     int mask[] = {GREEN, RED, YELLOW, GREEN+PHASE2, RED+PHASE2, YELLOW+PHASE2};
     std::vector<string> fileName {"Green", "Red", "Yellow", "GreenBroken", "RedBroken", "YellowBroken"};
@@ -190,7 +191,7 @@ void MaskBoss::Spiking(int spikeSize, int spikeNum){
     auto& st = Game::GetInstance().GetCurrentState();
     for(int i = 0; i < spikeNum; i++){
         auto goSpike = new GameObject();
-            goSpike->depth = 12;
+            goSpike->depth = 3;
             Spike* spike;
             if(spikeSize == Spike::SMALL)
                 spike = new Spike(*goSpike, spikeSize, 1.0f, 6.0f, 660);
@@ -199,7 +200,7 @@ void MaskBoss::Spiking(int spikeSize, int spikeNum){
             goSpike->AddComponent(spike);
             goSpike->box.y = 660 - goSpike->box.h;
             goSpike->box.x = position[i];
-        st.objectArray.emplace_back(goSpike);
+        st.bulletArray.emplace_back(goSpike);
     }
     timer.Restart();
     timer.SetFinish(0.2f);
@@ -212,7 +213,7 @@ void MaskBoss::Flaming(){
         goFlames->depth = -3;
         auto flameSpike = new FlameSpike(*goFlames, st.GetObject(C_ID::Mask), 2.0f * MOVE_TIME);
         goFlames->AddComponents({flameSpike});
-    st.objectArray.emplace_back(goFlames);
+    st.bulletArray.emplace_back(goFlames);
     timer.Restart();
     timer.SetFinish(0.2f);
     CURR_STATE = COOLING;
@@ -222,7 +223,7 @@ void MaskBoss::Shooting(float dt){
     auto& st = Game::GetInstance().GetCurrentState();
     if(!CHARGE_SHOOT){
         auto goChargeShoot = new GameObject();
-            goChargeShoot->depth = 12;
+            goChargeShoot->depth = 5;
             auto chargeShoot = new Sprite(*goChargeShoot, "assets/img/Mask_Atks/projectile_birth.png", 5, 0.2f, 1.0f);
             chargeShoot->SetScaleX(0.5, 0.5);
             goChargeShoot->AddComponent(chargeShoot);
@@ -238,13 +239,13 @@ void MaskBoss::Shooting(float dt){
         float angle = 360.0f / (float) SHOOT_NUM;
         for(int i = 1; i <= SHOOT_NUM; i++){
             auto goShootProj = new GameObject();
-                goShootProj->depth = 12;
+                goShootProj->depth = 5;
                 auto spt = new Sprite(*goShootProj, "assets/img/Mask_Atks/projectile.png");
                 spt->SetScaleX(0.5, 0.5);
                 auto proj = new Projectile(*goShootProj, 5.0f, angle*i, 250, 250);
                 goShootProj->AddComponents({spt, proj});
                 goShootProj->box.SetCenter(903, 280);
-            st.objectArray.emplace_back(goShootProj);
+            st.bulletArray.emplace_back(goShootProj);
         }
         timer.Restart();
         timer.SetFinish(SHOOTING_COOLDOWN + 0.2f);
@@ -261,7 +262,7 @@ void MaskBoss::Lasering(float dt){
         auto laser = new Laser(*goLaser, LASERING_TIME);
         goLaser->box.SetCenter(903, 280);
         goLaser->AddComponents({laser});
-    st.objectArray.emplace_back(goLaser);
+    st.bulletArray.emplace_back(goLaser);
 
     timer.Restart();
     timer.SetFinish(LASERING_TIME + LASERING_COOLDOWN + 0.2f);
@@ -277,23 +278,23 @@ void MaskBoss::Raining(){
         Vec2 p3a = Vec2((12 - (i + 1)) * 60 + 30, 720);
         std::vector<Vec2> points = {p1, p2a, p3a};
         auto goProj = new GameObject();
-            goProj->depth = 11;
+            goProj->depth = -1;
             auto spt = new Sprite(*goProj, "assets/img/Mask_Atks/fire_rain.png", 4, 0.1);
             auto proj = new ProjectileB(*goProj, new Bcurve(points), 8, RAINING_TIME + DELAY_RAIN * i, true);
-            goProj->AddComponents({spt, proj});
-            goProj->box.SetCenter(900, 330);
-        st.objectArray.emplace_back(goProj);
+            auto collider = new Collider(*goProj);
+            goProj->AddComponents({spt, proj, collider});
+        st.bulletArray.emplace_back(goProj);
 
         Vec2 p2b = Vec2((i + 18) * 60 + 30, -720);
         Vec2 p3b = Vec2((i + 18) * 60 + 30, 720);
         std::vector<Vec2> points1 = {p1, p2b, p3b};
         auto goProj1 = new GameObject();
-            goProj1->depth = 11;
+            goProj1->depth = -1;
             auto spt1 = new Sprite(*goProj1, "assets/img/Mask_Atks/fire_rain.png", 4, 0.1);
             auto proj1 = new ProjectileB(*goProj1, new Bcurve(points1), 8, RAINING_TIME + DELAY_RAIN * i, true);
-            goProj1->AddComponents({spt1, proj1});
-            goProj1->box.SetCenter(900, 330);
-        st.objectArray.emplace_back(goProj1);
+            auto collider1 = new Collider(*goProj1);
+            goProj->AddComponents({spt1, proj1, collider1});
+        st.bulletArray.emplace_back(goProj1);
     }
 
     timer.Restart();

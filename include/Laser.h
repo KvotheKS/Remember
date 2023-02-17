@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Collider.h"
 #include "StateMac.h"
 #include "Timer.h"
 

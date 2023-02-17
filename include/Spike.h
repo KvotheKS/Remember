@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "StateMac.h"
+#include "Collider.h"
 #include "Timer.h"
 
 class Spike : public GameObject {

@@ -68,6 +68,9 @@ void Spike::Update(float dt){
             timer.Restart();
             timer.SetFinish(ACTIVE_TIME);
 
+            auto collider = new Collider(associated);
+            associated.AddComponent(collider);
+
             stmac->ChangeState(ACTIVE);
             associated.depth = -associated.depth;
         }

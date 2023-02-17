@@ -3,6 +3,7 @@
 #include "StateMac.h"
 #include "Timer.h"
 #include "Bcurve.h"
+#include "Collider.h"
 #include "Sprite.h"
 #include "TimeBomb.h"
 #include "Rand.h"

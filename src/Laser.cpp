@@ -32,15 +32,20 @@ void Laser::Update(float dt){
     else if(stmac->GetCurr() == FIRING && !MARKED){
         auto& st = Game::GetInstance().GetCurrentState();
         auto target = st.GetObject(C_ID::Player, &st.rigidArray);
+
         float angle = center.AngleLine(target.lock().get()->box.GetCenter());
         Vec2 rotCenter = center + Vec2(associated.box.w/2, 0).Rotate(angle);
         associated.box.SetCenter(rotCenter.x, rotCenter.y);
         associated.angleDeg = angle * PI_DEG;
+
         MARKED = true;
     }
     else if(stmac->GetCurr() == LASER_LOOP){
-        if(MARKED)
+        if(MARKED){
+            auto collider = new Collider(associated);
+            associated.AddComponent(collider);
             MARKED = false;
+        }
         if(timer.Update(dt))
             associated.RequestDelete();
     }

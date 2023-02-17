@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Timer.h"
+#include "Collider.h"
 #include "Bcurve.h"
 #include "Vec2.h"
 
