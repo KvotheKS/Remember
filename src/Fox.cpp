@@ -182,9 +182,9 @@ Fox::Fox(GameObject& associated)
     brainz->SetActions(
         {
             {Vec2(), 1, ARCBALLSDURATION},
-            {Vec2(), 2.0f, KONDURATION, true},
-            {Vec2(), 1.5f, LIONPHASINGTIME, true},
-            {Vec2(), 2.5f, BULLETHELLDURATION,true},
+            {Vec2(), 1, KONDURATION, true},
+            {Vec2(), 1, LIONPHASINGTIME, true},
+            {Vec2(), 1.0f, BULLETHELLDURATION,true},
             {Vec2(), 1, WÕEDURATION},
             {Vec2(), 1, COMETDURATION},
             {Vec2(), 1, TORNADODURATION}
