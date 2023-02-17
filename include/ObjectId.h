@@ -28,6 +28,11 @@ enum class C_ID
     Hurtbox,
     TimeBomb,
     ShakeBehavior,
+    Mask,
+    ProjectileB,
+    Spike,
+    FlameSpike,
+    Laser,
     Fox,
     Kon
 };

@@ -18,7 +18,7 @@
 
 enum RBSTATE
 {
-    LEFT, RIGHT, STILL, CROUCHSTART, CROUCH, IDLE, IDLE_B, WALK, RUN, JUMP, FALL, DASH ,DASHUP, MELEE, SHOT, SKID, STUN,CASTR,CASTL
+    LEFT, RIGHT, STILL, CROUCHSTART, CROUCH, IDLE, IDLE_B, WALK, RUN, JUMP, FALL, DASH ,DASHUP, MELEE, SHOT, DIE, STUN,CASTR,CASTL
 };
 
 class Player : public GameObject{
@@ -45,18 +45,21 @@ public:
     bool Is(std::string type);
     bool Is(C_ID);
 
-
+    
     void Jump(bool type);
     void Shoot(float dt);
     void bonkHead();
     /// @brief stuns and push player 
     /// @param dir direction of push
-    void GetStunned(Vec2 dir,float dt);
+    void GetStunned(Vec2 dir);
+    void TakeDamage(int damage,int direction);
+    void Die();
     void JustGrounded();
+    void NotifyCollision(GameObject& other,Vec2 sep);
 
     // int GetState();
     void SetPause(bool pause);
-    
+    void Tint(bool trans);
     Rect Bounds;
     int hp;
     bool isFiring;
@@ -64,12 +67,14 @@ public:
 
     Vec2 speed;
     Vec2 oldbox;
+    bool invul;
     bool* isGrounded;
     float* surface_inclination;
     int hasDoubleJump;
     int hasDash;
     bool inputDone;
     bool isDashing;
+    bool isDead;
     bool isAttacking;
     bool crouchHeld;
     bool jumpStored;
@@ -85,7 +90,8 @@ public:
     
     Timer stunTimer;
     Timer castTimer;
-    
+    Timer deathTimer;
+    Timer invulTimer;
 
 
     int MAX_HP;

@@ -14,8 +14,6 @@
 #include <memory>
 #include <cmath>
 
-#define PI_DEG 180.0f / M_PI
-
 LionBoss::LionBoss(GameObject& associated)
     : GameObject(associated)
 {
@@ -141,7 +139,7 @@ void LionBoss::Update(float dt)
         if(targ_go->box.GetCenter().Distance(associated.box.GetCenter()) < 500)
         {
             Camera::SetCameraFunction(Camera::Stationary);
-            ((Player*)targ_go->GetComponent(C_ID::Player))->Bounds=Rect(Camera::pos.x-50.0f, Camera::pos.y, Camera::width, Camera::height);
+            ((Player*)targ_go->GetComponent(C_ID::Player))->Bounds=Rect(Camera::pos.x-50.0f, Camera::pos.y, Camera::width+120, Camera::height+120);
             auto lionb = (IA*)associated.GetComponent(C_ID::IA);
             lionb->SetActionTimer((float)2.0f);
             activated = true;

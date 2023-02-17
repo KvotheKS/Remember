@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv){
     Game& game = Game::GetInstance();
-    game.Push(new TitleState());
+    game.Push(new MenuState());
     game.Run();
 
     return 0;

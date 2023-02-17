@@ -16,7 +16,7 @@
 
 
 Stage2::Stage2() : State(){
-    backgroundMusic.Open("assets/audio/StageState.ogg");
+    backgroundMusic.Open("assets/audio/Tema Ambiente.ogg");
     tileSet = new TileSet(60, 60, "assets/img/Tileset02.png");
 }
 

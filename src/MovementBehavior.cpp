@@ -27,8 +27,10 @@ void MovementBehavior::Update(float dt){
             }else{
                 associated.box.x += speed*dt;
             }
-                
-           
+        break;
+        case 1:
+            associated.angleDeg += speed*dt;
+        break;
     }
 }
 

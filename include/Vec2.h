@@ -12,6 +12,7 @@ using namespace std;
 #define p(x) cout << #x << ": " << x <<" ";
 
 #define PI 3.14159265358979323846
+#define PI_DEG 180.0f / PI
 const float _f_leniancy = 0.005f;
 
 class Vec2 {

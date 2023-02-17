@@ -9,6 +9,8 @@
 #include <string>
 
 class TitleState : public State {
+    private:
+        Music backgroundMusic;
     public:
         TitleState();
         ~TitleState();
