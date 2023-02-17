@@ -38,10 +38,10 @@ void Fox::SetVariables()
 
     WARNINGCIRCLEFRAMES = 20;
 
-    ARCBALLSSIZE = Vec2(75,75);
-    ARCBALLSQTT = 3;
+    ARCBALLSSIZE = Vec2(90,90);
+    ARCBALLSQTT = 5;
     ARCBALLSINITIALYSPEED = 500.0f;
-    ARCBALLSDURATION = 3.5f;
+    ARCBALLSDURATION = 2.0f;
     ARCBALLSTIMEBETWEEN = 0.3f;
     ARCBALLSFIRSTTIME = 1.5f;
     ARCBALLSSPACEBETWEEN = 250.0f;
@@ -57,7 +57,7 @@ void Fox::SetVariables()
     KONMOVEMENTFRAMETIME = 0.2f;
     KONFRAMES = 2;
     KONFRAMETIME = 0.5f;
-    KONLASERDURATION = 2.0f;
+    KONLASERDURATION = 2.5f;
     KONFADEOUT = 1.5f;
     KONLASERSIZE = Vec2(4000,315);
     KONDAMAGE = 15;
@@ -71,13 +71,13 @@ void Fox::SetVariables()
     BULLETHELLTRANSITIONFRAMETIME = 0.3f;
     
 
-    WÕEXSPEED = 500.0f; // Wõe eh o que cria 2 projeteis q vão dos pontos do estágio e quando os projeteis se encontram eles invertem o angulo 180graus
-    WÕEDURATION = 4.0f;
+    WÕEXSPEED = 570.0f; // Wõe eh o que cria 2 projeteis q vão dos pontos do estágio e quando os projeteis se encontram eles invertem o angulo 180graus
+    WÕEDURATION = 2.5f;
     WÕESIZE = Vec2(60, 200);
     WÕEDAMAGE = 3;
     WÕEKNOCKBACK = 0;
 
-    LIONLASERDURATION = 6.0f;
+    LIONLASERDURATION = 5.0f;
     LIONPHASINGTIME = 1.5f;
     LIONLASERDAMAGEDURATION = 0.4f;
     LIONLASERSIZE = Vec2(0, 250);
@@ -90,14 +90,14 @@ void Fox::SetVariables()
     COMETSIZE = Vec2(150, 100);
     COMETLANGLE = 60.0f;
     COMETRANGLE = 120.0f;
-    COMETSPEED = 285.0f;
-    COMETFIRSTTIME = 1.5f;
-    COMETDELAY = 0.25f;
-    COMETDURATION = 6.5f;
+    COMETSPEED = 300.0f;
+    COMETFIRSTTIME = 1.4f;
+    COMETDELAY = 0.22f;
+    COMETDURATION = 5.5f;
     COMETDAMAGE = 3;
     COMETKNOCKBACK = 0;
 
-    TORNADODURATION = 2.5f;
+    TORNADODURATION = 2.0f;
     TORNADOLIVEDURATION = 10.0f;
     TORNADOSIZE = Vec2(700, 80);
     TORNADODAMAGE = 3;
@@ -181,13 +181,13 @@ Fox::Fox(GameObject& associated)
     
     brainz->SetActions(
         {
-            {Vec2(), 1, ARCBALLSDURATION, true},
+            {Vec2(), 1, ARCBALLSDURATION},
             {Vec2(), 2.0f, KONDURATION, true},
             {Vec2(), 1.5f, LIONPHASINGTIME, true},
             {Vec2(), 2.5f, BULLETHELLDURATION,true},
-            {Vec2(), 1, WÕEDURATION,true},
+            {Vec2(), 1, WÕEDURATION},
             {Vec2(), 1, COMETDURATION},
-            {Vec2(), 1, TORNADODURATION,true}
+            {Vec2(), 1, TORNADODURATION}
         }
     );
     
@@ -248,7 +248,7 @@ void Fox::ARCBALL_f()
         auto arcballs_GO = new GameObject;
             auto arcballs_spr = new Sprite(*arcballs_GO, "assets/img/Fox/projectile_birth.png", 5, 0.1f);
             arcballs_spr->SetSize(ARCBALLSSIZE.x*5, ARCBALLSSIZE.y);
-            arcballs_spr->SetTint(127,200,70);
+            arcballs_spr->SetTint(200,200,70);
             float xpos = Rand::FloatRange(player->box.x, player->box.x + ARCBALLSSPACEBETWEEN) + ARCBALLSSPACEBETWEEN*i;
             auto arcballs_proj = new Projectile(*arcballs_GO, arctime + 1.5f, 90.0f, vecinic.Magnitude(), vecinic.Magnitude());
             auto dsp = new DisappearOnHit(*arcballs_GO, &associated);
@@ -261,7 +261,7 @@ void Fox::ARCBALL_f()
         arcballs_GO = new GameObject;
             arcballs_spr = new Sprite(*arcballs_GO, "assets/img/Fox/projectile_birth.png", 5, 0.2f);
             arcballs_spr->SetSize(ARCBALLSSIZE.x*5, ARCBALLSSIZE.y);
-            arcballs_spr->SetTint(127,200,70);
+            arcballs_spr->SetTint(200,200,70);
             xpos = Rand::FloatRange(player->box.x - ARCBALLSSPACEBETWEEN, player->box.x) - ARCBALLSSPACEBETWEEN*i;
             arcballs_proj = new Projectile(*arcballs_GO, arctime + 1.5f, 90.0f, vecinic.Magnitude(), vecinic.Magnitude());
             atk = new Attack(*arcballs_GO, ARCBALLSDAMAGE, ARCBALLSKNOCKBACK, &associated);
@@ -291,12 +291,12 @@ void Fox::KON_f()
                
                 GameObject* Go_hurtsound = new GameObject();
                 std::string soundname;
-                
+                std::cout << "KONJ";
                 soundname = "assets/audio/Foleys/KON.wav";        
                 Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);
                 ypehurtsound->Play();
                 Go_hurtsound->AddComponent(ypehurtsound);
-               
+                std::cout << "WSEekon";
                 auto kon_go = new GameObject;
                     kon_go->AddComponents({new Kon(*kon_go, fx->KONFRAMES, fx->KONFRAMETIME)});
                 st.cameraFollowerObjectArray.emplace_back(kon_go);
@@ -320,11 +320,12 @@ void Fox::BULLETHELL_f()
 {
     GameObject* Go_hurtsound = new GameObject();
         std::string soundname;
-        
-        soundname = "assets/audio/Foleys/Risada da raposa.wav";        
+        std::cout << "WEE_b";
+        soundname = "assets/audio/Foleys/Risada da raposa.wav";
         Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);
         ypehurtsound->Play();
         Go_hurtsound->AddComponent(ypehurtsound);
+        std::cout << "WOO_B";
 
     associated.AddComponent(
         new TimedTrigger(associated, BULLETHELLTRANSITIONFRAMES*BULLETHELLTRANSITIONFRAMETIME,
@@ -544,9 +545,10 @@ void Fox::TORNADO_f()
         auto spr = new Sprite(*tornado_GO, "assets/img/laser.png");
         auto cld = new Collider(*tornado_GO);
         auto tmb = new TimeBomb(*tornado_GO, TORNADOLIVEDURATION);
+        auto atk = new Attack(*tornado_GO, TORNADODAMAGE, TORNADOKNOCKBACK, &associated);
         spr->SetSize(TORNADOSIZE.x, TORNADOSIZE.y);
         tornado_GO->box.SetCenter(xpos, 75.0f -TORNADOSIZE.x/2 + StageRBound.y);
-        tornado_GO->AddComponents({spr, cld, tmb});
+        tornado_GO->AddComponents({spr, cld, tmb, atk});
         tornado_GO->angleDeg = 270.0f;
     st.bulletArray.emplace_back(tornado_GO);
 }
@@ -599,11 +601,13 @@ void Fox::Phase2Transition()
             
             GameObject* Go_hurtsound = new GameObject();
             std::string soundname;
-            
+            std::cout << "in RIS";
             soundname = "assets/audio/Foleys/Risada da raposa.wav";        
             Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);
             ypehurtsound->Play();
             Go_hurtsound->AddComponent(ypehurtsound);
+            
+            std::cout << "out RIS";
         }
     ));
 }
@@ -640,7 +644,7 @@ void Fox::NotifyCollision(GameObject& other, Vec2 sep)
             soundname = "assets/audio/Foleys/Raposa machucada 1.wav";
         
         else
-            soundname = "assets/audio/Foleys/Raposa Machudada 2.wav";
+            soundname = "assets/audio/Foleys/Raposa Machucada 2.wav";
         
         
         Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);

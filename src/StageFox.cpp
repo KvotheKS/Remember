@@ -92,7 +92,7 @@ void StageFox::LoadAssets(){
     GameObject* GO_Gate = new GameObject();
         int spawnpoint = 1;
         bool active = true;
-        GO_Gate->AddComponent(new Gate(*GO_Gate,new StageFox(),spawnpoint,active));
+        GO_Gate->AddComponent(new Gate(*GO_Gate,new StageFox(),spawnpoint,false));
         GO_Gate->box.x = 60*-1.8;
         GO_Gate->box.y = 60*15;
     terrainArray.emplace_back(GO_Gate);
