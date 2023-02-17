@@ -24,23 +24,23 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     DOUBLE_HIT = false;
 
     SPIKE_NUM = (int) Rand::FloatRange(4.0f, 7.0f);
-    SPIKE_DAMAGE = 20;
+    SPIKE_DAMAGE = 8;
 
-    FLAMES_DAMAGE = 8;
+    FLAMES_DAMAGE = 4;
 
     SHOOTING_TIME = 1.5f;
     SHOOTING_COOLDOWN = 1.0f;
     SHOOT_NUM = 24;
-    SHOOT_DAMAGE = 12;
+    SHOOT_DAMAGE = 6;
     SHOOT_CHARGE = false;
 
     LASERING_TIME = 1.0f;
     LASERING_COOLDOWN = 1.0f;
-    LASER_DAMAGE = 32;
+    LASER_DAMAGE = 16;
 
     RAINING_TIME = 2.5f;
     RAIN_DELAY = 0.265f;
-    RAIN_DAMAGE = 12;
+    RAIN_DAMAGE = 6;
 
     Vec2 p1 = Vec2(900, 330);
     Vec2 p2 = Vec2(0, 630);
