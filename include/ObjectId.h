@@ -33,5 +33,6 @@ enum class C_ID
     Spike,
     FlameSpike,
     Laser,
-    Fox
+    Fox,
+    Kon
 };

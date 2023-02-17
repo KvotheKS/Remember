@@ -29,6 +29,8 @@ private:
     Music backgroundMusic;
     
 public:
+    TileMap* tlmap;
+    
     StageFox();
     ~StageFox();
     void LoadAssets();
