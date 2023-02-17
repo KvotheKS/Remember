@@ -134,8 +134,7 @@ void StageMask::LoadAssets(){
     GameObject* enemy_GO = new GameObject();
         enemy_GO->depth = 3;
         enemy_GO->AddComponent(new MaskBoss(*enemy_GO));
-        enemy_GO->box.x = 1100 - enemy_GO->box.w;
-        enemy_GO->box.y = 510 - enemy_GO->box.h;
+        enemy_GO->box.SetCenter(900, 330);
     rigidArray.emplace_back(enemy_GO);
     
 

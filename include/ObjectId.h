@@ -31,5 +31,6 @@ enum class C_ID
     Mask,
     ProjectileB,
     Spike,
-    FlameSpike
+    FlameSpike,
+    Laser
 };

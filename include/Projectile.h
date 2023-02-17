@@ -25,8 +25,6 @@ class Projectile : public GameObject {
                 float maxSpeed = std::numeric_limits<float>::infinity(), float homingRadius = 0.0f,
                     float homingAccMax = 0.0f, bool accelerated = false, float gravity = 0.0f, float pace = 1.0f);
         void Update(float dt);
-        void Render();
-        bool Is(std::string type);
         bool Is(C_ID);
         void SetMaxSpeed(float maxSpeed);
 };

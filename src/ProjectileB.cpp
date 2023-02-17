@@ -42,9 +42,6 @@ void ProjectileB::Update(float dt){
     }
 }
 
-void ProjectileB::Render(){
-}
-
 bool ProjectileB::Is(C_ID type){
     return type == C_ID::ProjectileB;
 }

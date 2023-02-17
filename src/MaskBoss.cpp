@@ -4,7 +4,8 @@
 MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     CURR_STATE = INACTIVED;
     CURR_PHASE = PHASE1;
-    CURR_MASK = Rand::Get() % 3;
+    CURR_MASK = RED;
+    CURR_ATK = 0;
 
     MAX_HEALTH = 500;
     currentHealth = MAX_HEALTH;
@@ -13,20 +14,37 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     MOVE_LOOP = -1;
     CURVE_IDX = 0;
 
-    REST_TIME = 2.0f;
+    REST_TIME = 1.5f;
 
-    SWAP_TIME = 0.5f;
-    SWAPED = false;
+    CHARGE_TIME = 1.5f;
+    CHARGED = false;
 
-    Vec2 p1 = Vec2(947, 346);
-    Vec2 p2 = Vec2(-106, 646);
-    Vec2 p3 = Vec2(-106, 46);
-    Vec2 p4 = Vec2(947, 346);
+    SWAP_TIME = 1.5f;
+
+    DOUBLE_HIT = false;
+
+    SPIKE_NUM = (int) Rand::FloatRange(4.0f, 7.0f);
+
+    SHOOTING_TIME = 1.5f;
+    SHOOTING_COOLDOWN = 1.0f;
+    SHOOT_NUM = 24;
+    CHARGE_SHOOT = false;
+
+    LASERING_TIME = 1.0f;
+    LASERING_COOLDOWN = 0.5f;
+
+    RAINING_TIME = 2.5f;
+    DELAY_RAIN = 0.265f;
+
+    Vec2 p1 = Vec2(900, 330);
+    Vec2 p2 = Vec2(0, 630);
+    Vec2 p3 = Vec2(0, 30);
+    Vec2 p4 = Vec2(900, 330);
     std::vector<Vec2> points1 = {p1, p2, p3, p4};
     curves.push_back(new Bcurve(points1));
 
-    Vec2 p5 = Vec2(1856, 646);
-    Vec2 p6 = Vec2(1856, 46);
+    Vec2 p5 = Vec2(1800, 630);
+    Vec2 p6 = Vec2(1800, 30);
     std::vector<Vec2> points2 = {p1, p5, p6, p4};
     curves.push_back(new Bcurve(points2));
 
@@ -53,10 +71,10 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
 void MaskBoss::Activate(){
     auto& currstate = Game::GetInstance().GetCurrentState();
     auto target = currstate.GetObject(C_ID::Player, &currstate.rigidArray);
-    if(target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) < 800){
+    if(target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) < 500){
         auto stmac = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
         stmac->ChangeState(CURR_MASK);
-        CURR_STATE = MOVING;
+        CURR_STATE = CHARGING;
     }
 }
 
@@ -84,6 +102,17 @@ void MaskBoss::Moving(float dt){
     else{
         MOVE_LOOP = -1;
 
+        if(CURR_PHASE == PHASE1 && currentHealth < MAX_HEALTH/2){
+            CURR_PHASE = PHASE2;
+            auto& st = Game::GetInstance().GetCurrentState();
+            auto goBreaking = new GameObject();
+                goBreaking->depth = 5;
+                auto breakingSpt = new Sprite(*goBreaking, "assets/img/Masks/breaking.png", 10, 0.15, 1.5f);
+                goBreaking->AddComponent(breakingSpt);
+                goBreaking->box.SetCenter(903, 330);
+            st.objectArray.emplace_back(goBreaking);
+        }
+
         auto stmac = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
         stmac->ChangeState(CURR_MASK + CURR_PHASE + DARK);
         CURR_STATE = IDLE;
@@ -94,36 +123,208 @@ void MaskBoss::Moving(float dt){
 }
 
 void MaskBoss::Resting(float dt){
-    if(CURR_PHASE == PHASE1 && currentHealth < MAX_HEALTH/2)
-        CURR_PHASE = PHASE2;
     if(timer.Update(dt)){
+        auto& st = Game::GetInstance().GetCurrentState();
+        auto goChanging = new GameObject();
+            goChanging->depth = 5;
+            auto changingSpt = new Sprite(*goChanging, "assets/img/Masks/changing.png", 15, 0.1, 1.5f);
+            goChanging->AddComponent(changingSpt);
+            goChanging->box.SetCenter(903, 330);
+        st.objectArray.emplace_back(goChanging);
+
+        timer.SetFinish(SWAP_TIME + 0.2f);
+        timer.Restart();
+
         auto stmac = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
         stmac->ChangeState(CURR_MASK + CURR_PHASE);
-        CURR_STATE = ATTAKING;
+        CURR_STATE = SWAPPING;
     }
 }
 
-void MaskBoss::Attacking(){
-    // auto& st = Game::GetInstance().GetCurrentState();
-    // auto goSpike = new GameObject();
-    // goSpike->depth = 3;
-    // auto spike = new Spike(*goSpike, Spike::SMALL, 1.0f, 3.0f, 660);
-    // goSpike->AddComponent(spike);
-    // goSpike->box.y = 660 - goSpike->box.h;
-    // goSpike->box.x = 600;
-    // st.objectArray.emplace_back(goSpike);
-    // CURR_STATE = CHARGING;
+void MaskBoss::Charging(float dt){
+    if(!CHARGED){
+        auto& st = Game::GetInstance().GetCurrentState();
+        auto goWarning = new GameObject();
+            goWarning->depth = 5;
+            auto warningSpt = new Sprite(*goWarning, "assets/img/Masks/warning_circle.png", 20, 0.075, 1.5f);
+            goWarning->AddComponent(warningSpt);
+            goWarning->box.SetCenter(903, 280);
+        st.objectArray.emplace_back(goWarning);
+
+        timer.SetFinish(CHARGE_TIME);
+        timer.Restart();
+        CHARGED = true;
+    }
+    else if(timer.Update(dt)){
+        CURR_ATK = Rand::Get() % 2;
+        CURR_STATE = ATTAKING;
+        CHARGED = false;
+    }
+}
+
+void MaskBoss::Spiking(int spikeSize, int spikeNum){
+    vector<int> position;
+    vector<bool> occupedPos(30, false);
+    int count = 0;
+
+    while(count < spikeNum){
+        if(spikeSize == Spike::SMALL){
+            int div = Rand::IntRange(0, 1680) / 60;
+            if(!occupedPos[div] && !occupedPos[div + 1]){
+                occupedPos[div] = true;
+                occupedPos[div+1] = true;
+                position.push_back(div * 60);
+                count++;
+            }
+        }
+        else{
+            int div = Rand::IntRange(0, 1740) / 60;
+            if(!occupedPos[div]){
+                occupedPos[div] = true;
+                position.push_back(div * 60);
+                count++;
+            }
+        }
+    }
+
+    auto& st = Game::GetInstance().GetCurrentState();
+    for(int i = 0; i < spikeNum; i++){
+        auto goSpike = new GameObject();
+            goSpike->depth = 12;
+            Spike* spike;
+            if(spikeSize == Spike::SMALL)
+                spike = new Spike(*goSpike, spikeSize, 1.0f, 6.0f, 660);
+            else
+                spike = new Spike(*goSpike, spikeSize, 1.0f, 3.0f, 660);
+            goSpike->AddComponent(spike);
+            goSpike->box.y = 660 - goSpike->box.h;
+            goSpike->box.x = position[i];
+        st.objectArray.emplace_back(goSpike);
+    }
+    timer.Restart();
+    timer.SetFinish(0.2f);
+    CURR_STATE = COOLING;
+}
+
+void MaskBoss::Flaming(){
     auto& st = Game::GetInstance().GetCurrentState();
     auto goFlames = new GameObject();
-    goFlames->depth = -3;
-    auto flameSpike = new FlameSpike(*goFlames, st.GetObject(C_ID::Mask), 2.0f * MOVE_TIME);
-    goFlames->AddComponents({flameSpike});
+        goFlames->depth = -3;
+        auto flameSpike = new FlameSpike(*goFlames, st.GetObject(C_ID::Mask), 2.0f * MOVE_TIME);
+        goFlames->AddComponents({flameSpike});
     st.objectArray.emplace_back(goFlames);
-    CURR_STATE = MOVING;
+    timer.Restart();
+    timer.SetFinish(0.2f);
+    CURR_STATE = COOLING;
+}
+
+void MaskBoss::Shooting(float dt){
+    auto& st = Game::GetInstance().GetCurrentState();
+    if(!CHARGE_SHOOT){
+        auto goChargeShoot = new GameObject();
+            goChargeShoot->depth = 12;
+            auto chargeShoot = new Sprite(*goChargeShoot, "assets/img/Mask_Atks/projectile_birth.png", 5, 0.2f, 1.0f);
+            chargeShoot->SetScaleX(0.5, 0.5);
+            goChargeShoot->AddComponent(chargeShoot);
+            goChargeShoot->box.SetCenter(903, 280);
+        st.objectArray.emplace_back(goChargeShoot);
+
+        timer.Restart();
+        timer.SetFinish(1.0f);
+
+        CHARGE_SHOOT = true;
+    }
+    else if(timer.Update(dt)){
+        float angle = 360.0f / (float) SHOOT_NUM;
+        for(int i = 1; i <= SHOOT_NUM; i++){
+            auto goShootProj = new GameObject();
+                goShootProj->depth = 12;
+                auto spt = new Sprite(*goShootProj, "assets/img/Mask_Atks/projectile.png");
+                spt->SetScaleX(0.5, 0.5);
+                auto proj = new Projectile(*goShootProj, 5.0f, angle*i, 250, 250);
+                goShootProj->AddComponents({spt, proj});
+                goShootProj->box.SetCenter(903, 280);
+            st.objectArray.emplace_back(goShootProj);
+        }
+        timer.Restart();
+        timer.SetFinish(SHOOTING_COOLDOWN + 0.2f);
+
+        CHARGE_SHOOT = false;
+        CURR_STATE = COOLING;
+    }
+}
+
+void MaskBoss::Lasering(float dt){
+    auto& st = Game::GetInstance().GetCurrentState();
+    auto goLaser = new GameObject();
+        goLaser->depth = 12;
+        auto laser = new Laser(*goLaser, LASERING_TIME);
+        goLaser->box.SetCenter(903, 280);
+        goLaser->AddComponents({laser});
+    st.objectArray.emplace_back(goLaser);
+
+    timer.Restart();
+    timer.SetFinish(LASERING_TIME + LASERING_COOLDOWN + 0.2f);
+    CURR_STATE = COOLING;
+}
+
+void MaskBoss::Raining(){
+    auto& st = Game::GetInstance().GetCurrentState();
+
+    Vec2 p1 = Vec2(900, -60);
+    for(int i = 0; i < 12; i++){
+        Vec2 p2a = Vec2((12 - (i + 1)) * 60 + 30, -720);
+        Vec2 p3a = Vec2((12 - (i + 1)) * 60 + 30, 720);
+        std::vector<Vec2> points = {p1, p2a, p3a};
+        auto goProj = new GameObject();
+            goProj->depth = 11;
+            auto spt = new Sprite(*goProj, "assets/img/Mask_Atks/fire_rain.png", 4, 0.1);
+            auto proj = new ProjectileB(*goProj, new Bcurve(points), 8, RAINING_TIME + DELAY_RAIN * i, true);
+            goProj->AddComponents({spt, proj});
+            goProj->box.SetCenter(900, 330);
+        st.objectArray.emplace_back(goProj);
+
+        Vec2 p2b = Vec2((i + 18) * 60 + 30, -720);
+        Vec2 p3b = Vec2((i + 18) * 60 + 30, 720);
+        std::vector<Vec2> points1 = {p1, p2b, p3b};
+        auto goProj1 = new GameObject();
+            goProj1->depth = 11;
+            auto spt1 = new Sprite(*goProj1, "assets/img/Mask_Atks/fire_rain.png", 4, 0.1);
+            auto proj1 = new ProjectileB(*goProj1, new Bcurve(points1), 8, RAINING_TIME + DELAY_RAIN * i, true);
+            goProj1->AddComponents({spt1, proj1});
+            goProj1->box.SetCenter(900, 330);
+        st.objectArray.emplace_back(goProj1);
+    }
+
+    timer.Restart();
+    timer.SetFinish(RAINING_TIME + DELAY_RAIN * 11 + 0.2f);
+    CURR_STATE = COOLING;
+}
+
+void MaskBoss::Attacking(float dt){
+    if(CURR_MASK == YELLOW)
+        CURR_ATK ? Lasering(dt) : Raining();
+    else if(CURR_MASK == RED)
+        CURR_ATK ? Flaming() : Shooting(dt);
+    else
+        Spiking(CURR_ATK, SPIKE_NUM);
+}
+
+void MaskBoss::Cooling(float dt){
+    if(timer.Update(dt)){
+        if(CURR_PHASE == PHASE1 || DOUBLE_HIT){
+            DOUBLE_HIT = false;
+            CURR_STATE = MOVING;
+        }
+        else{
+            DOUBLE_HIT = true;
+            CURR_STATE = IDLE;
+        }
+    }
 }
 
 void MaskBoss::Swapping(float dt){
-    if(!SWAPED){
+    if(timer.Update(dt)){
         vector<int> swapMask;
         if(CURR_MASK == RED)
             swapMask.assign({GREEN, YELLOW});
@@ -136,13 +337,7 @@ void MaskBoss::Swapping(float dt){
         CURR_MASK = swapMask[Rand::Get() % 2];
         stmac->ChangeState(CURR_MASK + CURR_PHASE);
 
-        timer.SetFinish(SWAP_TIME);
-        timer.Restart();
-        SWAPED = true;
-    }
-    if(timer.Update(dt)){
-        CURR_STATE = MOVING;
-        SWAPED = false;
+        CURR_STATE = CHARGING;
     }
 }
 
@@ -158,9 +353,13 @@ void MaskBoss::Update(float dt){
             Resting(dt);
             break;
         case CHARGING:
+            Charging(dt);
             break;
         case ATTAKING:
-            Attacking();
+            Attacking(dt);
+            break;
+        case COOLING:
+            Cooling(dt);
             break;
         case SWAPPING:
             Swapping(dt);

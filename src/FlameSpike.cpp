@@ -16,7 +16,6 @@ FlameSpike::FlameSpike(GameObject& associated, std::weak_ptr<GameObject> center,
     this->center = center;
     if(std::shared_ptr<GameObject> orig = this->center.lock()){
         Vec2 maskCenter = orig->box.GetCenter();
-        cout << maskCenter;
         associated.box.SetCenter(maskCenter.x, maskCenter.y);
     }
 }
@@ -30,9 +29,6 @@ void FlameSpike::Update(float dt){
     }
     else
         associated.RequestDelete();
-}
-
-void FlameSpike::Render(){
 }
 
 bool FlameSpike::Is(C_ID type){

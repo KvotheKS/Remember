@@ -14,6 +14,5 @@ class ProjectileB : public GameObject {
     public:
         ProjectileB(GameObject& associated, Bcurve* curve, float lifeTime, float maxMoveTime, bool rotSprt = false);
         void Update(float dt);
-        void Render();
         bool Is(C_ID type);
 };

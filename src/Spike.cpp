@@ -69,20 +69,16 @@ void Spike::Update(float dt){
             timer.SetFinish(ACTIVE_TIME);
 
             stmac->ChangeState(ACTIVE);
+            associated.depth = -associated.depth;
         }
     }
     else if(stmac->GetCurr() == ACTIVE_LOOP){
         if(timer.Update(dt)){
-            associated.depth = -5;
-            associated.box.y += associated.box.h * dt;
-
+            associated.box.y += associated.box.h/2 * dt;
             if(associated.box.y > floorHeight)
                 associated.RequestDelete();
         }
     }
-}
-
-void Spike::Render(){
 }
 
 bool Spike::Is(C_ID type){

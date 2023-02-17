@@ -108,15 +108,8 @@ void Projectile::Update(float dt){
     }
 }
 
-void Projectile::Render(){
-}
-
 bool Projectile::Is(C_ID type)
 { return type == C_ID::Projectile; }
-
-bool Projectile::Is(std::string type){
-    return type == "ProjectileF";
-}
 
 void Projectile::SetMaxSpeed(float maxSpeed){
     this->maxSpeed = maxSpeed;

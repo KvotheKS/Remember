@@ -16,6 +16,5 @@ class Spike : public GameObject {
         enum {SMALL, BIG};
         Spike(GameObject& associated, int spikeSize, float warningTime, float activeTime, float floorHeight);
         void Update(float dt);
-        void Render();
         bool Is(C_ID type);
 };
