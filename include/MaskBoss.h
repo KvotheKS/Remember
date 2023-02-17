@@ -12,6 +12,7 @@
 #include "Projectile.h"
 #include "ProjectileB.h"
 #include "Laser.h"
+#include "Attack.h"
 #include <memory>
 
 class MaskBoss : public GameObject {
@@ -23,7 +24,7 @@ class MaskBoss : public GameObject {
         int MAX_HEALTH;
         int currentHealth;
 
-        float MOVE_TIME, MOVE_TIME2;
+        float MOVE_TIME;
         int CURVE_IDX, MOVE_LOOP;
         vector<Bcurve*> curves;
 
@@ -36,15 +37,19 @@ class MaskBoss : public GameObject {
 
         float SWAP_TIME;
 
-        int SPIKE_NUM;
+        int SPIKE_NUM, SPIKE_DAMAGE;
+
+        int FLAMES_DAMAGE;
 
         float SHOOTING_TIME, SHOOTING_COOLDOWN;
-        int SHOOT_NUM;
-        bool CHARGE_SHOOT, COOLDOWN_SHOOT;
+        int SHOOT_NUM, SHOOT_DAMAGE;
+        bool SHOOT_CHARGE;
 
         float LASERING_TIME, LASERING_COOLDOWN;
+        int LASER_DAMAGE;
 
-        float RAINING_TIME, DELAY_RAIN;
+        float RAINING_TIME, RAIN_DELAY;
+        int RAIN_DAMAGE;
 
         int CURR_MASK, CURR_PHASE, CURR_STATE, CURR_ATK;
         Timer timer;
@@ -64,5 +69,7 @@ class MaskBoss : public GameObject {
         MaskBoss(GameObject&);
         void Update(float);
         bool Is(C_ID);
+        void NotifyCollision(GameObject& other, Vec2 sep);
         void TakeDamage(int damage);
+        void Die();
 };

@@ -24,17 +24,23 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     DOUBLE_HIT = false;
 
     SPIKE_NUM = (int) Rand::FloatRange(4.0f, 7.0f);
+    SPIKE_DAMAGE = 20;
+
+    FLAMES_DAMAGE = 8;
 
     SHOOTING_TIME = 1.5f;
     SHOOTING_COOLDOWN = 1.0f;
     SHOOT_NUM = 24;
-    CHARGE_SHOOT = false;
+    SHOOT_DAMAGE = 12;
+    SHOOT_CHARGE = false;
 
     LASERING_TIME = 1.0f;
     LASERING_COOLDOWN = 1.0f;
+    LASER_DAMAGE = 32;
 
     RAINING_TIME = 2.5f;
-    DELAY_RAIN = 0.265f;
+    RAIN_DELAY = 0.265f;
+    RAIN_DAMAGE = 12;
 
     Vec2 p1 = Vec2(900, 330);
     Vec2 p2 = Vec2(0, 630);
@@ -50,6 +56,8 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
 
     auto stmac = new StateMachine(associated);
     auto collider = new Collider(associated);
+    collider->SetScale(Vec2(0.5, 0.7));
+    collider->SetOffset(Vec2(0, 30));
     associated.AddComponents({stmac, collider});
 
     int mask[] = {GREEN, RED, YELLOW, GREEN+PHASE2, RED+PHASE2, YELLOW+PHASE2};
@@ -70,8 +78,8 @@ MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
 }
 
 void MaskBoss::Activate(){
-    auto& currstate = Game::GetInstance().GetCurrentState();
-    auto target = currstate.GetObject(C_ID::Player, &currstate.rigidArray);
+    auto& st = Game::GetInstance().GetCurrentState();
+    auto target = st.GetObject(C_ID::Player, &st.rigidArray);
     if(target.lock().get()->box.GetCenter().Distance(associated.box.GetCenter()) < 500){
         auto stmac = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
         stmac->ChangeState(CURR_MASK);
@@ -109,7 +117,8 @@ void MaskBoss::Moving(float dt){
             auto goBreaking = new GameObject();
                 goBreaking->depth = 5;
                 auto breakingSpt = new Sprite(*goBreaking, "assets/img/Masks/breaking.png", 10, 0.15, 1.5f);
-                goBreaking->AddComponent(breakingSpt);
+                auto breakingDisp = new DisappearOnDeadOwner(*goBreaking, st.GetObject(C_ID::Mask, &st.enemyArray));
+                goBreaking->AddComponents({breakingSpt, breakingDisp});
                 goBreaking->box.SetCenter(903, 330);
             st.objectArray.emplace_back(goBreaking);
         }
@@ -129,7 +138,8 @@ void MaskBoss::Resting(float dt){
         auto goChanging = new GameObject();
             goChanging->depth = 5;
             auto changingSpt = new Sprite(*goChanging, "assets/img/Masks/changing.png", 15, 0.1, 1.5f);
-            goChanging->AddComponent(changingSpt);
+            auto changingDisp = new DisappearOnDeadOwner(*goChanging, st.GetObject(C_ID::Mask, &st.enemyArray));
+            goChanging->AddComponents({changingSpt, changingDisp});
             goChanging->box.SetCenter(903, 330);
         st.objectArray.emplace_back(goChanging);
 
@@ -148,7 +158,8 @@ void MaskBoss::Charging(float dt){
         auto goWarning = new GameObject();
             goWarning->depth = 5;
             auto warningSpt = new Sprite(*goWarning, "assets/img/Masks/warning_circle.png", 20, 0.075, 1.5f);
-            goWarning->AddComponent(warningSpt);
+            auto warningDisp = new DisappearOnDeadOwner(*goWarning, st.GetObject(C_ID::Mask, &st.enemyArray));
+            goWarning->AddComponents({warningSpt, warningDisp});
             goWarning->box.SetCenter(903, 280);
         st.objectArray.emplace_back(goWarning);
 
@@ -197,7 +208,8 @@ void MaskBoss::Spiking(int spikeSize, int spikeNum){
                 spike = new Spike(*goSpike, spikeSize, 1.0f, 6.0f, 660);
             else
                 spike = new Spike(*goSpike, spikeSize, 1.0f, 3.0f, 660);
-            goSpike->AddComponent(spike);
+            auto spikeAtk = new Attack(*goSpike, SPIKE_DAMAGE, 1, &associated);
+            goSpike->AddComponents({spike, spikeAtk});
             goSpike->box.y = 660 - goSpike->box.h;
             goSpike->box.x = position[i];
         st.bulletArray.emplace_back(goSpike);
@@ -212,7 +224,8 @@ void MaskBoss::Flaming(){
     auto goFlames = new GameObject();
         goFlames->depth = -3;
         auto flameSpike = new FlameSpike(*goFlames, st.GetObject(C_ID::Mask), 2.0f * MOVE_TIME);
-        goFlames->AddComponents({flameSpike});
+        auto flamesAtk = new Attack(*goFlames, FLAMES_DAMAGE, 1, &associated);
+        goFlames->AddComponents({flameSpike, flamesAtk});
     st.bulletArray.emplace_back(goFlames);
     timer.Restart();
     timer.SetFinish(0.2f);
@@ -221,19 +234,20 @@ void MaskBoss::Flaming(){
 
 void MaskBoss::Shooting(float dt){
     auto& st = Game::GetInstance().GetCurrentState();
-    if(!CHARGE_SHOOT){
+    if(!SHOOT_CHARGE){
         auto goChargeShoot = new GameObject();
             goChargeShoot->depth = 5;
             auto chargeShoot = new Sprite(*goChargeShoot, "assets/img/Mask_Atks/projectile_birth.png", 5, 0.2f, 1.0f);
+            auto chargeDisp = new DisappearOnDeadOwner(*goChargeShoot, st.GetObject(C_ID::Mask, &st.enemyArray));
             chargeShoot->SetScaleX(0.5, 0.5);
-            goChargeShoot->AddComponent(chargeShoot);
+            goChargeShoot->AddComponents({chargeShoot, chargeDisp});
             goChargeShoot->box.SetCenter(903, 280);
         st.objectArray.emplace_back(goChargeShoot);
 
         timer.Restart();
         timer.SetFinish(1.0f);
 
-        CHARGE_SHOOT = true;
+        SHOOT_CHARGE = true;
     }
     else if(timer.Update(dt)){
         float angle = 360.0f / (float) SHOOT_NUM;
@@ -243,14 +257,16 @@ void MaskBoss::Shooting(float dt){
                 auto spt = new Sprite(*goShootProj, "assets/img/Mask_Atks/projectile.png");
                 spt->SetScaleX(0.5, 0.5);
                 auto proj = new Projectile(*goShootProj, 5.0f, angle*i, 250, 250);
-                goShootProj->AddComponents({spt, proj});
+                auto projAtk = new Attack(*goShootProj, SHOOT_DAMAGE, 1, &associated);
+                auto projDsp = new DisappearOnHit(*goShootProj, &associated);
+                goShootProj->AddComponents({spt, proj, projAtk, projDsp});
                 goShootProj->box.SetCenter(903, 280);
             st.bulletArray.emplace_back(goShootProj);
         }
         timer.Restart();
         timer.SetFinish(SHOOTING_COOLDOWN + 0.2f);
 
-        CHARGE_SHOOT = false;
+        SHOOT_CHARGE = false;
         CURR_STATE = COOLING;
     }
 }
@@ -261,7 +277,9 @@ void MaskBoss::Lasering(float dt){
         goLaser->depth = 12;
         auto laser = new Laser(*goLaser, LASERING_TIME);
         goLaser->box.SetCenter(903, 280);
-        goLaser->AddComponents({laser});
+        auto laserAtk = new Attack(*goLaser, LASER_DAMAGE, 1, &associated);
+        auto laserDspo = new DisappearOnDeadOwner(*goLaser, st.GetObject(C_ID::Mask, &st.enemyArray));
+        goLaser->AddComponents({laser, laserAtk, laserDspo});
     st.bulletArray.emplace_back(goLaser);
 
     timer.Restart();
@@ -280,9 +298,11 @@ void MaskBoss::Raining(){
         auto goProj = new GameObject();
             goProj->depth = -1;
             auto spt = new Sprite(*goProj, "assets/img/Mask_Atks/fire_rain.png", 4, 0.1);
-            auto proj = new ProjectileB(*goProj, new Bcurve(points), 8, RAINING_TIME + DELAY_RAIN * i, true);
+            auto proj = new ProjectileB(*goProj, new Bcurve(points), 8, RAINING_TIME + RAIN_DELAY * i, true);
             auto collider = new Collider(*goProj);
-            goProj->AddComponents({spt, proj, collider});
+            auto attack = new Attack(*goProj, RAIN_DAMAGE, 1, &associated);
+            auto disp = new DisappearOnHit(*goProj, &associated);
+            goProj->AddComponents({spt, proj, collider, attack, disp});
         st.bulletArray.emplace_back(goProj);
 
         Vec2 p2b = Vec2((i + 18) * 60 + 30, -720);
@@ -291,14 +311,16 @@ void MaskBoss::Raining(){
         auto goProj1 = new GameObject();
             goProj1->depth = -1;
             auto spt1 = new Sprite(*goProj1, "assets/img/Mask_Atks/fire_rain.png", 4, 0.1);
-            auto proj1 = new ProjectileB(*goProj1, new Bcurve(points1), 8, RAINING_TIME + DELAY_RAIN * i, true);
+            auto proj1 = new ProjectileB(*goProj1, new Bcurve(points1), 8, RAINING_TIME + RAIN_DELAY * i, true);
             auto collider1 = new Collider(*goProj1);
-            goProj->AddComponents({spt1, proj1, collider1});
+            auto attack1 = new Attack(*goProj1, RAIN_DAMAGE, 1, &associated);
+            auto disp1 = new DisappearOnHit(*goProj1, &associated);
+            goProj1->AddComponents({spt1, proj1, collider1, attack1, disp1});
         st.bulletArray.emplace_back(goProj1);
     }
 
     timer.Restart();
-    timer.SetFinish(RAINING_TIME + DELAY_RAIN * 11 + 0.2f);
+    timer.SetFinish(RAINING_TIME + RAIN_DELAY * 11 + 0.2f);
     CURR_STATE = COOLING;
 }
 
@@ -343,6 +365,12 @@ void MaskBoss::Swapping(float dt){
 }
 
 void MaskBoss::Update(float dt){
+    auto& st = Game::GetInstance().GetCurrentState();
+    auto target = st.GetObject(C_ID::Player, &st.rigidArray);
+    if(target.expired()){
+        Die();
+        return;
+    }
     switch(CURR_STATE){
         case INACTIVED:
             Activate();
@@ -374,6 +402,23 @@ bool MaskBoss::Is(C_ID type){
     return type == C_ID::Mask;
 }
 
+void MaskBoss::NotifyCollision(GameObject& other, Vec2 sep){
+    auto attack = (Attack*)other.GetComponent(C_ID::Attack);
+    if(!attack || attack->OwnedBy(&associated))
+        return;
+    
+    TakeDamage(attack->GetDamage());
+}
+
 void MaskBoss::TakeDamage(int damage){
-    if((currentHealth -= damage) < 0) currentHealth = 0;
+    if(CURR_STATE == INACTIVED)
+        return;
+
+    currentHealth -= damage;
+    if(currentHealth <= 0) 
+        Die();
+}
+
+void MaskBoss::Die(){
+    associated.RequestDelete();
 }
