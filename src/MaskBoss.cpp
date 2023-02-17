@@ -209,7 +209,8 @@ void MaskBoss::Spiking(int spikeSize, int spikeNum){
             else
                 spike = new Spike(*goSpike, spikeSize, 1.0f, 3.0f, 660);
             auto spikeAtk = new Attack(*goSpike, SPIKE_DAMAGE, 1, &associated);
-            goSpike->AddComponents({spike, spikeAtk});
+            auto spikeDisp = new DisappearOnDeadOwner(*goSpike, st.GetObject(C_ID::Mask, &st.enemyArray));
+            goSpike->AddComponents({spike, spikeAtk, spikeDisp});
             goSpike->box.y = 660 - goSpike->box.h;
             goSpike->box.x = position[i];
         st.bulletArray.emplace_back(goSpike);
@@ -225,7 +226,8 @@ void MaskBoss::Flaming(){
         goFlames->depth = -3;
         auto flameSpike = new FlameSpike(*goFlames, st.GetObject(C_ID::Mask), 2.0f * MOVE_TIME);
         auto flamesAtk = new Attack(*goFlames, FLAMES_DAMAGE, 1, &associated);
-        goFlames->AddComponents({flameSpike, flamesAtk});
+        auto flamesDisp = new DisappearOnDeadOwner(*goFlames, st.GetObject(C_ID::Mask, &st.enemyArray));
+        goFlames->AddComponents({flameSpike, flamesAtk, flamesDisp});
     st.bulletArray.emplace_back(goFlames);
     timer.Restart();
     timer.SetFinish(0.2f);
@@ -259,7 +261,8 @@ void MaskBoss::Shooting(float dt){
                 auto proj = new Projectile(*goShootProj, 5.0f, angle*i, 250, 250);
                 auto projAtk = new Attack(*goShootProj, SHOOT_DAMAGE, 1, &associated);
                 auto projDsp = new DisappearOnHit(*goShootProj, &associated);
-                goShootProj->AddComponents({spt, proj, projAtk, projDsp});
+                auto projDspo = new DisappearOnDeadOwner(*goShootProj, st.GetObject(C_ID::Mask, &st.enemyArray));
+                goShootProj->AddComponents({spt, proj, projAtk, projDsp, projDspo});
                 goShootProj->box.SetCenter(903, 280);
             st.bulletArray.emplace_back(goShootProj);
         }
@@ -300,9 +303,11 @@ void MaskBoss::Raining(){
             auto spt = new Sprite(*goProj, "assets/img/Mask_Atks/fire_rain.png", 4, 0.1);
             auto proj = new ProjectileB(*goProj, new Bcurve(points), 8, RAINING_TIME + RAIN_DELAY * i, true);
             auto collider = new Collider(*goProj);
+            collider->SetScale(Vec2(0.5, 0.5));
             auto attack = new Attack(*goProj, RAIN_DAMAGE, 1, &associated);
             auto disp = new DisappearOnHit(*goProj, &associated);
-            goProj->AddComponents({spt, proj, collider, attack, disp});
+            auto dispo = new DisappearOnDeadOwner(*goProj, st.GetObject(C_ID::Mask, &st.enemyArray));
+            goProj->AddComponents({spt, proj, collider, attack, disp, dispo});
         st.bulletArray.emplace_back(goProj);
 
         Vec2 p2b = Vec2((i + 18) * 60 + 30, -720);
@@ -313,9 +318,11 @@ void MaskBoss::Raining(){
             auto spt1 = new Sprite(*goProj1, "assets/img/Mask_Atks/fire_rain.png", 4, 0.1);
             auto proj1 = new ProjectileB(*goProj1, new Bcurve(points1), 8, RAINING_TIME + RAIN_DELAY * i, true);
             auto collider1 = new Collider(*goProj1);
+            collider->SetScale(Vec2(0.5, 0.5));
             auto attack1 = new Attack(*goProj1, RAIN_DAMAGE, 1, &associated);
             auto disp1 = new DisappearOnHit(*goProj1, &associated);
-            goProj1->AddComponents({spt1, proj1, collider1, attack1, disp1});
+            auto dispo1 = new DisappearOnDeadOwner(*goProj1, st.GetObject(C_ID::Mask, &st.enemyArray));
+            goProj1->AddComponents({spt1, proj1, collider1, attack1, disp1, dispo1});
         st.bulletArray.emplace_back(goProj1);
     }
 
