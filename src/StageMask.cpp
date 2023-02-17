@@ -116,8 +116,8 @@ void StageMask::LoadAssets(){
         int spawnpoint = 2;
         bool active = true;
         GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage3(),spawnpoint,active));
-        GO_Gate->box.x = 60*-1.8;
-        GO_Gate->box.y = 60*6;
+        GO_Gate->box.x = -600;
+        GO_Gate->box.y = 600;
     terrainArray.emplace_back(GO_Gate);
     //PLAYER 
     
@@ -168,6 +168,14 @@ void StageMask::Start(){
 }
 
 void StageMask::Update(float dt){
+    auto mask = GetObject(C_ID::Mask, &enemyArray);
+    if(mask.expired()){
+        auto gate = GetObject(C_ID::Gate);
+        if(!gate.expired()){
+            gate.lock()->box.x = 60*-1.8;
+            gate.lock()->box.y = 60*6;
+        }
+    }
     // removendo condicao de vitoria/derrota -m
     
     // if(PenguinBody::player == nullptr){
