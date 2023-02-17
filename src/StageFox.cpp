@@ -9,6 +9,7 @@
 #include "LionBoss.h"
 #include "StageFox.h"
 #include "ScreenFade.h"
+#include "GameData.h"
 #include "Fox.h"
 #include "Stage4.h"
 #include "Gate.h"
@@ -119,17 +120,18 @@ void StageFox::LoadAssets(){
        player_GO->box.SetCenter(spawnList[GameData::spawn_ID].x*60, spawnList[GameData::spawn_ID].y*60);
       
     rigidArray.emplace_back(player_GO);
+    if(GameData::isAlive[2])
+    {
+        auto fox_GO = new GameObject();
+            fox_GO->depth = 0;
+            auto fox = new Fox(*fox_GO);
+            fox_GO->AddComponents({fox});
 
-    auto fox_GO = new GameObject();
-        fox_GO->depth = 0;
-        auto fox = new Fox(*fox_GO);
-        fox_GO->AddComponents({fox});
-
-        fox_GO->box.x = 1500.01 - fox->FOXSIZE.x/2;
-        fox_GO->box.y = 880  - fox->FOXSIZE.y/2;
-    
-    enemyArray.emplace_back(fox_GO);
-  
+            fox_GO->box.x = 1500.01 - fox->FOXSIZE.x/2;
+            fox_GO->box.y = 880  - fox->FOXSIZE.y/2;
+        
+        enemyArray.emplace_back(fox_GO);
+    }
 
     backgroundMusic.Play();
 

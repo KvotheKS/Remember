@@ -6,6 +6,7 @@
 #include "ActionMachine.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "GameData.h"
 #include "LionBoss.h"
 #include "MaskBoss.h"
 #include "StageMask.h"
@@ -140,12 +141,15 @@ void StageMask::LoadAssets(){
         player_GO->box.SetCenter(spawnList[GameData::spawn_ID].x*60, spawnList[GameData::spawn_ID].y*60);
       
     rigidArray.emplace_back(player_GO);
-
-    GameObject* enemy_GO = new GameObject();
-        enemy_GO->depth = 3;
-        enemy_GO->AddComponent(new MaskBoss(*enemy_GO));
-        enemy_GO->box.SetCenter(900, 330);
-    enemyArray.emplace_back(enemy_GO);
+    
+    if(GameData::isAlive[1])
+    {
+        GameObject* enemy_GO = new GameObject();
+            enemy_GO->depth = 3;
+            enemy_GO->AddComponent(new MaskBoss(*enemy_GO));
+            enemy_GO->box.SetCenter(900, 330);
+        enemyArray.emplace_back(enemy_GO);
+    }
 
     backgroundMusic.Play();
 

@@ -207,10 +207,10 @@ void Player::Controls(float dt){
 
         auto& st = Game::GetInstance().GetCurrentState();
         auto proj_go = new GameObject();
-
-            auto proj = new Projectile(*proj_go, 20.0f, 0.0f, 600.0f, 600.0f);
+            float projangle = cr_state->GetFliped() ? 180.0f : 0.0f;
+            auto proj = new Projectile(*proj_go, 20.0f, projangle, 600.0f, 600.0f);
             auto spr = new Sprite(*proj_go, "assets/img/Ype/Ymagic.png", 6,0.1,0);
-            auto atk = new Attack(*proj_go, 260, 1, &associated);
+            auto atk = new Attack(*proj_go, 20, 1, &associated);
 
             auto dsp = new DisappearOnHit(*proj_go, &associated);
             auto cld = (Collider*)proj_go->GetComponent(C_ID::Collider);

@@ -10,7 +10,9 @@
 #include "Rand.h"
 #include "TimeBomb.h"
 #include "LionBoss.h"
+#include "GameData.h"
 #include "Trigger.h"
+#include <string>
 #include "ScreenFade.h"
 #include "Kon.h"
 #include <cmath>
@@ -286,6 +288,15 @@ void Fox::KON_f()
             {
                 auto& st = Game::GetInstance().GetCurrentState();
                 auto fx = (Fox*)associated.GetComponent(C_ID::Fox);
+               
+                GameObject* Go_hurtsound = new GameObject();
+                std::string soundname;
+                
+                soundname = "assets/audio/Foleys/KON.wav";        
+                Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);
+                ypehurtsound->Play();
+                Go_hurtsound->AddComponent(ypehurtsound);
+               
                 auto kon_go = new GameObject;
                     kon_go->AddComponents({new Kon(*kon_go, fx->KONFRAMES, fx->KONFRAMETIME)});
                 st.cameraFollowerObjectArray.emplace_back(kon_go);
@@ -307,6 +318,14 @@ void Fox::KON_f()
 
 void Fox::BULLETHELL_f()
 {
+    GameObject* Go_hurtsound = new GameObject();
+        std::string soundname;
+        
+        soundname = "assets/audio/Foleys/Risada da raposa.wav";        
+        Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);
+        ypehurtsound->Play();
+        Go_hurtsound->AddComponent(ypehurtsound);
+
     associated.AddComponent(
         new TimedTrigger(associated, BULLETHELLTRANSITIONFRAMES*BULLETHELLTRANSITIONFRAMETIME,
             [](GameObject& associated)
@@ -577,6 +596,14 @@ void Fox::Phase2Transition()
             fx->RealFox->RequestDelete();
             st->AddTransition(fx->BULLETHELLANIM,fx->BULLETHELLIDLEANIM);
             associated.AddComponent(new Collider(associated));
+            
+            GameObject* Go_hurtsound = new GameObject();
+            std::string soundname;
+            
+            soundname = "assets/audio/Foleys/Risada da raposa.wav";        
+            Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);
+            ypehurtsound->Play();
+            Go_hurtsound->AddComponent(ypehurtsound);
         }
     ));
 }
@@ -605,11 +632,30 @@ void Fox::NotifyCollision(GameObject& other, Vec2 sep)
     auto [idx, currnode] = stm->GetCurrent();
 
     if(idx == BULLETHELLIDLEANIM || idx == IDLE || idx == SNAPIDLEANIM)
+    {
+        GameObject* Go_hurtsound = new GameObject();
+        float rando = Rand::Get_r();
+        std::string soundname;
+        if (rando > 0.5 )
+            soundname = "assets/audio/Foleys/Raposa machucada 1.wav";
+        
+        else
+            soundname = "assets/audio/Foleys/Raposa Machudada 2.wav";
+        
+        
+        Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);
+        ypehurtsound->Play();
+        Go_hurtsound->AddComponent(ypehurtsound);
+
+        State& state = Game::GetInstance().GetCurrentState();
+        state.AddObject(Go_hurtsound);
         stm->ChangeState(DAMAGED);
+    }
 }
 
 void Fox::DIEEEE()
 {
+    GameData::isAlive[2] = false;
     auto& st = Game::GetInstance().GetCurrentState();
     
     auto stm = (StateMachine*)associated.GetComponent(C_ID::StateMachine); 

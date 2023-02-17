@@ -4,6 +4,7 @@
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
 #include "MovementBehavior.h"
+#include "GameData.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "LionBoss.h"
@@ -190,12 +191,15 @@ void TestState::LoadAssets(){
       
     rigidArray.emplace_back(player_GO);
 
-    GameObject* enemy_GO = new GameObject();
-        enemy_GO->depth = 3;
-        enemy_GO->AddComponent(new LionBoss(*enemy_GO));
-        enemy_GO->box.x = 7151.86 + 48 - enemy_GO->box.w;
-        enemy_GO->box.y = 488 + 112 - enemy_GO->box.h;
-    enemyArray.emplace_back(enemy_GO);
+    if(GameData::isAlive[0])
+    {
+        GameObject* enemy_GO = new GameObject();
+            enemy_GO->depth = 3;
+            enemy_GO->AddComponent(new LionBoss(*enemy_GO));
+            enemy_GO->box.x = 7151.86 + 48 - enemy_GO->box.w;
+            enemy_GO->box.y = 488 + 112 - enemy_GO->box.h;
+        enemyArray.emplace_back(enemy_GO);
+    }
 
     backgroundMusic.Play();
 

@@ -6,6 +6,7 @@
 #include "TimeBomb.h"
 #include "Rand.h"
 #include "Projectile.h"
+#include "GameData.h"
 #include "Player.h"
 #include "Trigger.h"
 #include "ShakeBehavior.h"
@@ -64,7 +65,7 @@ LionBoss::LionBoss(GameObject& associated)
 
     EXPLOSIONDURATION = 0.8f;
     LIONCONTACTKNOCK = Vec2(-40, 10);
-    LIONMAXHEALTH = 200;
+    LIONMAXHEALTH = 250;
     currentHealth = LIONMAXHEALTH;
     activated = false;
 
@@ -356,6 +357,7 @@ void LionBoss::TakeDamageVisuals() // TODO -> quando receber um ataque gerar os 
 
 void LionBoss::DIEEE()
 {
+    GameData::isAlive[0] = false;
     auto [_, anmptr] = ((StateMachine*)associated.GetComponent(C_ID::StateMachine))->GetCurrent();
     auto spr_go = new GameObject;
         auto spr = new Sprite(*spr_go, "assets/img/aliendeath.png", 4, EXPLOSIONDURATION/4.0f);

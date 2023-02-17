@@ -1,5 +1,6 @@
 #include "MaskBoss.h"
 #include "Game.h"
+#include "GameData.h"
 
 MaskBoss::MaskBoss(GameObject& associated) : GameObject(associated){
     CURR_STATE = INACTIVED;
@@ -427,5 +428,6 @@ void MaskBoss::TakeDamage(int damage){
 }
 
 void MaskBoss::Die(){
+    GameData::isAlive[1]=false;
     associated.RequestDelete();
 }
