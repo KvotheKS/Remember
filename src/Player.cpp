@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "RigidBody.h"
 #include "TerrainBody.h"
-
+#include "ActionMachine.h"
 #include "Rand.h"
 #include "ScreenFade.h"
 #include "StateMac.h"
@@ -10,6 +10,7 @@
 #include "Projectile.h"
 #include "Game.h"
 #include "Attack.h"
+
 #include <limits>
 // define pra test -m
 using namespace std;
@@ -27,7 +28,9 @@ Player::Player(GameObject& associated):GameObject(associated){
     // associated.AddComponent(pbody);
     // pbody->SetScaleX(2,2);
     // associated.AddComponent(new Attack(associated, 10, Vec2(0,0), &associated));
-   
+    invul = false;
+    isDead = false;
+    pause = false;
     isFiring = false;
     isSlashing = false;
     isAttacking = false;
@@ -53,6 +56,8 @@ Player::Player(GameObject& associated):GameObject(associated){
     JUMP_STORED_TIMELIMIT = 0.15;
     DASH_COOLDOWN = 0.15;
     STUN_TIMELIMIT = 0.3;
+    CAST_TIMELIMIT = 0.4;
+    CAST_COOLDOWN = 0.3;
 
     MAX_HP = 100;
 
@@ -63,7 +68,7 @@ Player::Player(GameObject& associated):GameObject(associated){
     FALL_ACCELERATION = 100;
 
     MAX_DASH_SPEED = 1000;
-    MAX_DASHDOWN_SPEED = 1600;
+    MAX_DASHDOWN_SPEED = 2000;
     MAX_MOVE_SPEED = 300;
     MOVE_ACCELERATION = 100;
     LATERAL_FRICTION = 80;
@@ -77,6 +82,9 @@ Player::~Player(){
 }
 
 void Player::Start(){
+    invulTimer.SetFinish(2.0);
+    deathTimer.SetFinish(1.3);
+    pause = false;
     hp = MAX_HP;
     // ------------------ STATE MACHINE SETUP --------------------
     
@@ -85,8 +93,14 @@ void Player::Start(){
     
     // state creation
     Vec2 scale = Vec2(2,2);
-    SSNode* sprite_sheet_node = new SSNode("assets/img/Ype/Ycrouch.png",  {0, 0, 80*5, 80}, 5, 0.1,scale);
+
+    SSNode* sprite_sheet_node = new SSNode("assets/img/Ype/Ycrouch_loop.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::CROUCH, sprite_sheet_node); 
+
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ycrouch.png",  {0, 0, 80*5, 80}, 5, 0.075,scale);
+    state_machine->AddNode(RBSTATE::CROUCHSTART, sprite_sheet_node); 
+
+
 
     sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80*18, 80}, 18, 0.1,scale);
     state_machine->AddNode(RBSTATE::IDLE, sprite_sheet_node); 
@@ -94,10 +108,11 @@ void Player::Start(){
     sprite_sheet_node = new SSNode("assets/img/Ype/Yidleblink.png",  {0, 0, 80*18, 80}, 18, 0.1,scale);
     state_machine->AddNode(RBSTATE::IDLE_B, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Ype/Ywalk.png",  {0, 0, 80, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yrun.png",  {0, 0, 80*3, 80}, 3, 0.1,scale);
     state_machine->AddNode(RBSTATE::WALK, sprite_sheet_node);
 
-    sprite_sheet_node = new SSNode("assets/img/Ype/Yrun.png",  {0, 0, 80*8, 80}, 8, 0.1,scale);
+    
+    sprite_sheet_node = new SSNode("assets/img/Ype/Yrun_loop.png",  {0, 0, 80*8, 80}, 8, 0.1,scale);
     state_machine->AddNode(RBSTATE::RUN, sprite_sheet_node); 
         
     sprite_sheet_node = new SSNode("assets/img/Ype/Yjump.png",  {0, 0, 80, 80}, 1, 1,scale);
@@ -118,17 +133,25 @@ void Player::Start(){
     sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::SHOT, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
-    state_machine->AddNode(RBSTATE::SKID, sprite_sheet_node); 
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ymorte.png",  {0, 0, 80*13, 80}, 13, 0.1,scale);
+    state_machine->AddNode(RBSTATE::DIE, sprite_sheet_node); 
 
-    sprite_sheet_node = new SSNode("assets/img/Ype/Yidle.png",  {0, 0, 80, 80}, 1, 1,scale);
+    sprite_sheet_node = new SSNode("assets/img/Ype/Ydano.png",  {0, 0, 80, 80}, 1, 1,scale);
     state_machine->AddNode(RBSTATE::STUN, sprite_sheet_node); 
+
+    sprite_sheet_node = new SSNode("assets/img/Ype/YmagicR.png",  {0, 0, 80*4, 80}, 4, 0.1,scale);
+    state_machine->AddNode(RBSTATE::CASTR, sprite_sheet_node); 
+
+    sprite_sheet_node = new SSNode("assets/img/Ype/YmagicL.png",  {0, 0, 80*6, 80}, 6, 0.1,scale);
+    state_machine->AddNode(RBSTATE::CASTL, sprite_sheet_node); 
+
 
 
 
     // transition creation
     state_machine->AddTransition(RBSTATE::WALK,RBSTATE::RUN);
     state_machine->AddTransition(RBSTATE::IDLE_B,RBSTATE::IDLE);
+    state_machine->AddTransition(RBSTATE::CROUCHSTART,RBSTATE::CROUCH);
     
 
     // set first colider e state
@@ -143,15 +166,17 @@ void Player::Start(){
 
 /// @brief Player Update
 void Player::Update(float dt){
-  
-    Controls(dt);
+
+    if(pause)return;
     RunTimers(dt);
-    Physics(dt);
+    Controls(dt); 
+    Physics(dt);  
     Animation(dt);
 
     *isGrounded = false;
     inputDone = false;
     crouchHeld = false;
+
 }
 void Player::Render(){
 }
@@ -164,7 +189,6 @@ bool Player::Is(C_ID type){
 }
 
 void Player::Controls(float dt){
-
     if(isStunned)return;
 
     auto [state_idx, cr_state] = state_machine->GetCurrent();
@@ -175,8 +199,29 @@ void Player::Controls(float dt){
 
     
     bool space_pressed = false;
-    
-    
+    //ATTACK COMMAND
+    if(inManager.IsKeyDown(D_KEY) && !isAttacking){
+        
+        isAttacking = true;
+        castTimer.Restart();
+
+        auto& st = Game::GetInstance().GetCurrentState();
+        auto proj_go = new GameObject();
+
+            auto proj = new Projectile(*proj_go, 20.0f, 0.0f, 600.0f, 600.0f);
+            auto spr = new Sprite(*proj_go, "assets/img/Ype/Ymagic.png", 6,0.1,0);
+            auto atk = new Attack(*proj_go, 10000, Vec2(),&associated);
+
+            auto dsp = new DisappearOnHit(*proj_go, &associated);
+            auto cld = (Collider*)proj_go->GetComponent(C_ID::Collider);
+            cld->type = C_ID::Hitbox;
+            proj_go->AddComponents({proj, spr, atk, dsp});
+            spr->SetScaleX(3,3);
+            proj_go->box.x = associated.box.GetCenter().x;
+            proj_go->box.y = associated.box.GetCenter().y;
+        st.bulletArray.emplace_back(proj_go);
+    }
+  
     // UP COMMAND
     if(inManager.IsKeyDown(UP_ARROW_KEY)){  
         movement_direction.y -= 1;
@@ -185,6 +230,7 @@ void Player::Controls(float dt){
   
     // DOWN COMMAND
     if(inManager.IsKeyDown(DOWN_ARROW_KEY) ){
+        // std::cout << associated.box;
         movement_direction.y += 1;
        
         
@@ -193,22 +239,7 @@ void Player::Controls(float dt){
         }      
     }
     
-    if(inManager.KeyPress(Q_KEY))
-    {
-        auto& st = Game::GetInstance().GetCurrentState();
-        auto proj_go = new GameObject();
-            auto proj = new Projectile(*proj_go, 5.0f, 0.0f, 250.0f, 250.0f);
-            auto spr = new Sprite(*proj_go, "assets/img/laser.png", 1,0,-1);
-            auto atk = new Attack(*proj_go, 10000, Vec2(), proj_go);
-            auto dsp = new DisappearOnHit(*proj_go, &associated);
-            auto cld = (Collider*)proj_go->GetComponent(C_ID::Collider);
-            cld->type = C_ID::Hitbox;
-            proj_go->AddComponents({proj, spr, atk, dsp});
-            spr->SetSize(50,50);
-            proj_go->box.x = associated.box.x;
-            proj_go->box.y = associated.box.y;
-        st.bulletArray.emplace_back(proj_go);
-    }
+   
     // LEFT COMMAND
     if(inManager.IsKeyDown(LEFT_ARROW_KEY) ){ 
         if(!isDashing && !(*isGrounded && isAttacking)){
@@ -331,7 +362,8 @@ void Player::Controls(float dt){
                 state.AddObject(GO_jumpdust_effect);
             }
             
-            speed = movement_direction.Normalize() * DASH_FORCE * dt;
+            speed = movement_direction.Normalize() * DASH_FORCE* dt;
+            if(movement_direction ==  Vec2(0,1))speed.y *= 1.5;
             /* Dash Based on Mouse Position    */
             // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
             //             (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * DASH_FORCE*dt;
@@ -346,9 +378,6 @@ void Player::Controls(float dt){
     // LEFT CLICK COMAND
     if(inManager.MousePress(LEFT_MOUSE_BUTTON) ){
         
-        isAttacking = true;
-        atackTimer.Restart();
-
         
 
         // GameObject* GO_fade = new GameObject();
@@ -368,12 +397,13 @@ void Player::Controls(float dt){
         // speed = Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x,
         // (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y).Normalize() * 1000*dt;
 
-        //GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y),dt);
+        // GetStunned(Vec2((inManager.GetMouseX() + Camera::pos.x)-associated.box.GetCenter().x, (inManager.GetMouseY() + Camera::pos.y)-associated.box.GetCenter().y));
         
+
         /* teleport to mouse click position*/ 
-        associated.box.x = inManager.GetMouseX() + Camera::pos.x;
-        associated.box.y = inManager.GetMouseY() + Camera::pos.y;
-        speed = Vec2(0,0);
+        // associated.box.x = inManager.GetMouseX() + Camera::pos.x;
+        // associated.box.y = inManager.GetMouseY() + Camera::pos.y;
+        // speed = Vec2(0,0);
     }
     // RIGHT CLICK COMAND
     if(inManager.MousePress(RIGHT_MOUSE_BUTTON) ){
@@ -386,13 +416,13 @@ void Player::Controls(float dt){
 
 void Player::RunTimers(float dt){
     if(isAttacking){
-        atackTimer.Update(dt);
-        if(atackTimer.Get()>1)isAttacking =false;
+        castTimer.Update(dt);
+        if(castTimer.Get()>CAST_TIMELIMIT)isAttacking =false;
     }
 
     if(isStunned){
         stunTimer.Update(dt);
-        if(stunTimer.Get()> STUN_TIMELIMIT) isStunned = false;
+        if(stunTimer.Get()> STUN_TIMELIMIT)isStunned = false; 
     }
     
 
@@ -410,10 +440,19 @@ void Player::RunTimers(float dt){
         JumpStoredTimer.Update(dt);
         if(JumpStoredTimer.Get() > JUMP_STORED_TIMELIMIT)jumpStored = false;
     }
+    if(isDead){
+        if(deathTimer.Update(dt)){
+            associated.RequestDelete();
+        }
+    }
+    if(invulTimer.Update(dt)){
+        invul = false;
+    }
+
 }
 
 void Player::Physics(float dt){
-   
+    
     // Queda 
     if(!isDashing){
         speed.y += FALL_ACCELERATION*dt; 
@@ -474,9 +513,9 @@ void Player::Physics(float dt){
     }  
     
     // limitar velocidade global
-    if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
-        speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
-    }
+    // if(speed.Magnitude() > MAX_GLOBAL_SPEED*dt){         
+    //     speed = speed.Normalize()*MAX_GLOBAL_SPEED*dt;          
+    // }
 
     // grounded
     if(*isGrounded){
@@ -497,18 +536,33 @@ void Player::Physics(float dt){
     // mova-se de acordo com a velocidade 
     Vec2 center = Vec2(associated.box.GetCenter() + speed);
     associated.box.SetCenter(center.x,center.y);
-
+    
+    
+    Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
+    associated.box.x = min(Bounds.x + Bounds.w - associated.box.w, max(Bounds.x, associated.box.x));
+    associated.box.y = min(Bounds.y + Bounds.h - associated.box.h, max(Bounds.y, associated.box.y));
+    
 }
 
 
 
 void Player::Animation(float dt){
+
+    
     state_machine = (StateMachine*) associated.GetComponent(C_ID::StateMachine);
     auto [state_idx, cr_state] = state_machine->GetCurrent();
     Collider * ass_collider = (Collider*)associated.GetComponent(C_ID::Collider);
     
-
-    if(isDashing){
+    if(isAttacking){
+        state_machine->ChangeState_s(RBSTATE::CASTR); 
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
+    }else if(isDead){
+        state_machine->ChangeState_s(RBSTATE::DIE); 
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
+    }
+    else if(isDashing){
         auto v = (Vec2(0,0).AngleLine(speed) * 180 / 3.141592); 
         if(speed.x == 0) {
             state_machine->ChangeState_s(RBSTATE::DASHUP);
@@ -517,13 +571,18 @@ void Player::Animation(float dt){
             state_machine->ChangeState_s(RBSTATE::DASH); 
             ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
             ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
-
+            
+         
           
             associated.angleDeg = v;
+           
             
             if(cr_state->GetFliped()){
                 associated.angleDeg -= 180;
+                
             }
+            
+            
         }
         if(Rand::Get_r()<0.20){
             GameObject* GO_dashline_effect = new GameObject();
@@ -546,6 +605,12 @@ void Player::Animation(float dt){
       
         
         // (speed.x <= 0)?cr_state->SetFliped(false):cr_state->SetFliped(true); 
+    }else if(isStunned){
+        
+        state_machine->ChangeState_s(RBSTATE::STUN);
+        ass_collider->SetScale(Vec2(nxsize,nysize)); 
+        ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
+    
     }else{
 
         associated.angleDeg = 0;
@@ -560,32 +625,27 @@ void Player::Animation(float dt){
             ass_collider->SetScale(Vec2(nxsize,nysize)); 
             ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
         }
-        if(crouchHeld && *isGrounded  ){
-            state_machine->ChangeState_s(RBSTATE::CROUCH);
-            ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
-            ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
-        }else{
-            if(speed.x != 0 && *isGrounded && state_idx != RBSTATE::RUN && state_idx != RBSTATE::RUN){    
-            state_machine->ChangeState_s(RBSTATE::RUN);
+        if(crouchHeld && *isGrounded ){
+            if(state_idx != RBSTATE::CROUCHSTART && state_idx != RBSTATE::CROUCH){
+                state_machine->ChangeState_s(RBSTATE::CROUCHSTART);
+                ass_collider->SetScale(Vec2(nxsize,nysize*0.60)); 
+                ass_collider->SetOffset(Vec2(nxoffset,nycrouchoffset));
+            }
+        
+        }else if(speed.x != 0 && *isGrounded && state_idx != RBSTATE::WALK && state_idx != RBSTATE::RUN){    
+            state_machine->ChangeState_s(RBSTATE::WALK);
             ass_collider->SetScale(Vec2(nxsize,nysize)); 
             ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
             }
             
-            if(speed.x == 0 && *isGrounded && state_idx != RBSTATE::IDLE && state_idx != RBSTATE::IDLE_B){
-                
-                
+        else if(speed.x == 0 && *isGrounded && state_idx != RBSTATE::IDLE && state_idx != RBSTATE::IDLE_B){ 
                 state_machine->ChangeState_s((Rand::Get_r()<0.30)?RBSTATE::IDLE_B:RBSTATE::IDLE);
                 ass_collider->SetScale(Vec2(nxsize,nysize)); 
                 ass_collider->SetOffset(Vec2(nxoffset,nyoffset));
             }
-        }
-    }
-    if(isStunned){
         
-        state_machine->ChangeState_s(RBSTATE::STUN);
-        ass_collider->SetScale(Vec2(nxsize,nysize)); 
-        ass_collider->SetOffset(Vec2(0,8));
     }
+    
 
     
 }
@@ -616,29 +676,67 @@ void Player::JustGrounded(){//!!doesn work, so retorna is grounded
     
 }
 
-void Player::GetStunned(Vec2 dir, float dt){
+void Player::GetStunned(Vec2 dir){
     auto [state_idx, cr_state] = state_machine->GetCurrent();
     InputManager& inManager = InputManager::GetInstance();
-    speed = dir.Normalize()*1000*dt;
+    speed = dir.Normalize()*30;
     
     if(speed.x >0){
-        cr_state->SetFliped(true);
-    }else{
         cr_state->SetFliped(false);
+    }else{
+        cr_state->SetFliped(true);
     }
     isStunned = true;
     isDashing = false;
     isDreamDashing = false;
     stunTimer.Restart();
 }
+void Player::Die(){
+    isStunned = false;
+    isDashing = false;
+    isDreamDashing = false;
+    stunTimer.SetFinish(1);
 
-int Player::GetState()
-{
-    return  RBSTATE::RIGHT*(speed.x > 0 && *isGrounded) +
-            RBSTATE::LEFT*(speed.x < 0 && *isGrounded) +
-            RBSTATE::STILL*(speed.x == 0 && *isGrounded) +
-            RBSTATE::JUMP*(speed.y < 0 && !*isGrounded) +
-            RBSTATE::FALL*(speed.y > 2 && !*isGrounded) +
-            RBSTATE::RUN*(speed.x != 0 && *isGrounded) +
-            RBSTATE::IDLE*(speed.x == 0 && *isGrounded);
+    isDead = true;
+    
+
 }
+
+void Player::NotifyCollision(GameObject& other, Vec2 sep)
+{
+    auto bingus = (Attack*)other.GetComponent(C_ID::Attack);
+    if(!bingus || bingus->OwnedBy(&associated))
+        return;
+    
+    
+    TakeDamage(bingus->GetDamage(), (other.box.x>associated.box.x)?0:1);
+}
+
+void Player::TakeDamage(int damage, int direction){
+    if(invul)return;
+    hp -= damage;
+    invulTimer.Restart();
+    invul = true;
+
+    if(direction == 1){
+        GetStunned(Vec2(1,-1));
+    }else{
+        GetStunned(Vec2(-1,-1));
+    }
+
+   if(hp<=0){
+        Die();
+    }
+}
+
+void Player::SetPause(bool pause){
+    this->pause = pause;
+}
+
+// void Player::Tint(bool trans){
+//     auto statelist = state_machine->GetStates();
+
+//     for(auto & node: statelist){
+//         node.second->SetTint(255,255,255);
+//     }
+// }

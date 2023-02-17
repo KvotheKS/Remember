@@ -9,7 +9,10 @@
 #include "LionBoss.h"
 #include "Stage4.h"
 #include "ScreenFade.h"
-
+#include "Gate.h"
+#include "Stage3.h"
+#include "Stage4.h"
+#include "StageFox.h"
 
 
 Stage4::Stage4() : State(){
@@ -35,7 +38,14 @@ void Stage4::LoadAssets(){
     
         State& state = Game::GetInstance().GetCurrentState();
     state.AddObject(GO_fade);
-
+     //TILEMAP
+    GameObject* goTileMap = new GameObject();
+        goTileMap->depth = 2;
+        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_stage4.txt", tileSet);
+        goTileMap->AddComponent(tileMap);
+        goTileMap->box.x = 0;
+        goTileMap->box.y = 0;
+    objectArray.emplace_back(goTileMap);
     //BACKGROUND
     GameObject* goBackground = new GameObject();
         goBackground->depth = -6;
@@ -101,6 +111,7 @@ void Stage4::LoadAssets(){
         goForeground2->box.x = 60*30;
         goForeground2->box.y = 60*48;
     cameraFollowerObjectArray.emplace_back(goForeground2);
+    
     //OBJECTS
     
     GameObject* fpsChecker = new GameObject();
@@ -110,9 +121,23 @@ void Stage4::LoadAssets(){
         fpsChecker->AddComponent(new Text(*fpsChecker, file, 35, Text::TextStyle::BLENDED, "0", {0, 100, 255, 255}, 0.35));
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
-    
+    //GATES
+    GameObject* GO_Gate = new GameObject();
+        int spawnpoint = 1;
+        bool active = true;
+        GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage3(),spawnpoint,active));
+        GO_Gate->box.x = 60*-1.8;
+        GO_Gate->box.y = 60*55;
+    terrainArray.emplace_back(GO_Gate);
+    GameObject* GO_Gate2 = new GameObject();
+        spawnpoint = 0;
+        active = true;
+        GO_Gate2->AddComponent(new Gate(*GO_Gate2,new StageFox(),spawnpoint,active));
+        GO_Gate2->box.x = 60*64;
+        GO_Gate2->box.y = 60*5;
+    terrainArray.emplace_back(GO_Gate2);
     //PLAYER
-    spawnList ={Vec2(1,34),Vec2(88,6)};
+    spawnList ={Vec2(2,53),Vec2(64,6)};
     GameObject* player_GO = new GameObject();
         player_GO->depth = 10;
 
@@ -124,6 +149,7 @@ void Stage4::LoadAssets(){
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
         Player* pl = new Player(*player_GO);
+        pl->Bounds = Rect(-70,-500, 60*tileMap->GetWidth()+140,60*tileMap->GetHeight()+500);
         player_GO->AddComponent(pl);
         
         
@@ -136,14 +162,7 @@ void Stage4::LoadAssets(){
     backgroundMusic.Play();
 
     Camera::Follow(player_GO);
-    //TILEMAP
-    GameObject* goTileMap = new GameObject();
-        goTileMap->depth = 2;
-        TileMap* tileMap = new TileMap(*goTileMap, "assets/map/tilemap_stage4.txt", tileSet);
-        goTileMap->AddComponent(tileMap);
-        goTileMap->box.x = 0;
-        goTileMap->box.y = 0;
-    objectArray.emplace_back(goTileMap);
+   
 
     Camera::SetCameraFunction(&Camera::FollowTarget);
     Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);

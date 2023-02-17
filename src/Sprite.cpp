@@ -128,6 +128,9 @@ void Sprite::Print(float x, float y)
     dstRect.x = x; dstRect.y = y;
     dstRect.w = clipRect.w * scale.x;
     dstRect.h = clipRect.h * scale.y;
+    // if(dstRect.w < 0.0f || dstRect.h < 0.0f)
+    //     return;
+    // std::cout << dstRect.x << ' ' << dstRect.y << '\n';
     // if(associated.GetComponent(C_ID::Attack))
     //     std::cout << "SPRITE" << dstRect.x << ' ' << dstRect.y << ' ' << dstRect.w << ' ' << dstRect.h << '\n';
 

@@ -159,5 +159,7 @@ float Game::GetDeltaTime(){
 }
 
 void Game::Push(State *state){
+    
     storedState = state;
+    
 }

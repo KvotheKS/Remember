@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
-#include "ActionMachine.h"
+#include "MovementBehavior.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "LionBoss.h"
@@ -54,6 +54,7 @@ void TestState::LoadAssets(){
         goBackground->box.x = 0;
         goBackground->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground);
+
     GameObject* goBackground2 = new GameObject();
         goBackground2->depth = -2;
         bg = new Sprite(*goBackground2, "assets/img/stage1/stg01bgl02.png");
@@ -63,6 +64,7 @@ void TestState::LoadAssets(){
         goBackground2->box.x = 0;
         goBackground2->box.y = 0;
     cameraFollowerObjectArray.emplace_back(goBackground2);
+
     GameObject* goBackground3 = new GameObject();
         goBackground3->depth = -3;
         bg = new Sprite(*goBackground3, "assets/img/stage1/stg01bgl03.png");
@@ -98,7 +100,7 @@ void TestState::LoadAssets(){
     GameObject* goArt1 = new GameObject();
         goArt1->depth = 0;
         bg = new Sprite(*goArt1, "assets/img/stage1/bridge_bg.png");
-        goBackground4->AddComponent(bg);
+        goArt1->AddComponent(bg);
 
 
         goArt1->box.x = 60*93;
@@ -147,8 +149,11 @@ void TestState::LoadAssets(){
 
     //OTHER
     GameObject* GO_Gate = new GameObject();
-
-        GO_Gate->AddComponent(new Gate(*GO_Gate));
+        int spawnpoint = 0;
+        bool active = true;
+        GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage2(),spawnpoint,active));
+        GO_Gate->box.x = 60*119;
+        GO_Gate->box.y = 60*8;
     terrainArray.emplace_back(GO_Gate);
 
     GameObject* fpsChecker = new GameObject();
@@ -167,13 +172,19 @@ void TestState::LoadAssets(){
 
         StateMachine* st = new StateMachine(*player_GO);
         player_GO->AddComponent(st);
+
         Collider* pl_collider = new Collider(*player_GO);
         player_GO->AddComponent(pl_collider);
+
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
+
         Player* pl = new Player(*player_GO);
+        pl->Bounds = Rect(-70,-500, 60*tileMap->GetWidth()+140,60*tileMap->GetHeight()+500);
         player_GO->AddComponent(pl);
-        
+
+        // MovementBehavior* mb = new MovementBehavior(*player_GO);
+        // player_GO->AddComponent(mb);
         
         player_GO->box.SetCenter(spawnList[GameData::spawn_ID].x*60, spawnList[GameData::spawn_ID].y*60);
       
@@ -184,7 +195,7 @@ void TestState::LoadAssets(){
         enemy_GO->AddComponent(new LionBoss(*enemy_GO));
         enemy_GO->box.x = 7151.86 + 48 - enemy_GO->box.w;
         enemy_GO->box.y = 488 + 112 - enemy_GO->box.h;
-    rigidArray.emplace_back(enemy_GO);
+    enemyArray.emplace_back(enemy_GO);
 
     backgroundMusic.Play();
 
@@ -195,82 +206,7 @@ void TestState::LoadAssets(){
     Camera::Bounds = Rect(0,0, 60*tileMap->GetWidth(), 60*tileMap->GetHeight());
 
 
-    /*STAGE TERRAIN*/
-   
-    // first platform
 
-    // for(int i = 0; i<10; i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth = 999;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         terrainbox->box.SetCenter(i*100-1000, 400);
-    //         terrainbox->angleDeg = 0;
-    //     terrainArray.emplace_back(terrainbox);
-    // }
-
-    // west celling
-
-    // for(int i = 0; i<10; i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth = 999;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         terrainbox->box.SetCenter(i*100-1300, 300);
-    //         terrainbox->angleDeg = 0;
-    //     terrainArray.emplace_back(terrainbox);
-    // }
-
-    // diagonal cubes
-    // for(int i = 0; i<20; i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth = 999;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         terrainbox->box.SetCenter(i*100+300, 000);
-    //         terrainbox->angleDeg = 20*(i+1);
-    //     terrainArray.emplace_back(terrainbox);
-    // }
-   
-    // jump platforms
-    // for(int i = 0; i<1; i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth = 999;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         terrainbox->box.SetCenter(0, i*300 +300);
-    //         terrainbox->angleDeg = 0;
-    //     terrainArray.emplace_back(terrainbox);
-    // }
-    // ramp 
-    // Vec2 p1 = Vec2(0,0), p2 = Vec2(100,100), p3 =Vec2(200,200) ,p4 =Vec2(300,100),p5 =Vec2(300,400),p6 =Vec2(200,500),p7 =Vec2(100,300),p8 =Vec2(300,300);
-    
-    // for(int i = 0; i<(tot=5); i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth = 999;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         float t = i/tot ;
-    //         Vec2 temp = Bcurve2(std::vector<Vec2> {Vec2(100,400),Vec2(500,170)},t);
-
-    //         terrainbox->box.SetCenter(temp.x+600, temp.y);
-    //         terrainbox->angleDeg = -30;
-    //     terrainArray.emplace_back(terrainbox);
-    // }
-    
-
-    // for(float i = 0;i<tot;i++){
-    //     GameObject* terrainbox = new GameObject();
-    //         terrainbox->depth = 100;
-    //         float t = i/tot ;
-    //         TerrainBody* box2 = new TerrainBody(*terrainbox);
-    //         terrainbox->AddComponent(box2);
-    //         Vec2 temp = Bcurve2(std::vector<Vec2> {p1,p2,p3,p4,p5,p6,p7,p8},t);
-
-    //         terrainbox->box.SetCenter(temp.x, temp.y+200);
-    //         terrainbox->angleDeg = 0;
-    //     terrainArray.emplace_back(terrainbox);
-    // }
 
     
 }
@@ -283,6 +219,7 @@ void TestState::Start(){
 }
 
 void TestState::Update(float dt){
+    
     // removendo condicao de vitoria/derrota -m
     
     // if(PenguinBody::player == nullptr){
@@ -311,7 +248,7 @@ void TestState::Update(float dt){
         Collider::debugMode = !Collider::debugMode;
     }
     
-
+    
     /* ordem de update necessaria
     */
     // std::cout << "ENTRA";
@@ -320,9 +257,9 @@ void TestState::Update(float dt){
 
     CollideVectors(rigidArray, terrainArray);
     CollideVectors(rigidArray, bulletArray);
-    CollideVectors(rigidArray, rigidArray);
+    CollideVectors(rigidArray, enemyArray);
     CollideVectors(bulletArray, terrainArray);
-    // std::cout << "colidiu";
+    CollideVectors(bulletArray, enemyArray);
     
     Camera::Update(dt);
     
@@ -372,6 +309,7 @@ void TestState::Render(){
 }
 
 void TestState::Pause(){
+    paused = true;
 }
 
 void TestState::Resume(){

@@ -9,8 +9,9 @@
 #include "LionBoss.h"
 #include "StageFox.h"
 #include "ScreenFade.h"
-
-
+#include "Fox.h"
+#include "Stage4.h"
+#include "Gate.h"
 
 StageFox::StageFox() : State(){
     backgroundMusic.Open("assets/audio/StageState.ogg");
@@ -46,7 +47,7 @@ void StageFox::LoadAssets(){
 
     // BACKGROUNDS
     GameObject* goBackground = new GameObject();
-        goBackground->depth = -4;
+        goBackground->depth = -4.0f;
         Sprite* bg = new Sprite(*goBackground, "assets/img/stagefox/Background_fox.png");
         goBackground->AddComponent(bg);
 
@@ -86,7 +87,15 @@ void StageFox::LoadAssets(){
         fpsChecker->AddComponent(new Text(*fpsChecker, file, 35, Text::TextStyle::BLENDED, "0", {0, 100, 255, 255}, 0.35));
         fpsChecker->AddComponent(new CameraFollower(*fpsChecker));
     cameraFollowerObjectArray.emplace_back(fpsChecker);
-    
+    //GATES
+    GameObject* GO_Gate = new GameObject();
+        int spawnpoint = 1;
+        bool active = true;
+        GO_Gate->AddComponent(new Gate(*GO_Gate,new StageFox(),spawnpoint,active));
+        GO_Gate->box.x = 60*-1.8;
+        GO_Gate->box.y = 60*15;
+    terrainArray.emplace_back(GO_Gate);
+   
     //PLAYER
     spawnList = {Vec2(1,15)};
     GameObject* player_GO = new GameObject();
@@ -100,6 +109,7 @@ void StageFox::LoadAssets(){
         RigidBody* box = new RigidBody(*player_GO);
         player_GO->AddComponent(box);
         Player* pl = new Player(*player_GO);
+        pl->Bounds = Rect(-70,-500, 60*tileMap->GetWidth()+140,60*tileMap->GetHeight()+500);
         player_GO->AddComponent(pl);
         
         
@@ -107,6 +117,15 @@ void StageFox::LoadAssets(){
       
     rigidArray.emplace_back(player_GO);
 
+    auto fox_GO = new GameObject();
+        fox_GO->depth = 10;
+        auto fox = new Fox(*fox_GO);
+        fox_GO->AddComponents({fox});
+
+        fox_GO->box.x = 1500.01 - fox->FOXSIZE.x/2;
+        fox_GO->box.y = 850  - fox->FOXSIZE.y/2;
+    
+    enemyArray.emplace_back(fox_GO);
   
 
     backgroundMusic.Play();
@@ -164,6 +183,9 @@ void StageFox::Update(float dt){
     // std::cout << "SAI";
 
     CollideVectors(rigidArray, terrainArray);
+    CollideVectors(rigidArray, bulletArray);
+    CollideVectors(enemyArray, bulletArray);
+    CollideVectors(bulletArray, terrainArray);
     // std::cout << "colidiu";
     
     Camera::Update(dt);

@@ -50,12 +50,15 @@ Projectile::Projectile(GameObject& associated, float lifeTime, GameObject* targe
 {}
 
 void Projectile::Update(float dt){
-    // std::cout << "PROJEEEEEEEEEEEEET";
+    // std::cout << lifeTimeCount.Get()<< endl;
+    // std::cout << lifeTimeCount.GetFinish()<< endl;
     if(lifeTimeCount.Update(dt))
     {
+    
         associated.RequestDelete();
     }
     else{
+        // std::cout << associated.box;
         Vec2 oldVelocity = velocity;
         Vec2 position = associated.box.GetCenter();
 
@@ -85,8 +88,12 @@ void Projectile::Update(float dt){
         if(velocity.Magnitude() > maxSpeed)
             velocity = velocity.Normalize() * maxSpeed;
 
-        position += velocity * dt;
-        associated.box.SetCenter(position.x, position.y);
+        // position += velocity * dt;
+        associated.box+=velocity * dt;
+        // std::cout << associated.box;
+        // std::cout << associated.box;
+        // std::cout << velocity.Magnitude() * dt << '\n';
+        // associated.box.SetCenter(position.x, position.y);
 
         // Rotaciona o Sprite pela direção da velocidade
         if(rotSprt){

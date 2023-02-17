@@ -6,8 +6,9 @@ TimedTrigger::TimedTrigger(GameObject& associated, float time, go_func fnc, int 
 
 void TimedTrigger::Update(float dt)
 {
-    if(tm.Update(dt))
+    if(rendered && tm.Update(dt))
     {
+        // std::cout << (void*)fnc << "PORQUE\n";
         fnc(associated);
         if(repeating == 0)
         {
@@ -17,7 +18,11 @@ void TimedTrigger::Update(float dt)
         repeating -= (repeating > 0);
         tm.Restart();
     }
+    // std::cout << tm.Get() << ' ' << tm.GetFinish() << '\n';
 }
+
+void TimedTrigger::Render()
+{ rendered = true; }
 
 ChainTrigger::ChainTrigger(GameObject& associated, std::vector<TriggerNode> tNodes, int repeating)
     : GameObject(associated), tNodes(tNodes), repeating(repeating)
@@ -62,3 +67,47 @@ void ConditionalTrigger::Update(float dt)
         repeating -= (repeating>0);
     }
 }
+
+AltenatingTrigger::AltenatingTrigger(GameObject& associated, float frequency, float duration, go_func frst, go_func snd)
+    : GameObject(associated), duration(duration), frequency(frequency)
+{
+    this->frst = frst;
+    this->snd = snd;
+    __curr = 0;
+}
+
+void AltenatingTrigger::Update(float dt)
+{
+    if(rendered && frequency.Update(dt))
+    {
+        frequency.Restart();
+        if(__curr) snd(associated);
+        else frst(associated);
+        __curr ^= __curr;
+    }
+    if(rendered && duration.Update(dt))
+        associated.RemoveComponent(this);
+}
+
+void AltenatingTrigger::Render()
+{rendered =true;}
+
+ProgressTrigger::ProgressTrigger(GameObject& associated, float duration, prog_func progress)
+    : GameObject(associated), duration(duration)
+{
+    this->progress = progress;
+}
+
+void ProgressTrigger::Update(float dt)
+{
+    if(rendered && duration.Update(dt))
+    {
+        progress(associated, 1.0f);
+        associated.RemoveComponent(this);
+        return;
+    }
+    progress(associated, duration.Get()/duration.GetFinish());
+}
+
+void ProgressTrigger::Render()
+{ rendered = true;}

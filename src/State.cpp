@@ -51,7 +51,7 @@ void State::RenderVector(std::vector<std::shared_ptr<GameObject>>& ObjectArray)
 
 std::vector<std::vector<std::shared_ptr<GameObject>>*> State::GetArrays()
 {
-    return {&objectArray,&rigidArray,&terrainArray,&bulletArray,&cameraFollowerObjectArray};
+    return {&objectArray,&rigidArray,&enemyArray, &terrainArray, &bulletArray, &cameraFollowerObjectArray};
 }
 
 void State::RenderArray()
@@ -93,9 +93,10 @@ void State::Collision(){
     
 }
 std::weak_ptr<GameObject> State::GetObjectPtr(GameObject* object){
-    for(unsigned i = 0; i < objectArray.size(); i++)
-        if(objectArray[i].get() == object)
-            return std::weak_ptr<GameObject>(objectArray[i]);
+    for(auto objarr : arrays)
+        for(unsigned i = 0; i < objarr->size(); i++)
+            if((*objarr)[i].get() == object)
+                return std::weak_ptr<GameObject>((*objarr)[i]);
     return std::weak_ptr<GameObject>();
 }
 

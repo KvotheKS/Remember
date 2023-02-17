@@ -32,5 +32,6 @@ enum class C_ID
     ProjectileB,
     Spike,
     FlameSpike,
-    Laser
+    Laser,
+    Fox
 };

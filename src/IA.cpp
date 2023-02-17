@@ -1,5 +1,6 @@
 #include "IA.h"
 #include "Rand.h"
+#include "Game.h"
 #include <limits>
 
 IA::IA(GameObject& associated, GameObject* target, float positionWeight)
@@ -9,9 +10,11 @@ IA::IA(GameObject& associated, GameObject* target, float positionWeight)
 
 void IA::Update(float dt)
 {
-    if(!rendered || !tm.Update(dt) || !target)
+    auto& st = Game::GetInstance().GetCurrentState();
+
+    if(!rendered || !tm.Update(dt) || !target || st.GetObject(C_ID::Player, &st.rigidArray).expired())
     {
-        // std::cout<<'\n'<< tm.Get(); 
+        std::cout<<'\n'<< tm.Get(); 
         selectedAction = -1;
         return;
     }
@@ -20,6 +23,7 @@ void IA::Update(float dt)
     
     for(auto& it : actions)
     {
+        if(it.deactivated) continue;
         Heuristic(it);
         overallWeight += it.weight;
     }
@@ -28,14 +32,12 @@ void IA::Update(float dt)
     float buildingWeight = 0.0f;
     for(unsigned int i = 0; i < actions.size(); i++)
     {
+        if(actions[i].deactivated) continue;
         buildingWeight += actions[i].weight / overallWeight;
         if(pct <= buildingWeight)
         {
-            // std::cout << (associated.box.GetCenter() - target->box.GetCenter()).Magnitude() << '\n';
             selectedAction = i;
             SetActionTimer((int)i);
-            // std::cout << '\n';
-            // std::cout << selectedAction << '\n';
             return;
         }
     }
@@ -45,7 +47,6 @@ void IA::Heuristic(ActionInfo& it)
 {
     auto tgcntr = target->box.GetCenter();
     float dst = (box.GetCenter() + it.range.Rotate((tgcntr - box.GetCenter()).AngleX()) - tgcntr).Magnitude();
-    // std::cout << dst << ' ';
     dst = std::pow(max(dst, 1.0f),positionWeight);
     it.weight = ((1/dst) / it.rarity);
 }

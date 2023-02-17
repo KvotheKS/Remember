@@ -6,6 +6,7 @@
 #include "StageMask.h"
 #include "StageFox.h"
 #include "Game.h"
+#include "MenuState.h"
 
 TitleState::TitleState() : State(){
     GameObject* goTitle = new GameObject();
@@ -48,7 +49,7 @@ void TitleState::Update(float dt){
         Game::GetInstance().Push(new StageState());
 
     if(inManager.KeyPress(ENTER_KEY))
-        Game::GetInstance().Push(new TestState());
+        Game::GetInstance().Push(new MenuState());
 
     if(inManager.KeyPress(W_KEY))
         Game::GetInstance().Push(new StageMask());

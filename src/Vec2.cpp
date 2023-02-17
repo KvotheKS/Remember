@@ -11,7 +11,7 @@ Vec2::Vec2(float x, float y){
 }
 
 bool Vec2::operator==(Vec2 vec){
-    return (this->x == vec.x , this->y == vec.y);
+    return (this->x == vec.x && this->y == vec.y);
 }
 Vec2 Vec2::operator+(Vec2 vec){
     return Vec2(this->x + vec.x, this->y + vec.y);
@@ -82,7 +82,7 @@ float Vec2::Cross(Vec2 vec){
 }
 
 ostream& operator<<(ostream& out,Vec2 const& v){
-    out << "Vec2: "<< v.x << " , "<< v.y << "\n";
+    out << "Vec2: "<< (float)v.x << " , "<< (float)v.y << "\n";
     return out ;
 }
 

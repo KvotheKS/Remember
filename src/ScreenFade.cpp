@@ -35,10 +35,13 @@ void ScreenFade::SetColor(Uint8 r , Uint8 g ,Uint8 b, Uint8 a)
 }
 
 void ScreenFade::Update(float dt){ 
-    if(duration.Update(dt))
+    if(duration.Update(dt)){
+        
         associated.RequestDelete();
-
+    }
+        
     
+ 
     if(fadeTimer.Update(dt) || fadeTimer.GetFinish() == 0){
        
         switch(local_state){
