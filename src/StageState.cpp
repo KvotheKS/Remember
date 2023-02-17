@@ -7,7 +7,7 @@
 #include <functional>
 
 StageState::StageState() : State(){
-    backgroundMusic.Open("assets/audio/stageState.ogg");
+    backgroundMusic.Open("assets/audio/Tema Ambiente.ogg");
     tileSet = new TileSet(64, 64, "assets/img/tileset.png");
 }
 

@@ -16,7 +16,7 @@
 
 
 StageMask::StageMask() : State(){
-    backgroundMusic.Open("assets/audio/StageState.ogg");
+    backgroundMusic.Open("assets/audio/Janela de Raposa (Battle Boss).ogg");
     tileSet = new TileSet(60, 60, "assets/img/tilesetcave.png");
 }
 
