@@ -114,10 +114,10 @@ void StageMask::LoadAssets(){
     //GATES
     GameObject* GO_Gate = new GameObject();
         int spawnpoint = 2;
-        bool active = false;
+        bool active = true;
         GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage3(),spawnpoint,active));
-        GO_Gate->box.x = 60*-1.8;
-        GO_Gate->box.y = 60*6;
+        GO_Gate->box.x = -600;
+        GO_Gate->box.y = 600;
     terrainArray.emplace_back(GO_Gate);
     //PLAYER 
     
@@ -145,15 +145,7 @@ void StageMask::LoadAssets(){
         enemy_GO->depth = 3;
         enemy_GO->AddComponent(new MaskBoss(*enemy_GO));
         enemy_GO->box.SetCenter(900, 330);
-    rigidArray.emplace_back(enemy_GO);
-
-    auto& currState = Game::GetInstance().GetCurrentState();
-    auto mask = currState.GetObject(C_ID::Mask);
-
-    if(mask.expired()){
-        auto gate = (Gate*) currState.GetObject(C_ID::Gate).lock().get();
-        gate->active = true;
-    }
+    enemyArray.emplace_back(enemy_GO);
 
     backgroundMusic.Play();
 
@@ -176,6 +168,14 @@ void StageMask::Start(){
 }
 
 void StageMask::Update(float dt){
+    auto mask = GetObject(C_ID::Mask, &enemyArray);
+    if(mask.expired()){
+        auto gate = GetObject(C_ID::Gate);
+        if(!gate.expired()){
+            gate.lock()->box.x = 60*-1.8;
+            gate.lock()->box.y = 60*6;
+        }
+    }
     // removendo condicao de vitoria/derrota -m
     
     // if(PenguinBody::player == nullptr){
@@ -212,6 +212,9 @@ void StageMask::Update(float dt){
     // std::cout << "SAI";
 
     CollideVectors(rigidArray, terrainArray);
+    CollideVectors(rigidArray, bulletArray);
+    CollideVectors(enemyArray, bulletArray);
+    CollideVectors(bulletArray, terrainArray);
     // std::cout << "colidiu";
     
     Camera::Update(dt);

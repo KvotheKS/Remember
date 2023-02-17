@@ -5,6 +5,7 @@ FlameSpike::FlameSpike(GameObject& associated, std::weak_ptr<GameObject> center,
 {
     auto stmac = new StateMachine(associated);
     auto collider = new Collider(associated);
+    collider->SetScale(Vec2(0.8, 0.8));
     associated.AddComponents({stmac, collider});
     auto anm = new AnimNode("assets/img/Mask_Atks/flameSpikes.png", 10, 0.1);
     anm->SetScaleX(1.65, 1.65);
