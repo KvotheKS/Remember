@@ -114,7 +114,7 @@ void StageMask::LoadAssets(){
     //GATES
     GameObject* GO_Gate = new GameObject();
         int spawnpoint = 2;
-        bool active = true;
+        bool active = false;
         GO_Gate->AddComponent(new Gate(*GO_Gate,new Stage3(),spawnpoint,active));
         GO_Gate->box.x = 60*-1.8;
         GO_Gate->box.y = 60*6;
@@ -146,7 +146,14 @@ void StageMask::LoadAssets(){
         enemy_GO->AddComponent(new MaskBoss(*enemy_GO));
         enemy_GO->box.SetCenter(900, 330);
     rigidArray.emplace_back(enemy_GO);
-    
+
+    auto& currState = Game::GetInstance().GetCurrentState();
+    auto mask = currState.GetObject(C_ID::Mask);
+
+    if(mask.expired()){
+        auto gate = (Gate*) currState.GetObject(C_ID::Gate).lock().get();
+        gate->active = true;
+    }
 
     backgroundMusic.Play();
 
