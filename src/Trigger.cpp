@@ -8,7 +8,6 @@ void TimedTrigger::Update(float dt)
 {
     if(rendered && tm.Update(dt))
     {
-        // std::cout << (void*)fnc << "PORQUE\n";
         fnc(associated);
         if(repeating == 0)
         {
@@ -18,7 +17,6 @@ void TimedTrigger::Update(float dt)
         repeating -= (repeating > 0);
         tm.Restart();
     }
-    // std::cout << tm.Get() << ' ' << tm.GetFinish() << '\n';
 }
 
 void TimedTrigger::Render()

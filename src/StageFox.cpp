@@ -47,7 +47,7 @@ void StageFox::LoadAssets(){
 
     // BACKGROUNDS
     GameObject* goBackground = new GameObject();
-        goBackground->depth = -4.0f;
+        goBackground->depth = -4.1f;
         Sprite* bg = new Sprite(*goBackground, "assets/img/stagefox/Background_fox.png");
         goBackground->AddComponent(bg);
 
@@ -98,6 +98,9 @@ void StageFox::LoadAssets(){
    
     //PLAYER
     spawnList = {Vec2(1,15)};
+
+    tlmap = tileMap;
+
     GameObject* player_GO = new GameObject();
         player_GO->depth = 10;
 
@@ -118,12 +121,12 @@ void StageFox::LoadAssets(){
     rigidArray.emplace_back(player_GO);
 
     auto fox_GO = new GameObject();
-        fox_GO->depth = 10;
+        fox_GO->depth = 0;
         auto fox = new Fox(*fox_GO);
         fox_GO->AddComponents({fox});
 
         fox_GO->box.x = 1500.01 - fox->FOXSIZE.x/2;
-        fox_GO->box.y = 850  - fox->FOXSIZE.y/2;
+        fox_GO->box.y = 880  - fox->FOXSIZE.y/2;
     
     enemyArray.emplace_back(fox_GO);
   
@@ -135,7 +138,7 @@ void StageFox::LoadAssets(){
     Camera::SetCameraFunction(&Camera::FollowTarget);
     // Camera::SetCameraTransition([]() -> bool {return Camera::pos.x >= 5967.5f;}, &Camera::Stationary);
     Camera::Bounds = Rect(0,0, 60*tileMap->GetWidth(), 60*tileMap->GetHeight());
-
+    
 
 }
 

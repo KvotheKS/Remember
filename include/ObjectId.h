@@ -28,5 +28,6 @@ enum class C_ID
     Hurtbox,
     TimeBomb,
     ShakeBehavior,
-    Fox
+    Fox,
+    Kon
 };
