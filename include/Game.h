@@ -7,7 +7,7 @@
 #include "InputManager.h"
 #include "Resources.h"
 #include "State.h"
-#include "TitleState.h"
+#include "MenuState.h"
 #include "PingusState.h"
 #include "Effect.h"
 #include <iostream>
