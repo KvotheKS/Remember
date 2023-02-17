@@ -13,7 +13,7 @@
 //test stage pra mecher em collision
 
 TestState::TestState() : State(){
-    backgroundMusic.Open("assets/audio/StageState.ogg");
+    backgroundMusic.Open("assets/audio/Tema Ambiente.ogg");
     tileSet = new TileSet(60, 60, "assets/img/Tileset01.png");
 }
 

@@ -718,6 +718,30 @@ void Player::TakeDamage(int damage, int direction){
     invulTimer.Restart();
     invul = true;
 
+    
+
+    GameObject* Go_hurtsound = new GameObject();
+        string soundname = "assets/audio/foleys/Ferida IP 1.wav";
+        float rando = Rand::Get_r();
+        if (rando > 0.66 ){
+            soundname = "assets/audio/foleys/Ferida IP 2.wav";
+        }
+        else if(rando> 0.33){
+            soundname = "assets/audio/foleys/Ferida IP 3.wav";
+        }
+        
+        
+       
+        Sound* ypehurtsound = new Sound(*Go_hurtsound, soundname);
+        ypehurtsound->Play();
+        Go_hurtsound->AddComponent(ypehurtsound);
+
+        State& state = Game::GetInstance().GetCurrentState();
+    state.AddObject(Go_hurtsound);
+
+
+
+
     if(direction == 1){
         GetStunned(Vec2(1,-1));
     }else{

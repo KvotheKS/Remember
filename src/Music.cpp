@@ -18,7 +18,7 @@ void Music::Play(int times){
         exit(EXIT_FAILURE);
     }
     Mix_PlayMusic(music.get(), times);
-    Mix_VolumeMusic(00); //!! mutado
+    Mix_VolumeMusic(10); //!! mutado
 }
 
 void Music::Stop(int msToStop){

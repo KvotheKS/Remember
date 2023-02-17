@@ -10,6 +10,7 @@
 
 class MenuState : public State {
     private:
+        Music backgroundMusic;
         int menu_pos;
         GameObject* GO_cursor;
         Text* op0;

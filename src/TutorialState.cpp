@@ -10,6 +10,8 @@
 #include "ScreenFade.h"
 
 TutorialState::TutorialState() : State(){
+
+    
     GameObject* goTitle = new GameObject();
     Sprite* titleBG = new Sprite(*goTitle, "assets/img/TutorialState.png");
     goTitle->AddComponent(titleBG);

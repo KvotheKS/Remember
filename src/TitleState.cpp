@@ -9,6 +9,7 @@
 #include "MenuState.h"
 
 TitleState::TitleState() : State(){
+    backgroundMusic.Open("assets/audio/Tema Ambiente.ogg");
     GameObject* goTitle = new GameObject();
     Sprite* titleBG = new Sprite(*goTitle, "assets/img/title.jpg");
     goTitle->AddComponent(titleBG);
@@ -23,6 +24,10 @@ TitleState::~TitleState(){
 }
 
 void TitleState::LoadAssets(){
+
+    
+    
+    backgroundMusic.Play();
     GameObject* goText = new GameObject();
 
     std::string file = "assets/font/Call me maybe.ttf";
@@ -30,8 +35,14 @@ void TitleState::LoadAssets(){
     Text* text = new Text(*goText, file, 35, Text::TextStyle::BLENDED, msg, {0, 100, 255, 255}, 0.35);
     goText->AddComponent(text);
 
+
     goText->box.SetCenter(540, 550);
     objectArray.emplace_back(goText);
+
+
+
+ 
+   
 }
 
 void TitleState::Start(){

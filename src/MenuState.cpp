@@ -12,6 +12,7 @@
 #include "CreditsState.h"
 
 MenuState::MenuState() : State(){
+    backgroundMusic.Open("assets/audio/Tema Ambiente.ogg");
     GameObject* goTitle = new GameObject();
     Sprite* titleBG = new Sprite(*goTitle, "assets/img/menuimage.png");
     goTitle->AddComponent(titleBG);
@@ -31,7 +32,7 @@ MenuState::~MenuState(){
 
 void MenuState::LoadAssets(){
       
-    
+    backgroundMusic.Play();
     //FADE IN EFFECT
     GameObject* GO_fade = new GameObject();
         GO_fade->depth = 1000;
