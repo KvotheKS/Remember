@@ -1,1 +1,2 @@
-"# IDJ-Provisions" 
+# Remember
+Remember trata-se de um jogo de plataforma 2D com temática japonesa do gênero _Boss Battle_ no qual a proposta principal é que à medida que o jogador avança pelos chefões estes vão se tornando cada vez mais fortes. Referente à protagonista ela era uma guerreira muito forte que perdeu suas memórias e teve que adentrar o Mundo das Lembranças para recuperá-las, ela possui algumas habilidades especiais como: _Dash_, Duplo Salto e Atirar flores de Ipê nos inimigos. Seu objetivo é derrotar todos os chefões ao longo do caminho até alcançar a inimiga suprema: Kihiko, a Raposa.
