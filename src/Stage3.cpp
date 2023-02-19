@@ -155,7 +155,7 @@ void Stage3::LoadAssets(){
     cameraFollowerObjectArray.emplace_back(fpsChecker);
     
     //PLAYER
-    spawnList ={Vec2(1,34),Vec2(88,6),Vec2(33,34)};
+    spawnList ={Vec2(1,34),Vec2(88,6),Vec2(33,30)};
     GameObject* player_GO = new GameObject();
         player_GO->depth = 10;
 

@@ -375,10 +375,8 @@ void MaskBoss::Swapping(float dt){
 void MaskBoss::Update(float dt){
     auto& st = Game::GetInstance().GetCurrentState();
     auto target = st.GetObject(C_ID::Player, &st.rigidArray);
-    if(target.expired()){
-        Die();
+    if(target.expired())
         return;
-    }
     switch(CURR_STATE){
         case INACTIVED:
             Activate();
@@ -428,6 +426,6 @@ void MaskBoss::TakeDamage(int damage){
 }
 
 void MaskBoss::Die(){
-    GameData::isAlive[1]=false;
+    GameData::isAlive[1] = false;
     associated.RequestDelete();
 }

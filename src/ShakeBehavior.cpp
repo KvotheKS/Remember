@@ -17,7 +17,7 @@ void ShakeBehavior::ShakeYoBooty()
 {
     float xrand = Rand::FloatRange(-amplitude.x, amplitude.x);
     float yrand = Rand::FloatRange(-amplitude.y, amplitude.y);
-    std::cout << xrand << '\n';
+    // std::cout << xrand << '\n';
     Vec2 lastdestination = destination;
     destination = box.GetCenter() + Vec2(xrand, yrand);
     dstdx = (destination - lastdestination).Normalize();

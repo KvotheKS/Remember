@@ -27,9 +27,9 @@ LionBoss::LionBoss(GameObject& associated)
     LASERDURATION = 3.0f;
     LASERCHARGE   = 1.0f;
     LASERCOOLDOWN = 1.5f;
-    TOWERDURATION = 4.5f;
-    BALLSDURATION = 2.5f;
-    SHOCKWAVEDURATION = 4.0f;
+    TOWERDURATION = 3.0f;
+    BALLSDURATION = 1.5f;
+    SHOCKWAVEDURATION = 2.5f;
     
     LASERDAMAGE = 25;
     LASERKNOCK = Vec2(-10,0);
@@ -44,7 +44,7 @@ LionBoss::LionBoss(GameObject& associated)
     BALLSKNOCK = Vec2(-10,0);
     BALLSSPEED = -600.0f;
     BALLSYSPEED = -1000.0f;
-    BALLSIZE = Vec2(85,85);
+    BALLSIZE = Vec2(135,135);
     BALLSFRAMES = 11;
     BALLSFRAMETIME = 0.08f;
 
@@ -52,7 +52,7 @@ LionBoss::LionBoss(GameObject& associated)
     TOWERKNOCK = Vec2(-10, -15);
     TOWERTOTALFRAMES = 18;
     TOWERFRAMESTOCREATE = 8;
-    TOWERFRAMETIME = 0.1f;
+    TOWERFRAMETIME = 0.05f;
     TOWERSIZE = Vec2(1250,250);
 
     WAVESIZE = Vec2(50,250);
@@ -65,7 +65,7 @@ LionBoss::LionBoss(GameObject& associated)
 
     EXPLOSIONDURATION = 0.8f;
     LIONCONTACTKNOCK = Vec2(-40, 10);
-    LIONMAXHEALTH = 250;
+    LIONMAXHEALTH = 350;
     currentHealth = LIONMAXHEALTH;
     activated = false;
 
@@ -209,7 +209,7 @@ void LionBoss::Laser()
 
         laser_go->box.x = associated.box.x - laser_go->box.w;
         laser_go->box.y = associated.box.y;
-        std::cout << laser_go->box << associated.box;
+        // std::cout << laser_go->box << associated.box;
 
         TimeBomb* tmb = new TimeBomb(*laser_go, (LASERINGTOCOLLIDE + LASERINGACTIVE + LASERINGRESTFRAMES)*LASERFRAMETIME);
         Attack* laser_atk = new Attack(*laser_go, LASERDAMAGE, 0, &associated);
@@ -360,11 +360,11 @@ void LionBoss::DIEEE()
     GameData::isAlive[0] = false;
     auto [_, anmptr] = ((StateMachine*)associated.GetComponent(C_ID::StateMachine))->GetCurrent();
     auto spr_go = new GameObject;
-        auto spr = new Sprite(*spr_go, "assets/img/aliendeath.png", 4, EXPLOSIONDURATION/4.0f);
+        auto spr = new Sprite(*spr_go, "assets/img/penguindeath.png", 5, EXPLOSIONDURATION/5.0f);
         auto tmb = new TimeBomb(*spr_go, EXPLOSIONDURATION);
         auto explsound = new Sound(*spr_go, "assets/audio/boom.wav");
 
-        spr->SetSize(anmptr->GetWidth(), anmptr->GetHeight());
+        spr->SetSize(anmptr->GetWidth()*2.3f, anmptr->GetHeight());
         spr_go->box.x = associated.box.x; spr_go->box.y = associated.box.y;
         spr_go->AddComponents({spr,tmb, explsound});
 

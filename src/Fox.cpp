@@ -45,7 +45,7 @@ void Fox::SetVariables()
     ARCBALLSTIMEBETWEEN = 0.3f;
     ARCBALLSFIRSTTIME = 1.5f;
     ARCBALLSSPACEBETWEEN = 250.0f;
-    ARCBALLSDAMAGE = 5;
+    ARCBALLSDAMAGE = 8;
     ARCBALLSKNOCKBACK= 0;
 
     KONSIZE;
@@ -60,7 +60,7 @@ void Fox::SetVariables()
     KONLASERDURATION = 2.5f;
     KONFADEOUT = 1.5f;
     KONLASERSIZE = Vec2(4000,315);
-    KONDAMAGE = 15;
+    KONDAMAGE = 25;
     KONKNOCKBACK = 0;
 
 
@@ -72,16 +72,16 @@ void Fox::SetVariables()
     
 
     WÕEXSPEED = 570.0f; // Wõe eh o que cria 2 projeteis q vão dos pontos do estágio e quando os projeteis se encontram eles invertem o angulo 180graus
-    WÕEDURATION = 2.5f;
+    WÕEDURATION = 2.0f;
     WÕESIZE = Vec2(60, 200);
-    WÕEDAMAGE = 3;
+    WÕEDAMAGE = 10;
     WÕEKNOCKBACK = 0;
 
     LIONLASERDURATION = 5.0f;
     LIONPHASINGTIME = 1.5f;
     LIONLASERDAMAGEDURATION = 0.4f;
     LIONLASERSIZE = Vec2(0, 250);
-    LIONLASERDAMAGE = 8;
+    LIONLASERDAMAGE = 13;
     LIONLASERKNOCKBACK = 1;
 
     StageLBound = Rect(-56.655, 928, 160, 160);
@@ -94,17 +94,17 @@ void Fox::SetVariables()
     COMETFIRSTTIME = 1.4f;
     COMETDELAY = 0.22f;
     COMETDURATION = 5.5f;
-    COMETDAMAGE = 3;
+    COMETDAMAGE = 6;
     COMETKNOCKBACK = 0;
 
     TORNADODURATION = 2.0f;
     TORNADOLIVEDURATION = 10.0f;
     TORNADOSIZE = Vec2(700, 80);
-    TORNADODAMAGE = 3;
+    TORNADODAMAGE = 6;
     TORNADOKNOCKBACK = 1;
 
     PHASE1LIFE = 300;
-    PHASE2LIFE = 500;
+    PHASE2LIFE = 600;
     
     currentLife = PHASE1LIFE;
 
@@ -132,7 +132,9 @@ Fox::Fox(GameObject& associated)
     st.objectArray.emplace_back(RealFox);
 
     auto stmac = new StateMachine(associated);
-    auto cld = new Collider(associated);
+    auto scale1 = Vec2(0.5,0.5);
+    auto lionoffset = Vec2(10,50);
+    auto cld = new Collider(associated, scale1, lionoffset);
     
     auto node  = new AnimNode("assets/img/Fox/Kihiko Idle-Sheet.png", IDLEFRAMES, IDLEFRAMETIME);
     // node->SetSize(FOXSIZE.x, FOXSIZE.y);
@@ -597,7 +599,9 @@ void Fox::Phase2Transition()
             }
             fx->RealFox->RequestDelete();
             st->AddTransition(fx->BULLETHELLANIM,fx->BULLETHELLIDLEANIM);
-            associated.AddComponent(new Collider(associated));
+            auto scale1 = Vec2(0.5,0.5);
+            auto lionoffset = Vec2(10,50);
+            associated.AddComponent(new Collider(associated, scale1, lionoffset));
             
             GameObject* Go_hurtsound = new GameObject();
             std::string soundname;
@@ -669,6 +673,7 @@ void Fox::DIEEEE()
     currnode->SetFrameTime(10000.0f);
 
     auto screen_go = new GameObject;
+        screen_go->depth = 100000;
         auto screen_fade = new ScreenFade(*screen_go, 1.0f,1.0f, 1.0f);
         screen_fade->SetColor(255,255,255,255);
         screen_go->AddComponent(screen_fade);

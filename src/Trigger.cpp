@@ -81,7 +81,7 @@ void AltenatingTrigger::Update(float dt)
         frequency.Restart();
         if(__curr) snd(associated);
         else frst(associated);
-        __curr ^= __curr;
+        __curr = !__curr;
     }
     if(rendered && duration.Update(dt))
         associated.RemoveComponent(this);

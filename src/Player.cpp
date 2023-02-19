@@ -7,6 +7,7 @@
 #include "StateMac.h"
 #include "SpriteSheetNode.h"
 #include <iostream>
+#include "Trigger.h"
 #include "Projectile.h"
 #include "Game.h"
 #include "Attack.h"
@@ -63,7 +64,7 @@ Player::Player(GameObject& associated):GameObject(associated){
 
     MAX_GLOBAL_SPEED = 3000;
     DASH_FORCE = 1200;
-    JUMP_FORCE = 16 ;
+    JUMP_FORCE = 16;
     MAX_FALL_SPEED = 1000;
     FALL_ACCELERATION = 100;
 
@@ -82,7 +83,7 @@ Player::~Player(){
 }
 
 void Player::Start(){
-    invulTimer.SetFinish(2.0);
+    invulTimer.SetFinish(0.7f);
     deathTimer.SetFinish(1.3);
     pause = false;
     hp = MAX_HP;
@@ -169,7 +170,8 @@ void Player::Update(float dt){
 
     if(pause)return;
     RunTimers(dt);
-    Controls(dt); 
+    if(hp > 0)
+        Controls(dt); 
     Physics(dt);  
     Animation(dt);
 
@@ -447,6 +449,9 @@ void Player::RunTimers(float dt){
     }
     if(invulTimer.Update(dt)){
         invul = false;
+        auto stm = (StateMachine*)associated.GetComponent(C_ID::StateMachine);
+        for(auto& it : stm->GetStates())
+            SDL_SetTextureAlphaMod(it.second->texture.get(), 255);        
     }
 
 }
@@ -699,7 +704,7 @@ void Player::Die(){
 
     isDead = true;
     
-
+    // associated.RemoveComponent(this);
 }
 
 void Player::NotifyCollision(GameObject& other, Vec2 sep)
@@ -718,7 +723,22 @@ void Player::TakeDamage(int damage, int direction){
     invulTimer.Restart();
     invul = true;
 
-    
+    associated.AddComponent(
+        new AltenatingTrigger(associated, 0.05f, invulTimer.GetFinish(),
+        [](GameObject& associated)
+        {
+            auto stm = (StateMachine*)associated.GetComponent(C_ID::StateMachine);
+            for(auto& it : stm->GetStates())
+                SDL_SetTextureAlphaMod(it.second->texture.get(), 127);    
+        },
+        [](GameObject& associated)
+        {
+            auto stm = (StateMachine*)associated.GetComponent(C_ID::StateMachine);
+            for(auto& it : stm->GetStates())
+                SDL_SetTextureAlphaMod(it.second->texture.get(), 255);        
+        }
+        )
+    );
 
     GameObject* Go_hurtsound = new GameObject();
         string soundname = "assets/audio/foleys/Ferida IP 1.wav";

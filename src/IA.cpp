@@ -14,7 +14,7 @@ void IA::Update(float dt)
 
     if(!rendered || !tm.Update(dt) || !target || st.GetObject(C_ID::Player, &st.rigidArray).expired())
     {
-        std::cout<<'\n'<< tm.Get(); 
+        // std::cout<<'\n'<< tm.Get(); 
         selectedAction = -1;
         return;
     }
